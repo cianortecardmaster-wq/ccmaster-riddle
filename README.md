@@ -79,3 +79,29 @@ Também funciona com GitHub Pages, porque ele processa Jekyll automaticamente.
 ## Aviso sobre segurança
 
 O hash evita deixar a resposta escrita diretamente no HTML, mas um site 100% estático nunca é totalmente seguro contra inspeção/brute force. Para ranking real, progresso entre dispositivos e validação forte de respostas, o ideal depois é usar Firebase ou Supabase.
+
+
+## Versão estática corrigida
+
+Esta versão também inclui páginas diretas em HTML:
+
+```txt
+riddles/001/index.html
+riddles/002/index.html
+```
+
+Assim o botão "Começar" funciona mesmo sem build Jekyll.
+
+No Cloudflare Pages, você pode usar:
+
+```txt
+Build command: deixar vazio
+Output directory: /
+```
+
+Se preferir usar os arquivos `.md`, aí precisa voltar para Jekyll:
+
+```txt
+Build command: bundle exec jekyll build
+Output directory: _site
+```

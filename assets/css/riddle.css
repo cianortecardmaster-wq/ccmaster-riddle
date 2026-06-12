@@ -327,3 +327,10 @@ body.light .theme-clue {
     margin-bottom: 12px;
   }
 }
+
+.page-clues-above {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+  margin-bottom: 22px;
+}
