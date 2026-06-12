@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title | default: page.nome }} — CC MASTER</title>
+  <meta name="description" content="{{ page.description | default: 'Riddle do jogo CC MASTER.' }}" />
+  <meta name="theme-color" content="#050505" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Fugaz+One&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/style.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/riddle.css' | relative_url }}" />
+</head>
+<body class="riddle-body" data-riddle="{{ page.numero }}">
+  <div class="noise" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="riddle-topbar">
+    <a class="back-home" href="{{ '/' | relative_url }}">← Entrada</a>
+    <div class="case-label mini">
+      <span>CC MASTER</span>
+      <strong>CASO #{{ page.numero }}</strong>
+    </div>
+    <nav class="nav-actions riddle-nav" aria-label="Menu do riddle">
+      <a href="{{ '/#como-jogar' | relative_url }}">? <span>Como jogar</span></a>
+      <a href="{{ '/#ranking' | relative_url }}">♜ <span>Ranking</span></a>
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Alternar tema">☼</button>
+    </nav>
+  </header>
+
+  <main class="riddle-shell">
+    <section class="riddle-card" aria-labelledby="riddle-title">
+      <p class="eyebrow">Arquivo de investigação</p>
+      <h1 id="riddle-title">{{ page.nome | default: page.title }}</h1>
+      {% if page.frase %}
+      <blockquote class="riddle-phrase">{{ page.frase }}</blockquote>
+      {% endif %}
+
+      <div class="evidence-area">
+        <div class="evidence-frame" id="evidenceFrame">
+          <img
+            id="riddleImage"
+            class="riddle-image"
+            src="{{ page.imagem | relative_url }}"
+            alt="Imagem do riddle {{ page.numero }}"
+            draggable="false"
+          />
+          <div class="noise-layer" id="noiseLayer" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <section class="investigation-tools" aria-label="Ferramentas de investigação">
+        <h2>Painel de investigação</h2>
+        <div class="tool-grid">
+          <button type="button" data-action="zoom-in">Zoom +</button>
+          <button type="button" data-action="zoom-out">Zoom -</button>
+          <button type="button" data-action="brightness-up">Brilho +</button>
+          <button type="button" data-action="brightness-down">Brilho -</button>
+          <button type="button" data-action="contrast-up">Contraste +</button>
+          <button type="button" data-action="contrast-down">Contraste -</button>
+          <button type="button" data-action="invert">Inverter cores</button>
+          <button type="button" data-action="mirror">Espelhar</button>
+          <button type="button" data-action="rotate-left">Girar -90°</button>
+          <button type="button" data-action="rotate-right">Girar +90°</button>
+          <button type="button" data-action="noise">Ruído</button>
+          <button type="button" data-action="reset">Resetar</button>
+        </div>
+        <p class="tool-note">As ferramentas estão disponíveis em todos os casos. Descobrir qual usar faz parte do enigma.</p>
+      </section>
+
+      <section class="page-clues" aria-label="Pistas da página">
+        {{ content }}
+      </section>
+
+      <section class="answer-panel" aria-label="Enviar resposta">
+        <form id="answerForm" data-answer-hash="{{ page.answer_hash }}" data-next="{{ page.proximo | relative_url }}">
+          <label for="answerInput">Resposta</label>
+          <div class="answer-row">
+            <input id="answerInput" name="answer" type="text" placeholder="Digite sua resposta" autocomplete="off" required />
+            <button type="submit">Investigar</button>
+          </div>
+          <p id="answerMessage" class="answer-message" aria-live="polite"></p>
+          <a id="nextCaseLink" class="next-case hidden" href="{{ page.proximo | relative_url }}">Abrir próximo caso →</a>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <script src="{{ '/assets/js/riddle.js' | relative_url }}"></script>
+</body>
+</html>

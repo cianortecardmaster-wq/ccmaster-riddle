@@ -1,0 +1,13 @@
+title: "CC MASTER Riddle"
+description: "Jogo de enigmas, investigação, cultura geek, card games e Cianorte."
+lang: "pt-BR"
+timezone: "America/Sao_Paulo"
+baseurl: ""
+url: ""
+permalink: pretty
+markdown: kramdown
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
