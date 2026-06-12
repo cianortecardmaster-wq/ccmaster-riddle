@@ -127,3 +127,9 @@ Output directory: _site
 - Removidos os blocos laterais de investigação da página inicial.
 - A home agora mantém apenas logo, texto principal e cadastro/login.
 - Texto explicativo reduzido visualmente para ficar menos pesado.
+
+
+## Ajuste de logo
+
+- Removido o texto/fallback "CC MASTER" que podia aparecer junto ou abaixo da logo.
+- A home agora exibe apenas a imagem da logo.

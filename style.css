@@ -985,3 +985,9 @@ body.light .logged-panel {
     font-size: .86rem !important;
   }
 }
+
+
+/* Remove qualquer texto duplicado abaixo/junto da logo */
+.logo-fallback {
+  display: none !important;
+}
