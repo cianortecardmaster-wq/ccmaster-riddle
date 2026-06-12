@@ -105,3 +105,11 @@ Se preferir usar os arquivos `.md`, aí precisa voltar para Jekyll:
 Build command: bundle exec jekyll build
 Output directory: _site
 ```
+
+
+## Atualização de login
+
+- Nome do investigador aparece no menu antes de "Como jogar".
+- Login ganhou a opção "Lembrar neste navegador".
+- Botões "Começar/Continuar" e "Sair" ficam dentro do card de login, abaixo do formulário.
+- Os três cards inferiores da home foram removidos.

@@ -22,6 +22,8 @@
     </div>
 
     <nav class="nav-actions" aria-label="Menu principal">
+      <span class="nav-user" id="navUser" hidden></span>
+      <button class="nav-logout" type="button" id="navLogout" hidden>Sair</button>
       <a href="#como-jogar">? <span>Como jogar</span></a>
       <a href="#regras">▣ <span>Regras</span></a>
       <a href="#ranking">♜ <span>Ranking</span></a>
@@ -99,6 +101,11 @@
             </div>
           </label>
 
+          <label class="remember-field">
+            <input id="rememberDevice" name="rememberDevice" type="checkbox" checked />
+            <span>Lembrar neste navegador</span>
+          </label>
+
           <p class="auth-note">
             Seu apelido será utilizado para mostrar seu progresso na área <strong>Investigadores</strong>.
           </p>
@@ -108,42 +115,17 @@
             <button class="btn btn-light" type="button" id="submitRegister">Cadastrar</button>
           </div>
 
-          <button class="forgot-link" type="button" id="forgotPasswordBtn">Esqueci minha senha</button>
-
           <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
         </form>
 
-        <form id="recoveryForm" class="recovery-form hidden" autocomplete="on">
-          <h2>Recuperar senha</h2>
-          <p class="auth-note recovery-note">
-            Digite o e-mail cadastrado e escolha uma nova senha.
-            Este recurso é temporário para o protótipo local do jogo.
-          </p>
-
-          <label class="field">
-            <span>E-mail cadastrado</span>
-            <div class="input-wrap single-input">
-              <i aria-hidden="true">✉</i>
-              <input id="recoveryEmail" name="recoveryEmail" type="email" placeholder="seu@email.com" required />
-            </div>
-          </label>
-
-          <label class="field">
-            <span>Nova senha</span>
-            <div class="input-wrap">
-              <i aria-hidden="true">▣</i>
-              <input id="newPassword" name="newPassword" type="password" placeholder="Digite a nova senha" minlength="4" required />
-              <button class="show-pass" type="button" id="showNewPass" aria-label="Mostrar nova senha">◌</button>
-            </div>
-          </label>
-
-          <div class="form-actions">
-            <button class="btn btn-light" type="submit">Salvar nova senha</button>
-            <button class="btn btn-ghost" type="button" id="backToLoginBtn">Voltar</button>
+        <div class="logged-panel" id="loggedPanel" hidden>
+          <div>
+            <span>Investigador conectado</span>
+            <strong id="loggedName">---</strong>
           </div>
-
-          <p class="form-message" id="recoveryMessage" role="status" aria-live="polite"></p>
-        </form>
+          <a class="btn btn-light" id="continueBtn" href="/riddles/001/">Começar</a>
+          <button class="btn btn-ghost" type="button" id="logoutBtn">Sair</button>
+        </div>
       </section>
     </section>
 
@@ -163,26 +145,6 @@
     </aside>
   </main>
 
-  <section class="info-sections" id="como-jogar">
-    <article>
-      <h2>Como jogar</h2>
-      <p>Leia a frase, investigue a imagem e teste as ferramentas disponíveis em cada caso. A resposta pode estar visível, escondida, invertida, no tema da página ou até fora dela.</p>
-    </article>
-    <article id="regras">
-      <h2>Regras</h2>
-      <p>Não existe sorte. Existe observação. Use zoom, contraste, brilho, inversão, espelho, rotação, tema claro/escuro e seleção de texto quando desconfiar de algo.</p>
-    </article>
-    <article id="ranking">
-      <h2>Investigadores</h2>
-      <p>O apelido cadastrado será usado para exibir o progresso dos jogadores na área Investigadores.</p>
-    </article>
-  </section>
-
-  <div class="logged-panel" id="loggedPanel" hidden>
-    <div>
-      <span>Investigador conectado</span>
-      <strong id="loggedName">---</strong>
-    </div>
     <a class="btn btn-light" href="/riddles/001/">Começar</a>
     <button class="btn btn-ghost" type="button" id="logoutBtn">Sair</button>
   </div>

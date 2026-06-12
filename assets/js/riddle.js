@@ -1,3 +1,42 @@
+
+const SESSION_KEY = 'ccmaster_riddle_session';
+const TEMP_SESSION_KEY = 'ccmaster_riddle_session_temp';
+const navUser = document.querySelector('#navUser');
+const navLogout = document.querySelector('#navLogout');
+
+function getRiddleSession() {
+  try {
+    return JSON.parse(localStorage.getItem(SESSION_KEY)) || JSON.parse(sessionStorage.getItem(TEMP_SESSION_KEY));
+  } catch {
+    return null;
+  }
+}
+
+function renderRiddleSession() {
+  const session = getRiddleSession();
+
+  if (!session) {
+    if (navUser) navUser.hidden = true;
+    if (navLogout) navLogout.hidden = true;
+    return;
+  }
+
+  if (navUser) {
+    navUser.textContent = `Investigador: ${session.nickname}`;
+    navUser.hidden = false;
+  }
+
+  if (navLogout) navLogout.hidden = false;
+}
+
+function endRiddleSession() {
+  localStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(TEMP_SESSION_KEY);
+  renderRiddleSession();
+}
+
+navLogout?.addEventListener('click', endRiddleSession);
+
 const image = document.querySelector('#riddleImage');
 const frame = document.querySelector('#evidenceFrame');
 const themeToggle = document.querySelector('#themeToggle');
