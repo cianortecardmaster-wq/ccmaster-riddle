@@ -4,6 +4,7 @@ const SESSION_KEY = 'ccmaster_riddle_session';
 const $ = (selector) => document.querySelector(selector);
 
 const authForm = $('#authForm');
+const recoveryForm = $('#recoveryForm');
 const tabLogin = $('#tabLogin');
 const tabRegister = $('#tabRegister');
 const submitLogin = $('#submitLogin');
@@ -14,6 +15,12 @@ const emailInput = $('#email');
 const passwordInput = $('#password');
 const formMessage = $('#formMessage');
 const showPass = $('#showPass');
+const forgotPasswordBtn = $('#forgotPasswordBtn');
+const backToLoginBtn = $('#backToLoginBtn');
+const recoveryEmailInput = $('#recoveryEmail');
+const newPasswordInput = $('#newPassword');
+const recoveryMessage = $('#recoveryMessage');
+const showNewPass = $('#showNewPass');
 const loggedPanel = $('#loggedPanel');
 const loggedName = $('#loggedName');
 const logoutBtn = $('#logoutBtn');
@@ -42,8 +49,15 @@ function setMessage(text, type = 'normal') {
   formMessage.classList.toggle('error', type === 'error');
 }
 
+function setRecoveryMessage(text, type = 'normal') {
+  recoveryMessage.textContent = text;
+  recoveryMessage.classList.toggle('error', type === 'error');
+}
+
 function setMode(mode) {
   currentMode = mode;
+  authForm.classList.remove('hidden');
+  recoveryForm.classList.add('hidden');
   const isRegister = mode === 'register';
 
   tabLogin.classList.toggle('active', !isRegister);
@@ -52,8 +66,28 @@ function setMode(mode) {
   tabRegister.setAttribute('aria-selected', String(isRegister));
 
   nicknameField.style.display = isRegister ? 'block' : 'none';
+  forgotPasswordBtn.style.display = isRegister ? 'none' : 'inline-flex';
   nicknameInput.required = isRegister;
   setMessage('');
+  setRecoveryMessage('');
+}
+
+function openRecoveryForm() {
+  authForm.classList.add('hidden');
+  recoveryForm.classList.remove('hidden');
+  recoveryEmailInput.value = normalizeEmail(emailInput.value);
+  newPasswordInput.value = '';
+  setMessage('');
+  setRecoveryMessage('');
+  recoveryEmailInput.focus();
+}
+
+function closeRecoveryForm() {
+  recoveryForm.classList.add('hidden');
+  authForm.classList.remove('hidden');
+  setRecoveryMessage('');
+  setMessage('');
+  emailInput.focus();
 }
 
 function registerUser() {
@@ -96,6 +130,39 @@ function registerUser() {
   saveUsers(users);
   startSession(user);
   setMessage(`Cadastro concluído. Bem-vindo, ${nickname}.`);
+}
+
+
+function resetPassword() {
+  const email = normalizeEmail(recoveryEmailInput.value);
+  const newPassword = newPasswordInput.value;
+
+  if (!email || !newPassword) {
+    setRecoveryMessage('Preencha o e-mail e a nova senha.', 'error');
+    return;
+  }
+
+  if (newPassword.length < 4) {
+    setRecoveryMessage('A nova senha precisa ter pelo menos 4 caracteres.', 'error');
+    return;
+  }
+
+  const users = getUsers();
+  const user = users.find((candidate) => candidate.email === email);
+
+  if (!user) {
+    setRecoveryMessage('E-mail não encontrado neste dispositivo.', 'error');
+    return;
+  }
+
+  user.password = newPassword;
+  user.passwordUpdatedAt = new Date().toISOString();
+  saveUsers(users);
+
+  emailInput.value = email;
+  passwordInput.value = newPassword;
+  closeRecoveryForm();
+  setMessage('Senha atualizada. Agora clique em Entrar.');
 }
 
 function loginUser() {
@@ -193,6 +260,20 @@ showPass.addEventListener('click', () => {
   const isPassword = passwordInput.type === 'password';
   passwordInput.type = isPassword ? 'text' : 'password';
   showPass.textContent = isPassword ? '●' : '◌';
+});
+
+showNewPass.addEventListener('click', () => {
+  const isPassword = newPasswordInput.type === 'password';
+  newPasswordInput.type = isPassword ? 'text' : 'password';
+  showNewPass.textContent = isPassword ? '●' : '◌';
+});
+
+forgotPasswordBtn.addEventListener('click', openRecoveryForm);
+backToLoginBtn.addEventListener('click', closeRecoveryForm);
+
+recoveryForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  resetPassword();
 });
 
 logoutBtn.addEventListener('click', endSession);

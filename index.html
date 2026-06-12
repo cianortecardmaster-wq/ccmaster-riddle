@@ -108,7 +108,41 @@
             <button class="btn btn-light" type="button" id="submitRegister">Cadastrar</button>
           </div>
 
+          <button class="forgot-link" type="button" id="forgotPasswordBtn">Esqueci minha senha</button>
+
           <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+        </form>
+
+        <form id="recoveryForm" class="recovery-form hidden" autocomplete="on">
+          <h2>Recuperar senha</h2>
+          <p class="auth-note recovery-note">
+            Digite o e-mail cadastrado e escolha uma nova senha.
+            Este recurso é temporário para o protótipo local do jogo.
+          </p>
+
+          <label class="field">
+            <span>E-mail cadastrado</span>
+            <div class="input-wrap single-input">
+              <i aria-hidden="true">✉</i>
+              <input id="recoveryEmail" name="recoveryEmail" type="email" placeholder="seu@email.com" required />
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Nova senha</span>
+            <div class="input-wrap">
+              <i aria-hidden="true">▣</i>
+              <input id="newPassword" name="newPassword" type="password" placeholder="Digite a nova senha" minlength="4" required />
+              <button class="show-pass" type="button" id="showNewPass" aria-label="Mostrar nova senha">◌</button>
+            </div>
+          </label>
+
+          <div class="form-actions">
+            <button class="btn btn-light" type="submit">Salvar nova senha</button>
+            <button class="btn btn-ghost" type="button" id="backToLoginBtn">Voltar</button>
+          </div>
+
+          <p class="form-message" id="recoveryMessage" role="status" aria-live="polite"></p>
         </form>
       </section>
     </section>
