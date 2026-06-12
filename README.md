@@ -120,3 +120,10 @@ Output directory: _site
 - Nome do investigador aparece também nas páginas dos riddles.
 - Menu dos riddles agora inclui Como jogar, Regras e Ranking.
 - Removidos os botões órfãos Começar/Sair que apareciam no final da home.
+
+
+## Atualização visual da home
+
+- Removidos os blocos laterais de investigação da página inicial.
+- A home agora mantém apenas logo, texto principal e cadastro/login.
+- Texto explicativo reduzido visualmente para ficar menos pesado.

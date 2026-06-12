@@ -927,3 +927,61 @@ body.light .logged-panel {
     text-align: center;
   }
 }
+
+
+/* Home limpa: apenas logo, texto e cadastro */
+.investigation-board,
+.left-board,
+.right-board {
+  display: none !important;
+}
+
+.page-shell {
+  grid-template-columns: 1fr !important;
+  min-height: auto;
+  padding-top: 18px;
+}
+
+.hero {
+  grid-column: 1 !important;
+  width: min(760px, calc(100vw - 28px));
+  margin-inline: auto;
+}
+
+.logo-stage {
+  margin-bottom: 8px;
+}
+
+.intro-text {
+  max-width: 620px;
+  margin-inline: auto;
+}
+
+.intro-text .lead {
+  font-size: clamp(1.05rem, 2.2vw, 1.45rem) !important;
+}
+
+.intro-text p {
+  font-size: clamp(.82rem, 1.45vw, 1rem) !important;
+  line-height: 1.45 !important;
+  margin: 6px 0 !important;
+}
+
+.intro-text .closing {
+  font-size: clamp(.95rem, 1.8vw, 1.18rem) !important;
+  margin-top: 12px !important;
+}
+
+.auth-card {
+  margin-top: 22px !important;
+}
+
+@media (max-width: 760px) {
+  .page-shell {
+    padding-top: 4px;
+  }
+
+  .intro-text p {
+    font-size: .86rem !important;
+  }
+}
