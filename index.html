@@ -1,12 +1,158 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CCMaster Riddle</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CC MASTER — Riddles</title>
+  <meta name="description" content="CC MASTER — jogo de enigmas, investigação, cultura geek, card games e Cianorte." />
+  <meta name="theme-color" content="#050505" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Fugaz+One&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>CCMaster Riddle</h1>
-  <p>O primeiro portal foi aberto.</p>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="case-label" aria-label="Identificação do caso">
+      <span>CC MASTER v1.0</span>
+      <strong>CASO #001</strong>
+    </div>
+
+    <nav class="nav-actions" aria-label="Menu principal">
+      <a href="#como-jogar">? <span>Como jogar</span></a>
+      <a href="#regras">▣ <span>Regras</span></a>
+      <a href="#ranking">♜ <span>Ranking</span></a>
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Alternar tema">☼</button>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <aside class="investigation-board left-board" aria-hidden="true">
+      <div class="board-map">
+        <span class="map-title">CIANORTE - PR</span>
+        <span class="map-line line-a"></span>
+        <span class="map-line line-b"></span>
+        <span class="map-line line-c"></span>
+        <span class="pin pin-a"></span>
+        <span class="pin pin-b"></span>
+        <span class="pin pin-c"></span>
+      </div>
+      <div class="note note-small">NADA É<br>ALEATÓRIO</div>
+      <div class="photo photo-pixel">?</div>
+      <div class="note note-large">OBSERVE.<br>PENSE.<br>DESCUBRA.</div>
+    </aside>
+
+    <section class="hero" aria-labelledby="titulo-principal">
+      <div class="logo-stage" id="logoStage">
+        <img
+          class="logo-img"
+          src="assets/logo-ccmasters.png"
+          alt="CC MASTERS"
+          onerror="this.style.display='none'; document.querySelector('.logo-fallback').style.display='block';"
+        />
+        <h1 class="logo-fallback" id="titulo-principal">CC MASTER</h1>
+        <span class="pixel-burst" aria-hidden="true"></span>
+      </div>
+
+      <div class="hero-rule" aria-hidden="true"></div>
+
+      <section class="intro-text" aria-label="Introdução do jogo">
+        <p class="lead">Você está entrando em um caso sem respostas fáceis.</p>
+        <p>Algumas pistas estarão na imagem. Outras, fora dela.</p>
+        <p>Algumas exigirão conhecimento. Outras, desconfiança.</p>
+        <p>Cultura geek, card games e os caminhos de Cianorte fazem parte do jogo.</p>
+        <p class="closing">Nem tudo será entregue.<br>Quase tudo poderá ser descoberto.</p>
+      </section>
+
+      <section class="auth-card" aria-label="Cadastro e login">
+        <div class="auth-tabs" role="tablist" aria-label="Escolha entrar ou cadastrar">
+          <button class="tab active" type="button" id="tabLogin" aria-selected="true">Entrar</button>
+          <button class="tab" type="button" id="tabRegister" aria-selected="false">Cadastrar</button>
+        </div>
+
+        <form id="authForm" autocomplete="on">
+          <label class="field" id="nicknameField">
+            <span>Apelido</span>
+            <div class="input-wrap">
+              <i aria-hidden="true">●</i>
+              <input id="nickname" name="nickname" type="text" placeholder="Digite seu apelido" minlength="2" maxlength="24" />
+            </div>
+          </label>
+
+          <label class="field">
+            <span>E-mail</span>
+            <div class="input-wrap">
+              <i aria-hidden="true">✉</i>
+              <input id="email" name="email" type="email" placeholder="seu@email.com" required />
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Senha</span>
+            <div class="input-wrap">
+              <i aria-hidden="true">▣</i>
+              <input id="password" name="password" type="password" placeholder="Digite sua senha" minlength="4" required />
+              <button class="show-pass" type="button" id="showPass" aria-label="Mostrar senha">◌</button>
+            </div>
+          </label>
+
+          <p class="auth-note">
+            Seu apelido será utilizado para mostrar seu progresso na área <strong>Investigadores</strong>.
+          </p>
+
+          <div class="form-actions">
+            <button class="btn btn-ghost" type="submit" id="submitLogin">Entrar</button>
+            <button class="btn btn-light" type="button" id="submitRegister">Cadastrar</button>
+          </div>
+
+          <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </section>
+
+    <aside class="investigation-board right-board" aria-hidden="true">
+      <div class="truth-note">A VERDADE<br>NÃO É<br>ENTREGUE.<br>É DESCOBERTA.</div>
+      <div class="terminal-card">
+        <span>&gt; INVESTIGADORES ONLINE</span>
+        <strong id="onlineCount">042</strong>
+        <span>&gt; CASOS RESOLVIDOS</span>
+        <strong>127</strong>
+      </div>
+      <div class="book-stack">
+        <span>CRIPTOGRAFIA</span>
+        <span>TEORIAS DA INFORMAÇÃO</span>
+        <span>LÓGICA E DEDUÇÃO</span>
+      </div>
+    </aside>
+  </main>
+
+  <section class="info-sections" id="como-jogar">
+    <article>
+      <h2>Como jogar</h2>
+      <p>Leia a frase, investigue a imagem e teste as ferramentas disponíveis em cada caso. A resposta pode estar visível, escondida, invertida, no tema da página ou até fora dela.</p>
+    </article>
+    <article id="regras">
+      <h2>Regras</h2>
+      <p>Não existe sorte. Existe observação. Use zoom, contraste, brilho, inversão, espelho, rotação, tema claro/escuro e seleção de texto quando desconfiar de algo.</p>
+    </article>
+    <article id="ranking">
+      <h2>Investigadores</h2>
+      <p>O apelido cadastrado será usado para exibir o progresso dos jogadores na área Investigadores.</p>
+    </article>
+  </section>
+
+  <div class="logged-panel" id="loggedPanel" hidden>
+    <div>
+      <span>Investigador conectado</span>
+      <strong id="loggedName">---</strong>
+    </div>
+    <a class="btn btn-light" href="riddles/001.html">Começar</a>
+    <button class="btn btn-ghost" type="button" id="logoutBtn">Sair</button>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
