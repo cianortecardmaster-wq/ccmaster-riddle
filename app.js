@@ -1,10 +1,10 @@
 const STORAGE_KEY = 'ccmaster_riddle_users';
 const SESSION_KEY = 'ccmaster_riddle_session';
+const TEMP_SESSION_KEY = 'ccmaster_riddle_session_temp';
 
 const $ = (selector) => document.querySelector(selector);
 
 const authForm = $('#authForm');
-const recoveryForm = $('#recoveryForm');
 const tabLogin = $('#tabLogin');
 const tabRegister = $('#tabRegister');
 const submitLogin = $('#submitLogin');
@@ -13,17 +13,15 @@ const nicknameField = $('#nicknameField');
 const nicknameInput = $('#nickname');
 const emailInput = $('#email');
 const passwordInput = $('#password');
+const rememberDevice = $('#rememberDevice');
 const formMessage = $('#formMessage');
 const showPass = $('#showPass');
-const forgotPasswordBtn = $('#forgotPasswordBtn');
-const backToLoginBtn = $('#backToLoginBtn');
-const recoveryEmailInput = $('#recoveryEmail');
-const newPasswordInput = $('#newPassword');
-const recoveryMessage = $('#recoveryMessage');
-const showNewPass = $('#showNewPass');
 const loggedPanel = $('#loggedPanel');
 const loggedName = $('#loggedName');
+const continueBtn = $('#continueBtn');
 const logoutBtn = $('#logoutBtn');
+const navUser = $('#navUser');
+const navLogout = $('#navLogout');
 const themeToggle = $('#themeToggle');
 
 let currentMode = 'login';
@@ -45,49 +43,47 @@ function normalizeEmail(email) {
 }
 
 function setMessage(text, type = 'normal') {
+  if (!formMessage) return;
   formMessage.textContent = text;
   formMessage.classList.toggle('error', type === 'error');
 }
 
-function setRecoveryMessage(text, type = 'normal') {
-  recoveryMessage.textContent = text;
-  recoveryMessage.classList.toggle('error', type === 'error');
-}
-
 function setMode(mode) {
   currentMode = mode;
-  authForm.classList.remove('hidden');
-  recoveryForm.classList.add('hidden');
   const isRegister = mode === 'register';
 
-  tabLogin.classList.toggle('active', !isRegister);
-  tabLogin.setAttribute('aria-selected', String(!isRegister));
-  tabRegister.classList.toggle('active', isRegister);
-  tabRegister.setAttribute('aria-selected', String(isRegister));
+  tabLogin?.classList.toggle('active', !isRegister);
+  tabLogin?.setAttribute('aria-selected', String(!isRegister));
+  tabRegister?.classList.toggle('active', isRegister);
+  tabRegister?.setAttribute('aria-selected', String(isRegister));
 
-  nicknameField.style.display = isRegister ? 'block' : 'none';
-  forgotPasswordBtn.style.display = isRegister ? 'none' : 'inline-flex';
-  nicknameInput.required = isRegister;
+  if (nicknameField) nicknameField.style.display = isRegister ? 'block' : 'none';
+  if (nicknameInput) nicknameInput.required = isRegister;
   setMessage('');
-  setRecoveryMessage('');
 }
 
-function openRecoveryForm() {
-  authForm.classList.add('hidden');
-  recoveryForm.classList.remove('hidden');
-  recoveryEmailInput.value = normalizeEmail(emailInput.value);
-  newPasswordInput.value = '';
-  setMessage('');
-  setRecoveryMessage('');
-  recoveryEmailInput.focus();
+function makeSession(user) {
+  return {
+    id: user.id,
+    nickname: user.nickname,
+    email: user.email,
+    currentRiddle: user.progress?.currentRiddle || 1
+  };
 }
 
-function closeRecoveryForm() {
-  recoveryForm.classList.add('hidden');
-  authForm.classList.remove('hidden');
-  setRecoveryMessage('');
-  setMessage('');
-  emailInput.focus();
+function startSession(user) {
+  const session = makeSession(user);
+  const shouldRemember = Boolean(rememberDevice?.checked);
+
+  if (shouldRemember) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    sessionStorage.removeItem(TEMP_SESSION_KEY);
+  } else {
+    sessionStorage.setItem(TEMP_SESSION_KEY, JSON.stringify(session));
+    localStorage.removeItem(SESSION_KEY);
+  }
+
+  renderSession();
 }
 
 function registerUser() {
@@ -132,39 +128,6 @@ function registerUser() {
   setMessage(`Cadastro concluído. Bem-vindo, ${nickname}.`);
 }
 
-
-function resetPassword() {
-  const email = normalizeEmail(recoveryEmailInput.value);
-  const newPassword = newPasswordInput.value;
-
-  if (!email || !newPassword) {
-    setRecoveryMessage('Preencha o e-mail e a nova senha.', 'error');
-    return;
-  }
-
-  if (newPassword.length < 4) {
-    setRecoveryMessage('A nova senha precisa ter pelo menos 4 caracteres.', 'error');
-    return;
-  }
-
-  const users = getUsers();
-  const user = users.find((candidate) => candidate.email === email);
-
-  if (!user) {
-    setRecoveryMessage('E-mail não encontrado neste dispositivo.', 'error');
-    return;
-  }
-
-  user.password = newPassword;
-  user.passwordUpdatedAt = new Date().toISOString();
-  saveUsers(users);
-
-  emailInput.value = email;
-  passwordInput.value = newPassword;
-  closeRecoveryForm();
-  setMessage('Senha atualizada. Agora clique em Entrar.');
-}
-
 function loginUser() {
   const email = normalizeEmail(emailInput.value);
   const password = passwordInput.value;
@@ -176,58 +139,77 @@ function loginUser() {
     return;
   }
 
+  user.progress = user.progress || { currentRiddle: 1, solved: [] };
   user.progress.lastAccess = new Date().toISOString();
   saveUsers(users);
   startSession(user);
   setMessage(`Investigador conectado: ${user.nickname}.`);
 }
 
-function startSession(user) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify({
-    id: user.id,
-    nickname: user.nickname,
-    email: user.email,
-    currentRiddle: user.progress?.currentRiddle || 1
-  }));
-  renderSession();
-}
-
 function endSession() {
   localStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(TEMP_SESSION_KEY);
   renderSession();
   setMessage('Sessão encerrada.');
 }
 
 function getSession() {
   try {
-    return JSON.parse(localStorage.getItem(SESSION_KEY));
+    return JSON.parse(localStorage.getItem(SESSION_KEY)) || JSON.parse(sessionStorage.getItem(TEMP_SESSION_KEY));
   } catch {
     return null;
   }
 }
 
+function riddleUrl(number) {
+  return `/riddles/${String(number || 1).padStart(3, '0')}/`;
+}
+
 function renderSession() {
   const session = getSession();
+
   if (!session) {
-    loggedPanel.hidden = true;
+    if (loggedPanel) loggedPanel.hidden = true;
+    if (navUser) {
+      navUser.hidden = true;
+      navUser.textContent = '';
+    }
+    if (navLogout) navLogout.hidden = true;
     return;
   }
 
-  loggedName.textContent = `${session.nickname} — Riddle ${String(session.currentRiddle).padStart(3, '0')}`;
-  loggedPanel.hidden = false;
+  const current = session.currentRiddle || 1;
+
+  if (loggedName) {
+    loggedName.textContent = `${session.nickname} — Riddle ${String(current).padStart(3, '0')}`;
+  }
+
+  if (continueBtn) {
+    continueBtn.href = riddleUrl(current);
+    continueBtn.textContent = current > 1 ? 'Continuar' : 'Começar';
+  }
+
+  if (loggedPanel) loggedPanel.hidden = false;
+
+  if (navUser) {
+    navUser.textContent = `Investigador: ${session.nickname}`;
+    navUser.hidden = false;
+  }
+
+  if (navLogout) navLogout.hidden = false;
 }
 
 function initTheme() {
   const savedTheme = localStorage.getItem('ccmaster_theme');
   if (savedTheme === 'light') {
     document.body.classList.add('light');
-    themeToggle.textContent = '☾';
+    if (themeToggle) themeToggle.textContent = '☾';
   }
 }
 
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light');
-  themeToggle.textContent = isLight ? '☾' : '☼';
+  if (themeToggle) themeToggle.textContent = isLight ? '☾' : '☼';
   localStorage.setItem('ccmaster_theme', isLight ? 'light' : 'dark');
 }
 
@@ -240,14 +222,14 @@ function animateCounters() {
   online.textContent = String(base + variation).padStart(3, '0');
 }
 
-tabLogin.addEventListener('click', () => setMode('login'));
-tabRegister.addEventListener('click', () => setMode('register'));
-submitRegister.addEventListener('click', () => {
+tabLogin?.addEventListener('click', () => setMode('login'));
+tabRegister?.addEventListener('click', () => setMode('register'));
+submitRegister?.addEventListener('click', () => {
   setMode('register');
   registerUser();
 });
 
-authForm.addEventListener('submit', (event) => {
+authForm?.addEventListener('submit', (event) => {
   event.preventDefault();
   if (currentMode === 'register') {
     registerUser();
@@ -256,28 +238,15 @@ authForm.addEventListener('submit', (event) => {
   }
 });
 
-showPass.addEventListener('click', () => {
+showPass?.addEventListener('click', () => {
   const isPassword = passwordInput.type === 'password';
   passwordInput.type = isPassword ? 'text' : 'password';
   showPass.textContent = isPassword ? '●' : '◌';
 });
 
-showNewPass.addEventListener('click', () => {
-  const isPassword = newPasswordInput.type === 'password';
-  newPasswordInput.type = isPassword ? 'text' : 'password';
-  showNewPass.textContent = isPassword ? '●' : '◌';
-});
-
-forgotPasswordBtn.addEventListener('click', openRecoveryForm);
-backToLoginBtn.addEventListener('click', closeRecoveryForm);
-
-recoveryForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  resetPassword();
-});
-
-logoutBtn.addEventListener('click', endSession);
-themeToggle.addEventListener('click', toggleTheme);
+logoutBtn?.addEventListener('click', endSession);
+navLogout?.addEventListener('click', endSession);
+themeToggle?.addEventListener('click', toggleTheme);
 
 setMode('login');
 initTheme();
@@ -287,7 +256,7 @@ setInterval(animateCounters, 8000);
 
 /*
   IMPORTANTE:
-  Este cadastro usa localStorage apenas para protótipo estático no GitHub/Cloudflare Pages.
+  Este cadastro usa localStorage/sessionStorage apenas para protótipo estático no GitHub/Cloudflare Pages.
   Para salvar progresso real entre dispositivos, o ideal é trocar esta camada por Firebase Auth + Firestore
   ou Supabase Auth + Database.
 */
