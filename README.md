@@ -113,3 +113,10 @@ Output directory: _site
 - Login ganhou a opção "Lembrar neste navegador".
 - Botões "Começar/Continuar" e "Sair" ficam dentro do card de login, abaixo do formulário.
 - Os três cards inferiores da home foram removidos.
+
+
+## Ajuste de navegação
+
+- Nome do investigador aparece também nas páginas dos riddles.
+- Menu dos riddles agora inclui Como jogar, Regras e Ranking.
+- Removidos os botões órfãos Começar/Sair que apareciam no final da home.
