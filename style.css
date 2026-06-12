@@ -991,3 +991,33 @@ body.light .logged-panel {
 .logo-fallback {
   display: none !important;
 }
+
+
+/* Logo sem efeito de faixas/glitch na abertura */
+.pixel-burst,
+.logo-stage::before,
+.logo-stage::after,
+.logo-img::before,
+.logo-img::after {
+  display: none !important;
+  content: none !important;
+  animation: none !important;
+}
+
+.logo-stage,
+.logo-img,
+.logo-main {
+  animation: none !important;
+}
+
+.logo-img,
+.logo-main {
+  filter: none;
+  transition: filter .2s ease, opacity .2s ease;
+}
+
+/* No tema claro, inverter a cor da logo via CSS */
+body.light .logo-img,
+body.light .logo-main {
+  filter: invert(1);
+}

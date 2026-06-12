@@ -133,3 +133,9 @@ Output directory: _site
 
 - Removido o texto/fallback "CC MASTER" que podia aparecer junto ou abaixo da logo.
 - A home agora exibe apenas a imagem da logo.
+
+
+## Ajuste da logo
+
+- Removido o efeito de faixas/glitch/pixel-burst ao abrir a página.
+- No modo claro, a logo agora usa `filter: invert(1)` via CSS.
