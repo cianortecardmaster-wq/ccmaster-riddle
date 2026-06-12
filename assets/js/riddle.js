@@ -1,10 +1,12 @@
 const image = document.querySelector('#riddleImage');
 const frame = document.querySelector('#evidenceFrame');
 const themeToggle = document.querySelector('#themeToggle');
+const themeTogglePanel = document.querySelector('#themeTogglePanel');
 const answerForm = document.querySelector('#answerForm');
 const answerInput = document.querySelector('#answerInput');
 const answerMessage = document.querySelector('#answerMessage');
 const nextCaseLink = document.querySelector('#nextCaseLink');
+const opacityRange = document.querySelector('#opacityRange');
 
 const state = {
   zoom: 1,
@@ -13,6 +15,7 @@ const state = {
   invert: 0,
   mirror: 1,
   rotate: 0,
+  opacity: 1,
 };
 
 function clamp(value, min, max) {
@@ -20,12 +23,15 @@ function clamp(value, min, max) {
 }
 
 function applyImageState() {
+  if (!image) return;
   image.style.setProperty('--zoom', state.zoom.toFixed(2));
   image.style.setProperty('--brightness', state.brightness.toFixed(2));
   image.style.setProperty('--contrast', state.contrast.toFixed(2));
   image.style.setProperty('--invert', state.invert);
   image.style.setProperty('--mirror', state.mirror);
   image.style.setProperty('--rotate', `${state.rotate}deg`);
+  image.style.setProperty('--opacity', state.opacity.toFixed(2));
+  if (opacityRange) opacityRange.value = String(Math.round(state.opacity * 100));
 }
 
 function resetImage() {
@@ -35,7 +41,8 @@ function resetImage() {
   state.invert = 0;
   state.mirror = 1;
   state.rotate = 0;
-  frame.classList.remove('noise-on');
+  state.opacity = 1;
+  frame?.classList.remove('noise-on');
   applyImageState();
 }
 
@@ -70,6 +77,11 @@ function saveProgress(riddleNumber) {
   localStorage.setItem(key, JSON.stringify(progress));
 }
 
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  localStorage.setItem('ccmaster_theme', document.body.classList.contains('light') ? 'light' : 'dark');
+}
+
 document.querySelectorAll('[data-action]').forEach((button) => {
   button.addEventListener('click', () => {
     const action = button.dataset.action;
@@ -84,17 +96,20 @@ document.querySelectorAll('[data-action]').forEach((button) => {
     if (action === 'mirror') state.mirror = state.mirror === 1 ? -1 : 1;
     if (action === 'rotate-left') state.rotate -= 90;
     if (action === 'rotate-right') state.rotate += 90;
-    if (action === 'noise') frame.classList.toggle('noise-on');
+    if (action === 'noise') frame?.classList.toggle('noise-on');
     if (action === 'reset') resetImage();
 
     applyImageState();
   });
 });
 
-themeToggle?.addEventListener('click', () => {
-  document.body.classList.toggle('light');
-  localStorage.setItem('ccmaster_theme', document.body.classList.contains('light') ? 'light' : 'dark');
+opacityRange?.addEventListener('input', (event) => {
+  state.opacity = clamp(Number(event.target.value) / 100, 0, 1);
+  applyImageState();
 });
+
+themeToggle?.addEventListener('click', toggleTheme);
+themeTogglePanel?.addEventListener('click', toggleTheme);
 
 if (localStorage.getItem('ccmaster_theme') === 'light') {
   document.body.classList.add('light');

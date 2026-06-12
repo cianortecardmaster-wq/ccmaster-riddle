@@ -33,15 +33,25 @@
     <section class="riddle-card" aria-labelledby="riddle-title">
       <p class="eyebrow">Arquivo de investigação</p>
       <h1 id="riddle-title">{{ page.nome | default: page.title }}</h1>
+
       {% if page.frase %}
       <blockquote class="riddle-phrase">{{ page.frase }}</blockquote>
       {% endif %}
 
       <div class="evidence-area">
         <div class="evidence-frame" id="evidenceFrame">
+          {% if page.imagem_fundo %}
+          <img
+            class="riddle-image riddle-image-back"
+            src="{{ page.imagem_fundo | relative_url }}"
+            alt="Camada secreta do riddle {{ page.numero }}"
+            draggable="false"
+          />
+          {% endif %}
+
           <img
             id="riddleImage"
-            class="riddle-image"
+            class="riddle-image riddle-image-front"
             src="{{ page.imagem | relative_url }}"
             alt="Imagem do riddle {{ page.numero }}"
             draggable="false"
@@ -50,23 +60,42 @@
         </div>
       </div>
 
-      <section class="investigation-tools" aria-label="Ferramentas de investigação">
-        <h2>Painel de investigação</h2>
-        <div class="tool-grid">
-          <button type="button" data-action="zoom-in">Zoom +</button>
-          <button type="button" data-action="zoom-out">Zoom -</button>
-          <button type="button" data-action="brightness-up">Brilho +</button>
-          <button type="button" data-action="brightness-down">Brilho -</button>
-          <button type="button" data-action="contrast-up">Contraste +</button>
-          <button type="button" data-action="contrast-down">Contraste -</button>
-          <button type="button" data-action="invert">Inverter cores</button>
-          <button type="button" data-action="mirror">Espelhar</button>
-          <button type="button" data-action="rotate-left">Girar -90°</button>
-          <button type="button" data-action="rotate-right">Girar +90°</button>
-          <button type="button" data-action="noise">Ruído</button>
-          <button type="button" data-action="reset">Resetar</button>
-        </div>
-        <p class="tool-note">As ferramentas estão disponíveis em todos os casos. Descobrir qual usar faz parte do enigma.</p>
+      <section class="mobile-panels" aria-label="Painéis de interação">
+        <details class="tool-panel" open>
+          <summary>Ferramentas da imagem</summary>
+          <div class="panel-body">
+            <div class="slider-group">
+              <label for="opacityRange">Transparência da camada frontal</label>
+              <input id="opacityRange" type="range" min="0" max="100" step="5" value="100" />
+              <small>100% = imagem da frente totalmente visível. Reduza para investigar o que está atrás.</small>
+            </div>
+
+            <div class="tool-grid">
+              <button type="button" data-action="zoom-in">Zoom +</button>
+              <button type="button" data-action="zoom-out">Zoom -</button>
+              <button type="button" data-action="brightness-up">Brilho +</button>
+              <button type="button" data-action="brightness-down">Brilho -</button>
+              <button type="button" data-action="contrast-up">Contraste +</button>
+              <button type="button" data-action="contrast-down">Contraste -</button>
+              <button type="button" data-action="invert">Inverter cores</button>
+              <button type="button" data-action="mirror">Espelhar</button>
+              <button type="button" data-action="rotate-left">Girar -90°</button>
+              <button type="button" data-action="rotate-right">Girar +90°</button>
+              <button type="button" data-action="noise">Ruído</button>
+              <button type="button" data-action="reset">Resetar</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="tool-panel" open>
+          <summary>Ferramentas da página</summary>
+          <div class="panel-body">
+            <div class="page-tool-grid">
+              <button type="button" id="themeTogglePanel">Alternar tema claro/escuro</button>
+            </div>
+            <p class="tool-note">As ferramentas estão disponíveis em todos os casos. Descobrir qual usar faz parte do enigma.</p>
+          </div>
+        </details>
       </section>
 
       <section class="page-clues" aria-label="Pistas da página">
