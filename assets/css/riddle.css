@@ -138,16 +138,11 @@
   background: var(--riddle-button-bg);
   color: var(--text);
   border-radius: 12px;
-  padding: 11px 14px;
+  padding: 11px 12px;
   font-family: var(--font-ui);
   text-transform: uppercase;
   font-size: .72rem;
   cursor: pointer;
-}
-
-.info-button,
-.tool-button {
-  white-space: nowrap;
 }
 
 .info-button:hover,
@@ -398,15 +393,14 @@ body.light .theme-clue {
 @media (max-width: 540px) {
   .investigator-actions {
     width: 100%;
-    gap: 8px;
   }
 
   .investigator-actions .info-button {
-    flex: 0 0 50px;
+    flex: 1;
   }
 
   .tools-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -428,8 +422,25 @@ body.light .theme-clue {
 }
 
 @media (max-width: 540px) {
+  .info-button::before,
+  .tool-button::before,
   .tools-toggle::before,
   .answer-submit::before {
     margin-right: 6px;
+  }
+}
+
+/* Correção final dos botões do riddle */
+@media (max-width: 720px) {
+  .investigator-actions .info-button {
+    flex: 0 0 50px !important;
+  }
+
+  .tools-sheet .tool-button {
+    flex: 0 0 50px !important;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   }
 }

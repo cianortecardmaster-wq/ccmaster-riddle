@@ -2585,16 +2585,16 @@ body.light .leaderboard-progress-bar {
 }
 
 .info-button[data-info="metadata"] { --icon-url: url('/assets/icones/photo-search.svg'); }
-.info-button[data-info="trail"] { --icon-url: url('/assets/icones/folder-open.svg'); }
-.info-button[data-info="extra"] { --icon-url: url('/assets/icones/key.svg'); }
+.info-button[data-info="trail"] { --icon-url: url('/assets/icones/foodsteps.svg'); }
+.info-button[data-info="extra"] { --icon-url: url('/assets/icones/bulb.svg'); }
 
 .tool-button[data-action="reveal"] { --icon-url: url('/assets/icones/eye-check.svg'); }
-.tool-button[data-action="blend"] { --icon-url: url('/assets/icones/target-arrow.svg'); }
-.tool-button[data-action="isolate"] { --icon-url: url('/assets/icones/search.svg'); }
-.tool-button[data-action="invert"] { --icon-url: url('/assets/icones/eye-off.svg'); }
-.tool-button[data-action="mirror"] { --icon-url: url('/assets/icones/fingerprint.svg'); }
-.tool-button[data-action="rotate"] { --icon-url: url('/assets/icones/target-arrow.svg'); }
-.tool-button[data-action="reset"] { --icon-url: url('/assets/icones/lock-open.svg'); }
+.tool-button[data-action="blend"] { --icon-url: url('/assets/icones/stack.svg'); }
+.tool-button[data-action="isolate"] { --icon-url: url('/assets/icones/focus-centered.svg'); }
+.tool-button[data-action="invert"] { --icon-url: url('/assets/icones/contrast.svg'); }
+.tool-button[data-action="mirror"] { --icon-url: url('/assets/icones/caret-left-right.svg'); }
+.tool-button[data-action="rotate"] { --icon-url: url('/assets/icones/rotate-clockwise-2.svg'); }
+.tool-button[data-action="reset"] { --icon-url: url('/assets/icones/refresh.svg'); }
 .tools-toggle { --icon-url: url('/assets/icones/device-gamepad.svg'); }
 .answer-submit { --icon-url: url('/assets/icones/search.svg'); }
 
@@ -2605,18 +2605,6 @@ body.light .leaderboard-progress-bar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.button-text {
-  display: inline-block;
-}
-
-.info-button::before,
-.tool-button::before {
-  width: 1.34em;
-  height: 1.34em;
-  margin-right: 10px;
-  opacity: 1;
 }
 
 .info-button:hover::before,
@@ -2775,26 +2763,6 @@ body.light .legal-alert {
     height: 1.06em;
   }
 
-  .info-button,
-  .tool-button {
-    min-width: 50px;
-    min-height: 46px;
-    padding: 10px;
-    gap: 0;
-  }
-
-  .info-button .button-text,
-  .tool-button .button-text {
-    display: none;
-  }
-
-  .info-button::before,
-  .tool-button::before {
-    width: 1.72em;
-    height: 1.72em;
-    margin-right: 0;
-  }
-
   .legal-card {
     padding: 20px 16px;
   }
@@ -2819,4 +2787,61 @@ body.light .legal-alert {
 
 [hidden] {
   display: none !important;
+}
+
+/* ===== Correção final: botões do riddle no mobile só com ícones ===== */
+.riddle-card .info-button,
+.riddle-card .tool-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.riddle-card .info-button::before,
+.riddle-card .tool-button::before {
+  width: 1.38em !important;
+  height: 1.38em !important;
+  margin-right: 10px !important;
+  opacity: 1 !important;
+}
+
+.riddle-card .button-text {
+  display: inline-block;
+}
+
+@media (max-width: 720px) {
+  .riddle-card .investigator-actions {
+    gap: 8px !important;
+  }
+
+  .riddle-card .investigator-actions .info-button,
+  .riddle-card .tools-sheet .tool-button {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    font-size: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .riddle-card .investigator-actions .info-button .button-text,
+  .riddle-card .tools-sheet .tool-button .button-text {
+    display: none !important;
+  }
+
+  .riddle-card .investigator-actions .info-button::before,
+  .riddle-card .tools-sheet .tool-button::before {
+    width: 25px !important;
+    height: 25px !important;
+    margin: 0 !important;
+    font-size: 16px !important;
+    flex: 0 0 25px !important;
+  }
+
+  .riddle-card .tools-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
 }
