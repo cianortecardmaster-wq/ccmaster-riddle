@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>2. — CC MASTER</title>
-  <meta name="description" content="Riddle 001 do jogo CC MASTER." />
+  <title>Riddle 002 — CC MASTER</title>
+  <meta name="description" content="Riddle do jogo CC MASTER." />
   <meta name="theme-color" content="#050505" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,73 +35,76 @@
   <main class="riddle-shell">
     <section class="riddle-card" aria-labelledby="riddle-title">
       <p class="eyebrow">Arquivo de investigação</p>
-      <h1 id="riddle-title">2.</h1>
+      <h1 id="riddle-title">Caso 002</h1>
 
-      <blockquote class="riddle-phrase">
-        Este caso ainda está lacrado.
-      </blockquote>
+      <div class="investigator-panel" aria-label="Dados do investigador e pistas do caso">
+        <span class="investigator-name" id="caseInvestigator">Investigador: visitante</span>
+        <div class="investigator-actions">
+          <button
+            class="case-tool"
+            type="button"
+            id="metadataBtn"
+            data-image-name="placeholder.png"
+            data-image-title="Caso lacrado"
+            data-image-description="Arquivo reservado para um caso futuro."
+          >Metadados</button>
+          <button class="case-tool" type="button" id="trailBtn">Rastro</button>
+          <button
+            class="case-tool"
+            type="button"
+            id="extraHintBtn"
+            data-extra-id="extra-002-lacrado"
+            data-extra-title="Dica extra do Caso 002"
+            data-extra-text="Este caso ainda está lacrado."
+          >Extra</button>
+        </div>
+      </div>
 
+      <div class="case-info-box" id="caseInfoBox" hidden>
+        <div class="case-info-header">
+          <strong id="caseInfoTitle">Informação</strong>
+          <button class="case-info-close" type="button" id="caseInfoClose" aria-label="Fechar informação">×</button>
+        </div>
+        <div class="case-info-content" id="caseInfoContent"></div>
+      </div>
+
+      <blockquote class="riddle-phrase">Este caso ainda está lacrado.</blockquote>
       <section class="page-clues page-clues-above" aria-label="Pistas da página">
-        <p>Algumas pistas se escondem na sombra. Outras só aparecem quando a camada da frente deixa de ser absoluta.</p>
-        <p class="theme-clue">Nem toda transparência é fraqueza. Às vezes, ela é a única forma de revelar quem sobrevive na escuridão.</p>
+        <p>Placeholder para o segundo riddle.</p>
       </section>
 
       <div class="evidence-area">
         <div class="evidence-frame" id="evidenceFrame">
           <img
-            class="riddle-image riddle-image-back"
-            src="/assets/riddles/placeholder.svg"
-            alt="Camada secreta do riddle 001"
-            draggable="false"
-          />
-
-          <img
             id="riddleImage"
             class="riddle-image riddle-image-front"
             src="/assets/riddles/placeholder.svg"
-            alt="Imagem frontal do riddle 001"
+            alt="Imagem frontal do riddle 002"
             draggable="false"
           />
-          <div class="noise-layer" id="noiseLayer" aria-hidden="true"></div>
         </div>
       </div>
 
-      <section class="mobile-panels" aria-label="Painéis de interação">
-        <details class="tool-panel" open>
-          <summary>Ferramentas da imagem</summary>
-          <div class="panel-body">
-            <div class="slider-group">
-              <label for="opacityRange">Transparência da camada frontal</label>
-              <input id="opacityRange" type="range" min="0" max="100" step="5" value="100" />
-              <small>100% = imagem da frente totalmente visível. Reduza para investigar o que está atrás.</small>
-            </div>
+      <section class="mobile-panels" aria-label="Painel de ferramentas da imagem">
+        <button class="tools-toggle" type="button" data-tools-toggle aria-expanded="false" aria-controls="toolsPanel">Ferramentas</button>
 
-            <div class="tool-grid">
-              <button type="button" data-action="zoom-in">Zoom +</button>
-              <button type="button" data-action="zoom-out">Zoom -</button>
-              <button type="button" data-action="brightness-up">Brilho +</button>
-              <button type="button" data-action="brightness-down">Brilho -</button>
-              <button type="button" data-action="contrast-up">Contraste +</button>
-              <button type="button" data-action="contrast-down">Contraste -</button>
-              <button type="button" data-action="invert">Inverter cores</button>
-              <button type="button" data-action="mirror">Espelhar</button>
-              <button type="button" data-action="rotate-left">Girar -90°</button>
-              <button type="button" data-action="rotate-right">Girar +90°</button>
-              <button type="button" data-action="noise">Ruído</button>
-              <button type="button" data-action="reset">Resetar</button>
-            </div>
+        <div class="tools-panel" id="toolsPanel">
+          <div class="tools-panel-header">
+            <p class="tools-panel-title">Ferramentas da imagem</p>
           </div>
-        </details>
 
-        <details class="tool-panel">
-          <summary>Ferramentas da página</summary>
-          <div class="panel-body">
-            <div class="page-tool-grid">
-              <button type="button" id="themeTogglePanel">Alternar tema claro/escuro</button>
-            </div>
-            <p class="tool-note">As ferramentas estão disponíveis em todos os casos. Descobrir qual usar faz parte do enigma.</p>
+          <div class="tool-grid">
+            <button type="button" data-action="reveal">Revelar</button>
+            <button type="button" data-action="fuse">Fundir</button>
+            <button type="button" data-action="isolate">Isolar</button>
+            <button type="button" data-action="negative">Negativo</button>
+            <button type="button" data-action="mirror">Espelho</button>
+            <button type="button" data-action="rotate">Girar</button>
+            <button type="button" data-action="reset">Reiniciar</button>
           </div>
-        </details>
+
+          <p class="tool-note">As ferramentas alteram a imagem, mas não contam como dica extra.</p>
+        </div>
       </section>
 
       <section class="answer-panel" aria-label="Enviar resposta">

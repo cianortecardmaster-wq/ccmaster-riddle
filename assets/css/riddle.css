@@ -1,5 +1,10 @@
 .riddle-body {
   min-height: 100vh;
+  padding-bottom: 0;
+}
+
+.riddle-body.tools-open {
+  padding-bottom: 86px;
 }
 
 .riddle-topbar {
@@ -63,6 +68,110 @@
   line-height: .9;
 }
 
+.investigator-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255,255,255,.045);
+}
+
+.investigator-name {
+  color: var(--text);
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  font-size: .82rem;
+  letter-spacing: .04em;
+}
+
+.investigator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.case-tool,
+.case-info-close,
+.tools-toggle,
+.tool-grid button,
+.answer-row button {
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  font-size: .72rem;
+  cursor: pointer;
+}
+
+.case-tool:hover,
+.case-info-close:hover,
+.tools-toggle:hover,
+.tool-grid button:hover,
+.answer-row button:hover,
+.back-home:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.case-tool.used,
+.tool-grid button.active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.case-info-box {
+  margin-top: 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  background: rgba(0,0,0,.32);
+  padding: 14px;
+}
+
+body.light .case-info-box {
+  background: rgba(255,255,255,.42);
+}
+
+.case-info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.case-info-header strong {
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.case-info-close {
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.case-info-row,
+.case-info-message {
+  margin: 8px 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.case-info-row strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
 .riddle-phrase {
   margin: 24px 0 22px;
   padding: 20px;
@@ -76,9 +185,14 @@
 .evidence-area {
   display: grid;
   place-items: center;
+  margin-top: 22px;
 }
 
 .evidence-frame {
+  --front-opacity: 1;
+  --invert: 0;
+  --mirror: 1;
+  --rotate: 0deg;
   width: min(860px, 100%);
   aspect-ratio: 16 / 9;
   overflow: hidden;
@@ -88,6 +202,7 @@
   background: #000;
   display: grid;
   place-items: center;
+  isolation: isolate;
 }
 
 .riddle-image {
@@ -97,6 +212,9 @@
   height: 100%;
   object-fit: contain;
   user-select: none;
+  transform: rotate(var(--rotate)) scaleX(var(--mirror));
+  filter: invert(var(--invert));
+  transition: transform .18s ease, filter .18s ease, opacity .18s ease, mix-blend-mode .18s ease;
 }
 
 .riddle-image-back {
@@ -105,29 +223,15 @@
 
 .riddle-image-front {
   z-index: 2;
-  transform: scale(var(--zoom, 1)) rotate(var(--rotate, 0deg)) scaleX(var(--mirror, 1));
-  filter: brightness(var(--brightness, 1)) contrast(var(--contrast, 1)) invert(var(--invert, 0));
-  opacity: var(--opacity, 1);
-  transition: transform .18s ease, filter .18s ease, opacity .18s ease;
+  opacity: var(--front-opacity);
 }
 
-.noise-layer {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background-image:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,.28) 0 1px, transparent 1px),
-    radial-gradient(circle at 70% 80%, rgba(255,255,255,.20) 0 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.10) 1px, transparent 1px);
-  background-size: 9px 9px, 13px 13px, 5px 5px;
+.evidence-frame.mode-fuse .riddle-image-front {
   mix-blend-mode: screen;
-  opacity: .45;
 }
 
-.evidence-frame.noise-on .noise-layer {
-  display: block;
+.evidence-frame.mode-isolate .riddle-image-front {
+  mix-blend-mode: difference;
 }
 
 .mobile-panels,
@@ -138,94 +242,51 @@
   padding-top: 22px;
 }
 
-.tool-panel {
+.tools-toggle {
+  display: none;
+}
+
+.tools-panel {
   border: 1px solid var(--line);
   border-radius: 18px;
   background: rgba(255,255,255,.04);
-  margin-bottom: 14px;
   overflow: hidden;
 }
 
-.tool-panel summary {
-  list-style: none;
-  cursor: pointer;
-  padding: 16px 18px;
+.tools-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 0;
+}
+
+.tools-panel-title {
+  margin: 0;
   font-family: var(--font-ui);
   font-size: .95rem;
   text-transform: uppercase;
   letter-spacing: .08em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
-.tool-panel summary::-webkit-details-marker {
-  display: none;
-}
-
-.tool-panel summary::after {
-  content: '+';
-  font-size: 1.2rem;
-}
-
-.tool-panel[open] summary::after {
-  content: '–';
-}
-
-.panel-body {
-  padding: 0 18px 18px;
-}
-
-.slider-group {
+.tool-grid {
   display: grid;
-  gap: 8px;
-  margin-bottom: 16px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+  padding: 18px;
 }
 
-.slider-group label {
-  font-family: var(--font-ui);
-  text-transform: uppercase;
-  font-size: .82rem;
+.tool-grid button {
+  min-height: 44px;
 }
 
-.slider-group input[type='range'] {
-  width: 100%;
-}
-
-.slider-group small,
 .tool-note {
+  margin: 0;
+  padding: 0 18px 18px;
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: .86rem;
-}
-
-.tool-grid,
-.page-tool-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.tool-grid button,
-.page-tool-grid button,
-.answer-row button {
-  border: 1px solid var(--line-strong);
-  background: rgba(255,255,255,.08);
-  color: var(--text);
-  border-radius: 12px;
-  padding: 11px 10px;
-  font-family: var(--font-ui);
-  text-transform: uppercase;
-  font-size: .72rem;
-  cursor: pointer;
-}
-
-.tool-grid button:hover,
-.page-tool-grid button:hover,
-.answer-row button:hover,
-.back-home:hover {
-  background: var(--text);
-  color: var(--bg);
+  line-height: 1.45;
 }
 
 .page-clues {
@@ -303,7 +364,14 @@ body.light .theme-clue {
   display: none !important;
 }
 
-@media (max-width: 900px) {
+.page-clues-above {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+  margin-bottom: 22px;
+}
+
+@media (max-width: 980px) {
   .riddle-topbar {
     align-items: flex-start;
     flex-wrap: wrap;
@@ -314,23 +382,85 @@ body.light .theme-clue {
     justify-content: center;
   }
 
-  .tool-grid,
-  .page-tool-grid {
+  .tool-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .riddle-shell {
+    width: min(100% - 20px, 1180px);
+    margin-bottom: 110px;
+  }
+
+  .riddle-card {
+    border-radius: 22px;
+    padding: 16px;
+  }
+
+  .investigator-panel {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .investigator-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .riddle-phrase {
+    padding: 14px;
+    font-size: .92rem;
+  }
+
+  .tools-toggle {
+    display: block;
+    position: fixed;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    width: min(360px, calc(100vw - 28px));
+    min-height: 52px;
+    z-index: 90;
+    border-radius: 999px;
+    box-shadow: 0 18px 50px var(--shadow);
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  .tools-panel {
+    display: none;
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 78px;
+    max-height: min(420px, calc(100dvh - 120px));
+    overflow: auto;
+    z-index: 80;
+    border-radius: 24px;
+    background: rgba(8,8,9,.96);
+    box-shadow: 0 24px 80px var(--shadow);
+    backdrop-filter: blur(14px);
+  }
+
+  body.light .tools-panel {
+    background: rgba(250,250,250,.96);
+  }
+
+  .tools-panel.open {
+    display: block;
+  }
+
+  .tools-panel-title {
+    font-size: .85rem;
+  }
+
+  .tool-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .answer-row {
     flex-direction: column;
   }
-
-  .tool-panel {
-    margin-bottom: 12px;
-  }
-}
-
-.page-clues-above {
-  margin-top: 0;
-  border-top: 0;
-  padding-top: 0;
-  margin-bottom: 22px;
 }

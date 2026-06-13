@@ -1021,3 +1021,86 @@ body.light .logo-img,
 body.light .logo-main {
   filter: invert(1);
 }
+
+/* Ranking local dos investigadores */
+.ranking-card {
+  width: min(620px, 94vw);
+  margin: 18px auto 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255,255,255,.045);
+  text-align: left;
+}
+
+body.light .ranking-card {
+  background: rgba(0,0,0,.045);
+}
+
+.ranking-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ranking-head span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: .74rem;
+}
+
+.ranking-head strong {
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.ranking-list {
+  display: grid;
+  gap: 10px;
+}
+
+.ranking-row {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(0,0,0,.18);
+}
+
+body.light .ranking-row {
+  background: rgba(255,255,255,.38);
+}
+
+.ranking-row strong {
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+}
+
+.ranking-row span,
+.ranking-row small,
+.ranking-empty,
+.ranking-note {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  line-height: 1.45;
+}
+
+.ranking-row span {
+  font-size: .88rem;
+}
+
+.ranking-row small,
+.ranking-empty,
+.ranking-note {
+  font-size: .78rem;
+}
+
+.ranking-note {
+  margin: 12px 0 0;
+}

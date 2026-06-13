@@ -139,3 +139,40 @@ Output directory: _site
 
 - Removido o efeito de faixas/glitch/pixel-burst ao abrir a página.
 - No modo claro, a logo agora usa `filter: invert(1)` via CSS.
+
+## Atualização — ferramentas de investigação
+
+A tela do riddle agora separa três tipos de interação:
+
+### Pistas do caso
+
+Ao lado do nome do investigador aparecem:
+
+- **Metadados**: mostra apenas nome da imagem, título e descrição.
+- **Rastro**: mostra apenas o caminho atual depois do domínio, por exemplo `/riddles/001/`.
+- **Extra**: mostra uma dica oficial, salva o uso no navegador e marca no ranking local.
+
+Para configurar em cada riddle, use no front matter:
+
+```yml
+imagem_nome: "nome-da-imagem.png"
+imagem_titulo: "Título da imagem"
+imagem_descricao: "Descrição curta da imagem."
+dica_extra_id: "extra-001-nome-da-dica"
+dica_extra_titulo: "Dica extra do Caso 001"
+dica_extra: "Texto da dica extra."
+```
+
+### Ferramentas da imagem
+
+As ferramentas visuais agora são:
+
+```txt
+Revelar | Fundir | Isolar | Negativo | Espelho | Girar | Reiniciar
+```
+
+No celular, elas ficam dentro do botão **Ferramentas**, que abre e fecha a aba inferior. Fechar a aba não remove os efeitos; apenas **Reiniciar** limpa tudo.
+
+### Ranking local
+
+A home ganhou um bloco `#ranking` que mostra, neste navegador, quantos casos cada investigador resolveu e quais dicas extras usou. Para ranking real entre dispositivos, ainda será necessário usar Firebase, Supabase ou outro backend.
