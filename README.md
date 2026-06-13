@@ -158,3 +158,10 @@ No modo claro, a mesma imagem é reaproveitada com CSS:
 ```css
 filter: invert(1) brightness(1.10) contrast(.86) saturate(.85);
 ```
+
+
+## Ajuste de altura da home
+
+- Logo menor e mais acima.
+- Texto da introdução unificado na mesma fonte, sem aparência de título gigante.
+- Card de cadastro/login compactado para aparecer inteiro em zoom 100% em telas desktop.
