@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>1. — CC MASTER</title>
-  <meta name="description" content="Riddle do jogo CC MASTER." />
+  <meta name="description" content="Riddle 001 do jogo CC MASTER." />
   <meta name="theme-color" content="#050505" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,12 +15,10 @@
 <body
   class="riddle-body"
   data-riddle="001"
-  data-image-name="001-front.webp"
-  data-image-title="Corredor do convés"
-  data-image-description="Um corredor escuro em um convés, com pouca iluminação e uma presença escondida pela sombra."
-  data-extra-id="extra-001"
-  data-extra-label="Dica extra"
-  data-extra-text="A imagem da frente não precisa continuar absoluta. Use as ferramentas para deixar outra camada aparecer."
+  data-meta-image="001-front.webp"
+  data-meta-title="1."
+  data-meta-description="Um corredor escuro em um convés, com sombras profundas e pouca iluminação."
+  data-extra-hint="Compare a imagem da frente com a de trás. Em alguns casos, o segredo está no que uma camada esconde da outra."
 >
   <div class="noise" aria-hidden="true"></div>
   <div class="scanlines" aria-hidden="true"></div>
@@ -33,11 +31,6 @@
     </div>
     <nav class="nav-actions riddle-nav" aria-label="Menu do riddle">
       <span class="nav-user" id="navUser" hidden></span>
-      <div class="investigator-actions" aria-label="Ferramentas de investigação">
-        <button class="clue-button" type="button" id="metadataButton">Metadados</button>
-        <button class="clue-button" type="button" id="trailButton">Rastro</button>
-        <button class="clue-button" type="button" id="extraButton">Extra</button>
-      </div>
       <button class="nav-logout" type="button" id="navLogout" hidden>Sair</button>
       <a href="/#como-jogar">? <span>Como jogar</span></a>
       <a href="/#regras">▣ <span>Regras</span></a>
@@ -50,47 +43,77 @@
     <section class="riddle-card" aria-labelledby="riddle-title">
       <p class="eyebrow">Arquivo de investigação</p>
       <h1 id="riddle-title">1.</h1>
-
       <blockquote class="riddle-phrase">A escuridão pode esconder o convés, mas não apaga quem carrega a vontade de se tornar o Rei dos Piratas. Deixe a luz atravessar aquilo que está na frente e descubra quem ainda espera no corredor.</blockquote>
+
+      <section class="investigator-panel" aria-label="Painel do investigador">
+        <div class="investigator-line">
+          <div class="investigator-chip">
+            <span>Investigador</span>
+            <strong id="investigatorInline">Visitante</strong>
+          </div>
+          <div class="investigator-actions">
+            <button type="button" class="info-button" data-info="metadata">Metadados</button>
+            <button type="button" class="info-button" data-info="trail">Rastro</button>
+            <button type="button" class="info-button" data-info="extra">Extra</button>
+          </div>
+        </div>
+        <div class="info-box" id="infoBox" hidden>
+          <p class="info-box-title" id="infoBoxTitle"></p>
+          <div class="info-box-content" id="infoBoxContent"></div>
+        </div>
+      </section>
 
       <section class="page-clues page-clues-above" aria-label="Pistas da página">
         <p>Algumas pistas se escondem na sombra. Outras só aparecem quando a camada da frente deixa de ser absoluta.</p>
-
 <p class="theme-clue">Nem toda transparência é fraqueza. Às vezes, ela é a única forma de revelar quem sobrevive na escuridão.</p>
       </section>
 
       <div class="evidence-area">
         <div class="evidence-frame" id="evidenceFrame">
-          <img
-            class="riddle-image riddle-image-back"
-            src="/assets/riddles/001-back.webp"
-            alt="Camada secreta do riddle 001"
-            draggable="false"
-          />
+          <div class="evidence-stack" id="evidenceStack">
+            <img
+              id="riddleImageBack"
+              class="riddle-image riddle-image-back"
+              src="/assets/riddles/001-back.webp"
+              alt="Camada secreta do riddle 001"
+              draggable="false"
+            />
 
-          <img
-            id="riddleImage"
-            class="riddle-image riddle-image-front"
-            src="/assets/riddles/001-front.webp"
-            alt="Imagem do riddle 001"
-            draggable="false"
-          />
+            <img
+              id="riddleImage"
+              class="riddle-image riddle-image-front"
+              src="/assets/riddles/001-front.webp"
+              alt="Imagem do riddle 001"
+              draggable="false"
+            />
+          </div>
         </div>
       </div>
 
-      <section class="image-tools" id="imageTools" aria-label="Ferramentas da imagem">
-        <button class="tools-toggle" type="button" id="toolsToggle" aria-expanded="false" aria-controls="toolsPanel">Ferramentas</button>
-        <div class="tool-panel image-tool-panel" id="toolsPanel">
-          <div class="tool-panel-title">Ferramentas</div>
-          <div class="tool-grid">
-            <button type="button" data-action="reveal" aria-pressed="false">Revelar</button>
-            <button type="button" data-action="fuse" aria-pressed="false">Fundir</button>
-            <button type="button" data-action="isolate" aria-pressed="false">Isolar</button>
-            <button type="button" data-action="invert" aria-pressed="false">Negativo</button>
-            <button type="button" data-action="mirror" aria-pressed="false">Espelho</button>
-            <button type="button" data-action="rotate">Girar</button>
-            <button type="button" data-action="reset">Reiniciar</button>
-          </div>
+      <div class="tools-desktop" aria-label="Ferramentas da imagem">
+        <button type="button" class="tool-button" data-action="reveal">Revelar</button>
+        <button type="button" class="tool-button" data-action="blend">Fundir</button>
+        <button type="button" class="tool-button" data-action="isolate">Isolar</button>
+        <button type="button" class="tool-button" data-action="invert">Negativo</button>
+        <button type="button" class="tool-button" data-action="mirror">Espelho</button>
+        <button type="button" class="tool-button" data-action="rotate">Girar</button>
+        <button type="button" class="tool-button" data-action="reset">Reiniciar</button>
+      </div>
+
+      <button type="button" class="tools-toggle" id="toolsToggle">Ferramentas</button>
+      <section class="tools-sheet" id="toolsSheet" aria-label="Ferramentas da imagem">
+        <div class="tools-sheet-header">
+          <strong>Ferramentas</strong>
+          <span>Toque novamente em Ferramentas para fechar.</span>
+        </div>
+        <div class="tools-grid">
+          <button type="button" class="tool-button" data-action="reveal">Revelar</button>
+          <button type="button" class="tool-button" data-action="blend">Fundir</button>
+          <button type="button" class="tool-button" data-action="isolate">Isolar</button>
+          <button type="button" class="tool-button" data-action="invert">Negativo</button>
+          <button type="button" class="tool-button" data-action="mirror">Espelho</button>
+          <button type="button" class="tool-button" data-action="rotate">Girar</button>
+          <button type="button" class="tool-button" data-action="reset">Reiniciar</button>
         </div>
       </section>
 
@@ -107,14 +130,6 @@
       </section>
     </section>
   </main>
-
-  <dialog class="riddle-dialog" id="infoDialog" aria-labelledby="infoDialogTitle">
-    <div class="dialog-card">
-      <button class="dialog-close" type="button" id="infoDialogClose" aria-label="Fechar">×</button>
-      <h2 id="infoDialogTitle">Informação</h2>
-      <div id="infoDialogContent"></div>
-    </div>
-  </dialog>
 
   <script src="/assets/js/riddle.js"></script>
 </body>
