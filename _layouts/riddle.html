@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#050505" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Fugaz+One&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Courier+Prime:wght@400;700&family=Fugaz+One&family=IBM+Plex+Mono:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ '/style.css' | relative_url }}" />
   <link rel="stylesheet" href="{{ '/assets/css/riddle.css' | relative_url }}" />
 </head>
@@ -24,7 +24,10 @@
   <div class="scanlines" aria-hidden="true"></div>
 
   <header class="riddle-topbar">
-    <a class="back-home" href="{{ '/' | relative_url }}">← Entrada</a>
+    <div class="riddle-brand-group">
+      <a class="back-home" href="{{ '/' | relative_url }}">CC MASTER</a>
+      <span class="archive-kicker">Arquivos confidenciais</span>
+    </div>
     <div class="case-label mini">
       <span>CC MASTER</span>
       <strong>CASO #{{ page.numero }}</strong>
@@ -132,6 +135,12 @@
           <a id="nextCaseLink" class="next-case hidden" href="{{ page.proximo | relative_url }}">Abrir próximo caso →</a>
         </form>
       </section>
+
+      <footer class="dossier-footer" aria-hidden="true">
+        <span class="dossier-code">Dossiê {{ page.numero }}-CCM-2026</span>
+        <span class="dossier-seal">⌖</span>
+        <span class="dossier-motto">Verdade nunca é simples.<br>Apenas escondida.</span>
+      </footer>
     </section>
   </main>
 
