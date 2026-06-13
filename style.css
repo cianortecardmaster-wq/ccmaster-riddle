@@ -2394,6 +2394,8 @@ body.light .leaderboard-progress-bar {
 .icon-target { --icon-url: url('/assets/icones/target-arrow.svg'); }
 .icon-eye-off { --icon-url: url('/assets/icones/eye-off.svg'); }
 .icon-eye-check { --icon-url: url('/assets/icones/eye-check.svg'); }
+.icon-folder-search,
+.nav-icon-folder-search { --icon-url: url('/assets/icones/folder-search.svg'); }
 
 .nav-actions a,
 .nav-logout,
@@ -2597,6 +2599,7 @@ body.light .leaderboard-progress-bar {
 .tool-button[data-action="reset"] { --icon-url: url('/assets/icones/refresh.svg'); }
 .tools-toggle { --icon-url: url('/assets/icones/device-gamepad.svg'); }
 .answer-submit { --icon-url: url('/assets/icones/search.svg'); }
+.tool-button.dossie-tool { --icon-url: url('/assets/icones/folder-search.svg'); }
 
 .info-button,
 .tool-button,
@@ -2843,5 +2846,184 @@ body.light .legal-alert {
 
   .riddle-card .tools-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+
+.riddle-card a.tool-button {
+  text-decoration: none;
+}
+
+.riddle-card .info-button::before,
+.riddle-card .tool-button::before {
+  width: 1.42em !important;
+  height: 1.42em !important;
+  margin-right: 10px !important;
+  opacity: 1 !important;
+}
+
+/* ===== Dossiê e ferramentas: mobile somente ícones ===== */
+@media (max-width: 720px) {
+  .riddle-card .investigator-actions .info-button,
+  .riddle-card .tools-sheet .tool-button {
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .riddle-card .investigator-actions .info-button .button-text,
+  .riddle-card .tools-sheet .tool-button .button-text {
+    display: none !important;
+  }
+
+  .riddle-card .investigator-actions .info-button::before,
+  .riddle-card .tools-sheet .tool-button::before {
+    width: 26px !important;
+    height: 26px !important;
+    margin: 0 !important;
+    flex: 0 0 26px !important;
+  }
+
+  .riddle-card .tools-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+
+
+/* ===== Página Dossiê ===== */
+.dossie-shell {
+  width: min(1040px, 94vw);
+}
+
+.dossie-intro {
+  display: grid;
+  gap: 12px;
+}
+
+.dossie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.dossie-case {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--riddle-section-bg);
+  padding: 18px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dossie-case::before {
+  content: "";
+  position: absolute;
+  inset: 12px 12px auto auto;
+  width: 34px;
+  height: 34px;
+  background: currentColor;
+  opacity: .18;
+  -webkit-mask: var(--case-icon) center / contain no-repeat;
+  mask: var(--case-icon) center / contain no-repeat;
+}
+
+.dossie-case.is-open {
+  --case-icon: url('/assets/icones/folder-search.svg');
+}
+
+.dossie-case.is-locked {
+  --case-icon: url('/assets/icones/lock.svg');
+  opacity: .72;
+}
+
+.dossie-case-kicker {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: .72rem;
+}
+
+.dossie-case h2 {
+  margin: 0;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  letter-spacing: .06em;
+}
+
+.dossie-case-status {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  line-height: 1.45;
+}
+
+.dossie-case-action {
+  margin-top: auto;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 10px 12px;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dossie-case-action::before {
+  content: "";
+  width: 1.15em;
+  height: 1.15em;
+  background: currentColor;
+  -webkit-mask: url('/assets/icones/folder-search.svg') center / contain no-repeat;
+  mask: url('/assets/icones/folder-search.svg') center / contain no-repeat;
+}
+
+.dossie-case-action:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.dossie-case-locked {
+  margin-top: auto;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.dossie-status {
+  margin-top: 18px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 540px) {
+  .dossie-grid {
+    grid-template-columns: 1fr;
   }
 }

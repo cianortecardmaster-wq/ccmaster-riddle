@@ -90,9 +90,10 @@
         <button type="button" class="tool-button" data-action="mirror" aria-label="Espelho" title="Espelho"><span class="button-text">Espelho</span></button>
         <button type="button" class="tool-button" data-action="rotate" aria-label="Girar" title="Girar"><span class="button-text">Girar</span></button>
         <button type="button" class="tool-button" data-action="reset" aria-label="Reiniciar" title="Reiniciar"><span class="button-text">Reiniciar</span></button>
+        <a class="tool-button dossie-tool" href="/dossie/" aria-label="Dossiê" title="Dossiê"><span class="button-text">Dossiê</span></a>
       </div>
 
-      <button type="button" class="tools-toggle" id="toolsToggle">Ferramentas</button>
+      <button type="button" class="tools-toggle" id="toolsToggle" aria-label="Ferramentas" title="Ferramentas"><span class="button-text">Ferramentas</span></button>
       <section class="tools-sheet" id="toolsSheet" aria-label="Ferramentas da imagem">
         <div class="tools-sheet-header">
           <strong>Ferramentas</strong>
@@ -106,6 +107,7 @@
           <button type="button" class="tool-button" data-action="mirror" aria-label="Espelho" title="Espelho"><span class="button-text">Espelho</span></button>
           <button type="button" class="tool-button" data-action="rotate" aria-label="Girar" title="Girar"><span class="button-text">Girar</span></button>
           <button type="button" class="tool-button" data-action="reset" aria-label="Reiniciar" title="Reiniciar"><span class="button-text">Reiniciar</span></button>
+          <a class="tool-button dossie-tool" href="/dossie/" aria-label="Dossiê" title="Dossiê"><span class="button-text">Dossiê</span></a>
         </div>
       </section>
 
@@ -114,7 +116,7 @@
           <label for="answerInput">Resposta</label>
           <div class="answer-row">
             <input id="answerInput" name="answer" type="text" placeholder="Digite sua resposta" autocomplete="off" required />
-            <button type="submit" class="answer-submit">Investigar</button>
+            <button type="submit" class="answer-submit" aria-label="Investigar resposta" title="Investigar resposta"><span class="button-text">Investigar</span></button>
           </div>
           <p id="answerMessage" class="answer-message" aria-live="polite"></p>
           <a id="nextCaseLink" class="next-case nav-icon nav-icon-folder hidden" href="/riddles/003/">Abrir próximo caso →</a>
