@@ -150,6 +150,10 @@ grant select, insert, update on public.profiles to authenticated;
 grant select, insert, update on public.progress to authenticated;
 grant select, insert on public.attempts to authenticated;
 
+-- Remove a função antiga antes de recriar.
+-- Isso é necessário quando o formato de retorno mudou.
+drop function if exists public.get_public_leaderboard();
+
 create or replace function public.get_public_leaderboard()
 returns table (
   user_id uuid,
