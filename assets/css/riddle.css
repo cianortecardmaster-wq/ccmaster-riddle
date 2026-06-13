@@ -21,7 +21,7 @@
   font-family: var(--font-ui);
   font-size: .82rem;
   text-transform: uppercase;
-  background: rgba(0,0,0,.22);
+  background: var(--riddle-input-bg);
 }
 
 .case-label.mini {
@@ -35,7 +35,7 @@
   min-height: 40px;
   color: var(--text);
   border: 1px solid var(--line);
-  background: rgba(0,0,0,.18);
+  background: var(--riddle-chip-bg);
   text-decoration: none;
   font-family: var(--font-ui);
   text-transform: uppercase;
@@ -57,7 +57,7 @@
 
 .riddle-card {
   border: 1px solid var(--line);
-  background: var(--panel);
+  background: var(--riddle-card-bg);
   box-shadow: 0 22px 90px var(--shadow);
   border-radius: 28px;
   padding: clamp(18px, 3vw, 42px);
@@ -85,7 +85,7 @@
   margin: 24px 0 18px;
   padding: 20px;
   border-left: 3px solid var(--line-strong);
-  background: rgba(255,255,255,.045);
+  background: var(--riddle-section-bg);
   font-family: var(--font-mono);
   font-size: clamp(1rem, 2vw, 1.25rem);
   line-height: 1.6;
@@ -109,7 +109,7 @@
 
 .investigator-chip {
   border: 1px solid var(--line);
-  background: rgba(255,255,255,.04);
+  background: var(--riddle-chip-bg);
   border-radius: 16px;
   padding: 12px 14px;
   display: flex;
@@ -135,7 +135,7 @@
 .tools-toggle,
 .answer-row button {
   border: 1px solid var(--line-strong);
-  background: rgba(255,255,255,.08);
+  background: var(--riddle-button-bg);
   color: var(--text);
   border-radius: 12px;
   padding: 11px 12px;
@@ -170,7 +170,7 @@
 .info-box {
   margin-top: 14px;
   border: 1px solid var(--line);
-  background: rgba(255,255,255,.04);
+  background: var(--riddle-chip-bg);
   border-radius: 18px;
   padding: 16px 18px;
 }
@@ -315,7 +315,7 @@ body.light .theme-clue {
   min-width: 0;
   border: 1px solid var(--line-strong);
   border-radius: 14px;
-  background: rgba(0,0,0,.22);
+  background: var(--riddle-input-bg);
   color: var(--text);
   font: 1rem var(--font-mono);
   padding: 14px 16px;
@@ -402,33 +402,4 @@ body.light .theme-clue {
   .tools-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
-
-/* Ajuste visual: o card do riddle deve ficar realmente preto, não cinza/translúcido */
-.riddle-body .riddle-card {
-  background: #000 !important;
-  box-shadow: 0 22px 90px rgba(0, 0, 0, .86);
-  backdrop-filter: none;
-}
-
-.riddle-body .riddle-phrase,
-.riddle-body .investigator-chip,
-.riddle-body .info-box,
-.riddle-body .answer-row input {
-  background: #000 !important;
-}
-
-.riddle-body .info-button,
-.riddle-body .tool-button,
-.riddle-body .tools-toggle,
-.riddle-body .answer-row button {
-  background: #000 !important;
-}
-
-.riddle-body .info-button:hover,
-.riddle-body .tool-button:hover,
-.riddle-body .tools-toggle:hover,
-.riddle-body .answer-row button:hover {
-  background: var(--text) !important;
-  color: var(--bg) !important;
 }
