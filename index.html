@@ -26,7 +26,7 @@
       <button class="nav-logout" type="button" id="navLogout" hidden>Sair</button>
       <a href="/como-jogar/">? <span>Como jogar</span></a>
       <a href="/regras/">▣ <span>Regras</span></a>
-      <a href="#ranking">♜ <span>Ranking</span></a>
+      <a href="/ranking/">♜ <span>Ranking</span></a>
       <a href="/politica-de-privacidade/">⚖ <span>Privacidade</span></a>
       <button class="theme-toggle" type="button" id="themeToggle" aria-label="Alternar tema">☼</button>
     </nav>
@@ -136,32 +136,23 @@
         </div>
       </section>
 
-      <section class="ranking-card" id="ranking" aria-label="Ranking dos investigadores">
+      <section class="ranking-card leaderboard-home-card" id="ranking" aria-label="Top 3 investigadores">
         <div class="ranking-title-wrap">
           <span class="auth-title-icon">♜</span>
-          <p class="auth-card-title">Ranking na nuvem</p>
+          <p class="auth-card-title">Top 3 investigadores</p>
         </div>
-        <p class="auth-card-helper">Ranking dos investigadores salvo na nuvem. Não mostra e-mail nem respostas.</p>
-        <div class="ranking-table-wrap">
-          <table class="ranking-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Investigador</th>
-                <th>Resolvidos</th>
-                <th>Último avanço</th>
-              </tr>
-            </thead>
-            <tbody id="rankingBody"></tbody>
-          </table>
-        </div>
-        <p class="ranking-empty" id="emptyRanking">Nenhum investigador com progresso salvo ainda.</p>
+        <p class="auth-card-helper">
+          Os 3 primeiros do ranking. Mais casos resolvidos fica na frente; em empate, menos dicas extras vence.
+        </p>
+        <div data-leaderboard="top" data-limit="3" data-empty="Ainda não há investigadores no ranking."></div>
+        <a class="ranking-full-link" href="/ranking/">Ver ranking completo →</a>
       </section>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/supabase-client.js"></script>
+  <script src="/assets/js/leaderboard.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

@@ -237,58 +237,9 @@ function formatDate(value) {
 }
 
 async function renderRanking() {
-  if (!rankingBody || !emptyRanking) return;
-
-  rankingBody.innerHTML = '';
-
-  if (!supabaseClient) {
-    emptyRanking.hidden = false;
-    emptyRanking.textContent = 'Supabase não carregou. Recarregue a página.';
-    return;
+  if (window.CCMasterLeaderboard?.renderAll) {
+    await window.CCMasterLeaderboard.renderAll();
   }
-
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (!session) {
-    emptyRanking.hidden = false;
-    emptyRanking.textContent = 'Entre para ver o ranking salvo na nuvem.';
-    return;
-  }
-
-  const { data, error } = await supabaseClient.rpc('get_public_leaderboard');
-
-  if (error) {
-    emptyRanking.hidden = false;
-    emptyRanking.textContent = 'Não foi possível carregar o ranking agora.';
-    return;
-  }
-
-  const ranking = Array.isArray(data) ? data.filter((entry) => Number(entry.solved_count) > 0) : [];
-
-  if (!ranking.length) {
-    emptyRanking.hidden = false;
-    emptyRanking.textContent = 'Nenhum investigador com progresso salvo ainda.';
-    return;
-  }
-
-  emptyRanking.hidden = true;
-
-  ranking.slice(0, 30).forEach((entry, index) => {
-    const row = document.createElement('tr');
-    const values = [
-      index + 1,
-      entry.nickname || 'Investigador',
-      `${entry.solved_count || 0}/${TOTAL_RIDDLES}`,
-      formatDate(entry.last_solved_at),
-    ];
-
-    values.forEach((value) => {
-      const cell = document.createElement('td');
-      cell.textContent = value;
-      row.appendChild(cell);
-    });
-
-    rankingBody.appendChild(row);
-  });
 }
 
 function animateCounters() {

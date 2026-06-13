@@ -34,7 +34,7 @@
       <button class="nav-logout" type="button" id="navLogout" hidden>Sair</button>
       <a href="/como-jogar/">? <span>Como jogar</span></a>
       <a href="/regras/">▣ <span>Regras</span></a>
-      <a href="/#ranking">♜ <span>Ranking</span></a>
+      <a href="/ranking/">♜ <span>Ranking</span></a>
       <a href="/politica-de-privacidade/">⚖ <span>Privacidade</span></a>
       <button class="theme-toggle" type="button" id="themeToggle" aria-label="Alternar tema">☼</button>
     </nav>
@@ -129,11 +129,22 @@
           <a id="nextCaseLink" class="next-case hidden" href="/riddles/002/">Abrir próximo caso →</a>
         </form>
       </section>
+
+      <section class="leaderboard-card leaderboard-riddle-card" aria-label="Top 3 investigadores">
+        <div class="ranking-title-wrap">
+          <span class="auth-title-icon">♜</span>
+          <p class="auth-card-title">Top 3 investigadores</p>
+        </div>
+        <p class="auth-card-helper">Só aparecem os 3 primeiros aqui. O ranking completo fica na página de ranking.</p>
+        <div data-leaderboard="top" data-limit="3" data-empty="Ainda não há investigadores no ranking."></div>
+        <a class="ranking-full-link" href="/ranking/">Ver ranking completo →</a>
+      </section>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/supabase-client.js"></script>
+  <script src="/assets/js/leaderboard.js"></script>
   <script src="/assets/js/riddle.js"></script>
 </body>
 </html>

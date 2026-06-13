@@ -260,6 +260,8 @@ async function syncCloudHintUsage() {
     attempts_count: Number(current?.attempts_count || 0),
     updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id,riddle_id' });
+
+  window.CCMasterLeaderboard?.renderAll?.();
 }
 
 function markExtraHintAsUsed() {
@@ -550,6 +552,7 @@ answerForm?.addEventListener('submit', async (event) => {
     answerMessage.className = 'answer-message ok';
     nextCaseLink.classList.remove('hidden');
     await renderRiddleSession();
+    await window.CCMasterLeaderboard?.renderAll?.();
   } else {
     answerMessage.textContent = 'Resposta recusada. Tentativa registrada.';
     answerMessage.className = 'answer-message error';
@@ -560,6 +563,7 @@ if (supabaseClient) {
   supabaseClient.auth.onAuthStateChange(async () => {
     await renderRiddleSession();
     await loadSolvedState();
+    await window.CCMasterLeaderboard?.renderAll?.();
   });
 }
 
@@ -568,3 +572,4 @@ renderInfoState();
 applyImageState();
 setToolsOpen(false);
 loadSolvedState();
+window.CCMasterLeaderboard?.renderAll?.();

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ranking — CC MASTER</title>
+  <meta name="description" content="Ranking geral dos investigadores do CC MASTER Riddles, com porcentagem de progresso de 0 a 100." />
+  <meta name="theme-color" content="#050505" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Fugaz+One&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="legal-body ranking-page-body">
+  <div class="noise" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="back-home legal-back" href="/">← Entrada</a>
+    <div class="case-label" aria-label="Identificação da página">
+      <span>CC MASTER</span>
+      <strong>RANKING</strong>
+    </div>
+
+    <nav class="nav-actions" aria-label="Menu principal">
+      <span class="nav-user" id="navUser" hidden></span>
+      <button class="nav-logout" type="button" id="navLogout" hidden>Sair</button>
+      <a href="/">⌂ <span>Início</span></a>
+      <a href="/como-jogar/">? <span>Como jogar</span></a>
+      <a href="/regras/">▣ <span>Regras</span></a>
+      <a href="/politica-de-privacidade/">⚖ <span>Privacidade</span></a>
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Alternar tema">☼</button>
+    </nav>
+  </header>
+
+  <main class="legal-shell ranking-shell">
+    <article class="legal-card ranking-card-full" aria-labelledby="ranking-title">
+      <p class="legal-kicker">Quadro de investigadores</p>
+      <h1 id="ranking-title">Ranking geral</h1>
+      <p class="legal-updated">A porcentagem mostra o avanço de cada jogador entre 0 e 100% dos riddles.</p>
+
+      <section class="legal-alert" aria-label="Como o ranking funciona">
+        <p>
+          O ranking considera primeiro quem resolveu mais riddles. Em caso de empate, fica na frente quem viu menos dicas extras.
+          Respostas erradas não interferem no ranking.
+        </p>
+      </section>
+
+      <section class="ranking-summary-grid" aria-label="Resumo das regras do ranking">
+        <div>
+          <strong>Progresso</strong>
+          <span>Mais riddles resolvidos sobe no ranking.</span>
+        </div>
+        <div>
+          <strong>Desempate</strong>
+          <span>Menos dicas extras vistas fica na frente.</span>
+        </div>
+        <div>
+          <strong>Tentativas</strong>
+          <span>Respostas erradas não tiram posição.</span>
+        </div>
+      </section>
+
+      <div data-leaderboard="full" data-empty="Ainda não há investigadores competindo."></div>
+
+      <footer class="legal-footer">
+        <a class="btn btn-light" href="/riddles/001/">Entrar no primeiro caso</a>
+        <a class="btn btn-ghost" href="/regras/">Ver regras</a>
+      </footer>
+    </article>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-client.js"></script>
+  <script src="/assets/js/leaderboard.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
