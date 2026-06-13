@@ -1584,3 +1584,81 @@ body.light .btn-ghost {
     font-size: .78rem;
   }
 }
+
+/* ===== Fundo investigativo por imagem ===== */
+body {
+  background: var(--bg) !important;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background-image: url('/assets/bg-investigacao-dark.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: .96;
+  filter: none;
+  transform: translateZ(0);
+}
+
+body.light::before {
+  background-image: url('/assets/bg-investigacao-dark.png');
+  filter: invert(1) brightness(1.10) contrast(.86) saturate(.85);
+  opacity: .94;
+}
+
+body::after {
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, transparent 28%, rgba(0,0,0,.62) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.14), rgba(0,0,0,.36)) !important;
+}
+
+body.light::after {
+  background:
+    radial-gradient(circle at center, transparent 34%, rgba(255,255,255,.12) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.42)) !important;
+}
+
+.noise {
+  opacity: .055 !important;
+}
+
+body.light .noise {
+  opacity: .035 !important;
+}
+
+.scanlines {
+  opacity: .055 !important;
+}
+
+body.light .scanlines {
+  opacity: .025 !important;
+}
+
+/* Remove os elementos de fundo gerados em CSS, pois agora estão dentro da imagem */
+.page-shell::before,
+.page-shell::after {
+  display: none !important;
+}
+
+/* Mantém a leitura da home por cima do background */
+.topbar,
+.page-shell,
+.riddle-topbar,
+.riddle-shell {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 760px) {
+  body::before,
+  body.light::before {
+    background-position: center top;
+  }
+}

@@ -147,3 +147,14 @@ Output directory: _site
 - Card de login agora tem cabeçalho “Identificação do Investigador”.
 - Navegação superior e riddles ficaram mais consistentes com o novo visual.
 - Mantida compatibilidade desktop e mobile.
+
+
+## Fundo investigativo
+
+O arquivo `/assets/bg-investigacao-dark.png` agora é usado como fundo principal do site.
+
+No modo claro, a mesma imagem é reaproveitada com CSS:
+
+```css
+filter: invert(1) brightness(1.10) contrast(.86) saturate(.85);
+```
