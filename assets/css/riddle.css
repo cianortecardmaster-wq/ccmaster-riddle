@@ -1,10 +1,5 @@
 .riddle-body {
   min-height: 100vh;
-  padding-bottom: 0;
-}
-
-.riddle-body.tools-open {
-  padding-bottom: 86px;
 }
 
 .riddle-topbar {
@@ -68,110 +63,6 @@
   line-height: .9;
 }
 
-.investigator-panel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 18px 0 0;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: rgba(255,255,255,.045);
-}
-
-.investigator-name {
-  color: var(--text);
-  font-family: var(--font-ui);
-  text-transform: uppercase;
-  font-size: .82rem;
-  letter-spacing: .04em;
-}
-
-.investigator-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.case-tool,
-.case-info-close,
-.tools-toggle,
-.tool-grid button,
-.answer-row button {
-  border: 1px solid var(--line-strong);
-  background: rgba(255,255,255,.08);
-  color: var(--text);
-  border-radius: 12px;
-  padding: 10px 12px;
-  font-family: var(--font-ui);
-  text-transform: uppercase;
-  font-size: .72rem;
-  cursor: pointer;
-}
-
-.case-tool:hover,
-.case-info-close:hover,
-.tools-toggle:hover,
-.tool-grid button:hover,
-.answer-row button:hover,
-.back-home:hover {
-  background: var(--text);
-  color: var(--bg);
-}
-
-.case-tool.used,
-.tool-grid button.active {
-  background: var(--text);
-  color: var(--bg);
-}
-
-.case-info-box {
-  margin-top: 12px;
-  border: 1px solid var(--line-strong);
-  border-radius: 18px;
-  background: rgba(0,0,0,.32);
-  padding: 14px;
-}
-
-body.light .case-info-box {
-  background: rgba(255,255,255,.42);
-}
-
-.case-info-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.case-info-header strong {
-  font-family: var(--font-ui);
-  text-transform: uppercase;
-  letter-spacing: .05em;
-}
-
-.case-info-close {
-  padding: 6px 10px;
-  border-radius: 999px;
-}
-
-.case-info-row,
-.case-info-message {
-  margin: 8px 0;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-.case-info-row strong {
-  color: var(--text);
-  font-weight: 700;
-}
-
 .riddle-phrase {
   margin: 24px 0 22px;
   padding: 20px;
@@ -185,14 +76,9 @@ body.light .case-info-box {
 .evidence-area {
   display: grid;
   place-items: center;
-  margin-top: 22px;
 }
 
 .evidence-frame {
-  --front-opacity: 1;
-  --invert: 0;
-  --mirror: 1;
-  --rotate: 0deg;
   width: min(860px, 100%);
   aspect-ratio: 16 / 9;
   overflow: hidden;
@@ -202,7 +88,6 @@ body.light .case-info-box {
   background: #000;
   display: grid;
   place-items: center;
-  isolation: isolate;
 }
 
 .riddle-image {
@@ -212,9 +97,6 @@ body.light .case-info-box {
   height: 100%;
   object-fit: contain;
   user-select: none;
-  transform: rotate(var(--rotate)) scaleX(var(--mirror));
-  filter: invert(var(--invert));
-  transition: transform .18s ease, filter .18s ease, opacity .18s ease, mix-blend-mode .18s ease;
 }
 
 .riddle-image-back {
@@ -223,15 +105,29 @@ body.light .case-info-box {
 
 .riddle-image-front {
   z-index: 2;
-  opacity: var(--front-opacity);
+  transform: scale(var(--zoom, 1)) rotate(var(--rotate, 0deg)) scaleX(var(--mirror, 1));
+  filter: brightness(var(--brightness, 1)) contrast(var(--contrast, 1)) invert(var(--invert, 0));
+  opacity: var(--opacity, 1);
+  transition: transform .18s ease, filter .18s ease, opacity .18s ease;
 }
 
-.evidence-frame.mode-fuse .riddle-image-front {
+.noise-layer {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.28) 0 1px, transparent 1px),
+    radial-gradient(circle at 70% 80%, rgba(255,255,255,.20) 0 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.10) 1px, transparent 1px);
+  background-size: 9px 9px, 13px 13px, 5px 5px;
   mix-blend-mode: screen;
+  opacity: .45;
 }
 
-.evidence-frame.mode-isolate .riddle-image-front {
-  mix-blend-mode: difference;
+.evidence-frame.noise-on .noise-layer {
+  display: block;
 }
 
 .mobile-panels,
@@ -242,51 +138,94 @@ body.light .case-info-box {
   padding-top: 22px;
 }
 
-.tools-toggle {
-  display: none;
-}
-
-.tools-panel {
+.tool-panel {
   border: 1px solid var(--line);
   border-radius: 18px;
   background: rgba(255,255,255,.04);
+  margin-bottom: 14px;
   overflow: hidden;
 }
 
-.tools-panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 16px 18px 0;
-}
-
-.tools-panel-title {
-  margin: 0;
+.tool-panel summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 18px;
   font-family: var(--font-ui);
   font-size: .95rem;
   text-transform: uppercase;
   letter-spacing: .08em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.tool-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 10px;
-  padding: 18px;
+.tool-panel summary::-webkit-details-marker {
+  display: none;
 }
 
-.tool-grid button {
-  min-height: 44px;
+.tool-panel summary::after {
+  content: '+';
+  font-size: 1.2rem;
 }
 
-.tool-note {
-  margin: 0;
+.tool-panel[open] summary::after {
+  content: '–';
+}
+
+.panel-body {
   padding: 0 18px 18px;
+}
+
+.slider-group {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.slider-group label {
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  font-size: .82rem;
+}
+
+.slider-group input[type='range'] {
+  width: 100%;
+}
+
+.slider-group small,
+.tool-note {
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: .86rem;
-  line-height: 1.45;
+}
+
+.tool-grid,
+.page-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tool-grid button,
+.page-tool-grid button,
+.answer-row button {
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 11px 10px;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  font-size: .72rem;
+  cursor: pointer;
+}
+
+.tool-grid button:hover,
+.page-tool-grid button:hover,
+.answer-row button:hover,
+.back-home:hover {
+  background: var(--text);
+  color: var(--bg);
 }
 
 .page-clues {
@@ -364,14 +303,7 @@ body.light .theme-clue {
   display: none !important;
 }
 
-.page-clues-above {
-  margin-top: 0;
-  border-top: 0;
-  padding-top: 0;
-  margin-bottom: 22px;
-}
-
-@media (max-width: 980px) {
+@media (max-width: 900px) {
   .riddle-topbar {
     align-items: flex-start;
     flex-wrap: wrap;
@@ -382,85 +314,143 @@ body.light .theme-clue {
     justify-content: center;
   }
 
-  .tool-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 720px) {
-  .riddle-shell {
-    width: min(100% - 20px, 1180px);
-    margin-bottom: 110px;
-  }
-
-  .riddle-card {
-    border-radius: 22px;
-    padding: 16px;
-  }
-
-  .investigator-panel {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .investigator-actions {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .riddle-phrase {
-    padding: 14px;
-    font-size: .92rem;
-  }
-
-  .tools-toggle {
-    display: block;
-    position: fixed;
-    left: 50%;
-    bottom: 14px;
-    transform: translateX(-50%);
-    width: min(360px, calc(100vw - 28px));
-    min-height: 52px;
-    z-index: 90;
-    border-radius: 999px;
-    box-shadow: 0 18px 50px var(--shadow);
-    background: var(--text);
-    color: var(--bg);
-  }
-
-  .tools-panel {
-    display: none;
-    position: fixed;
-    left: 10px;
-    right: 10px;
-    bottom: 78px;
-    max-height: min(420px, calc(100dvh - 120px));
-    overflow: auto;
-    z-index: 80;
-    border-radius: 24px;
-    background: rgba(8,8,9,.96);
-    box-shadow: 0 24px 80px var(--shadow);
-    backdrop-filter: blur(14px);
-  }
-
-  body.light .tools-panel {
-    background: rgba(250,250,250,.96);
-  }
-
-  .tools-panel.open {
-    display: block;
-  }
-
-  .tools-panel-title {
-    font-size: .85rem;
-  }
-
-  .tool-grid {
+  .tool-grid,
+  .page-tool-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .answer-row {
     flex-direction: column;
+  }
+
+  .tool-panel {
+    margin-bottom: 12px;
+  }
+}
+
+.page-clues-above {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+  margin-bottom: 22px;
+}
+
+
+/* ===== Ajuste visual dos riddles para combinar com a home ===== */
+.riddle-topbar {
+  width: min(1480px, 94vw);
+  margin: 0 auto;
+  padding-top: 18px;
+}
+
+.back-home,
+.riddle-nav a,
+.riddle-nav .theme-toggle,
+.riddle-nav .nav-user,
+.riddle-nav .nav-logout {
+  min-height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+body.light .back-home,
+body.light .riddle-nav a,
+body.light .riddle-nav .theme-toggle,
+body.light .riddle-nav .nav-user,
+body.light .riddle-nav .nav-logout {
+  background: rgba(255,255,255,.28);
+  border-color: rgba(0,0,0,.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.85);
+}
+
+.riddle-shell {
+  width: min(980px, calc(100% - 28px));
+}
+
+.riddle-card {
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(6,6,7,.58);
+  border-color: rgba(255,255,255,.15);
+}
+
+body.light .riddle-card {
+  background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.62)), rgba(255,255,255,.78);
+  border-color: rgba(0,0,0,.12);
+}
+
+.riddle-card h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  line-height: 1;
+}
+
+.riddle-phrase {
+  border-left: 0;
+  border-radius: 16px;
+  background: rgba(255,255,255,.045);
+}
+
+body.light .riddle-phrase {
+  background: rgba(255,255,255,.48);
+}
+
+.evidence-frame {
+  border-radius: 16px;
+}
+
+.tool-panel,
+.answer-panel,
+.page-clues {
+  border-radius: 16px;
+}
+
+.tool-panel {
+  background: rgba(255,255,255,.03);
+}
+
+body.light .tool-panel {
+  background: rgba(255,255,255,.42);
+}
+
+.tool-grid button,
+.page-tool-grid button,
+.answer-row button,
+.answer-row input {
+  border-radius: 0;
+}
+
+.answer-row input {
+  background: rgba(0,0,0,.18);
+}
+
+body.light .answer-row input {
+  background: rgba(255,255,255,.55);
+}
+
+@media (max-width: 900px) {
+  .riddle-topbar {
+    width: min(96vw, 96vw);
+  }
+
+  .riddle-nav {
+    gap: 8px;
+  }
+
+  .back-home,
+  .riddle-nav a,
+  .riddle-nav .theme-toggle,
+  .riddle-nav .nav-user,
+  .riddle-nav .nav-logout {
+    min-height: 38px;
+    font-size: .7rem;
+    padding: 8px 11px;
   }
 }

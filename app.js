@@ -1,7 +1,6 @@
 const STORAGE_KEY = 'ccmaster_riddle_users';
 const SESSION_KEY = 'ccmaster_riddle_session';
 const TEMP_SESSION_KEY = 'ccmaster_riddle_session_temp';
-const EXTRA_HINTS_KEY = 'ccmaster_riddle_extra_hints';
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -24,7 +23,6 @@ const logoutBtn = $('#logoutBtn');
 const navUser = $('#navUser');
 const navLogout = $('#navLogout');
 const themeToggle = $('#themeToggle');
-const rankingList = $('#rankingList');
 
 let currentMode = 'login';
 
@@ -38,86 +36,6 @@ function getUsers() {
 
 function saveUsers(users) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-}
-
-
-function getExtraHints() {
-  try {
-    return JSON.parse(localStorage.getItem(EXTRA_HINTS_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-function normalizeSolvedEntries(solved) {
-  if (!Array.isArray(solved)) return [];
-  return solved.map((entry) => {
-    if (typeof entry === 'string') {
-      return { riddleNumber: entry, extraHintCount: 0, extraHints: [] };
-    }
-    return {
-      riddleNumber: entry.riddleNumber,
-      solvedAt: entry.solvedAt,
-      extraHintCount: Number(entry.extraHintCount || entry.extraHints?.length || 0),
-      extraHints: Array.isArray(entry.extraHints) ? entry.extraHints : [],
-    };
-  }).filter((entry) => entry.riddleNumber);
-}
-
-function renderRanking() {
-  if (!rankingList) return;
-
-  const users = getUsers();
-  const hints = getExtraHints();
-  const rows = users.map((user) => {
-    const solved = normalizeSolvedEntries(user.progress?.solved);
-    const userHints = hints.filter((hint) => hint.userId === user.id);
-    const solvedHintCount = solved.reduce((total, entry) => total + Number(entry.extraHintCount || 0), 0);
-    const totalHintCount = Math.max(solvedHintCount, userHints.length);
-    const hintNames = userHints.length
-      ? userHints.map((hint) => `Caso ${hint.riddleNumber} — ${hint.hintTitle || hint.hintId}`)
-      : solved.flatMap((entry) => (entry.extraHints || []).map((hint) => `Caso ${entry.riddleNumber} — ${hint.hintTitle || hint.hintId}`));
-
-    return {
-      nickname: user.nickname || 'Investigador',
-      solvedCount: solved.length,
-      hintCount: totalHintCount,
-      hintNames: [...new Set(hintNames)],
-      lastAccess: user.progress?.lastAccess || user.createdAt || '',
-    };
-  }).filter((row) => row.solvedCount > 0 || row.hintCount > 0)
-    .sort((a, b) => {
-      if (b.solvedCount !== a.solvedCount) return b.solvedCount - a.solvedCount;
-      if (a.hintCount !== b.hintCount) return a.hintCount - b.hintCount;
-      return String(b.lastAccess).localeCompare(String(a.lastAccess));
-    });
-
-  rankingList.replaceChildren();
-
-  if (!rows.length) {
-    const empty = document.createElement('p');
-    empty.className = 'ranking-empty';
-    empty.textContent = 'Nenhum caso resolvido neste navegador ainda.';
-    rankingList.append(empty);
-    return;
-  }
-
-  rows.forEach((row, index) => {
-    const card = document.createElement('article');
-    card.className = 'ranking-row';
-
-    const place = document.createElement('strong');
-    place.textContent = `${index + 1}. ${row.nickname}`;
-
-    const meta = document.createElement('span');
-    meta.textContent = `${row.solvedCount} caso${row.solvedCount === 1 ? '' : 's'} resolvido${row.solvedCount === 1 ? '' : 's'} • ${row.hintCount} dica${row.hintCount === 1 ? '' : 's'} extra${row.hintCount === 1 ? '' : 's'}`;
-
-    const details = document.createElement('small');
-    details.textContent = row.hintNames.length ? `Usou: ${row.hintNames.join(', ')}` : 'Sem dicas extras registradas.';
-
-    card.append(place, meta, details);
-    rankingList.append(card);
-  });
 }
 
 function normalizeEmail(email) {
@@ -166,7 +84,6 @@ function startSession(user) {
   }
 
   renderSession();
-  renderRanking();
 }
 
 function registerUser() {
@@ -233,7 +150,6 @@ function endSession() {
   localStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem(TEMP_SESSION_KEY);
   renderSession();
-  renderRanking();
   setMessage('Sessão encerrada.');
 }
 
@@ -270,7 +186,7 @@ function renderSession() {
 
   if (continueBtn) {
     continueBtn.href = riddleUrl(current);
-    continueBtn.textContent = current > 1 ? 'Continuar' : 'Começar';
+    continueBtn.textContent = current > 1 ? 'CONTINUAR O CASO' : 'ENTRAR NO CASO';
   }
 
   if (loggedPanel) loggedPanel.hidden = false;
@@ -335,7 +251,6 @@ themeToggle?.addEventListener('click', toggleTheme);
 setMode('login');
 initTheme();
 renderSession();
-renderRanking();
 animateCounters();
 setInterval(animateCounters, 8000);
 
