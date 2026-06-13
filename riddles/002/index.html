@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#050505" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Fugaz+One&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Courier+Prime:wght@400;700&family=Fugaz+One&family=Roboto+Mono:wght@400;500;700&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/assets/css/riddle.css" />
 </head>
@@ -24,18 +24,18 @@
   <div class="scanlines" aria-hidden="true"></div>
 
   <header class="riddle-topbar">
-    <a class="back-home" href="/">← Entrada</a>
+    <a class="back-home nav-icon nav-icon-enter" href="/">Entrada</a>
     <div class="case-label mini">
       <span>CC MASTER</span>
       <strong>CASO #002</strong>
     </div>
     <nav class="nav-actions riddle-nav" aria-label="Menu do riddle">
-      <span class="nav-user" id="navUser" hidden></span>
-      <button class="nav-logout" type="button" id="navLogout" hidden>Sair</button>
-      <a href="/como-jogar/">? <span>Como jogar</span></a>
-      <a href="/regras/">▣ <span>Regras</span></a>
-      <a href="/ranking/">♜ <span>Ranking</span></a>
-      <a href="/politica-de-privacidade/">⚖ <span>Privacidade</span></a>
+      <span class="nav-user nav-icon nav-icon-fingerprint" id="navUser" hidden></span>
+      <button class="nav-logout nav-icon nav-icon-exit" type="button" id="navLogout" hidden>Sair</button>
+      <a href="/como-jogar/"><span class="icon icon-gamepad" aria-hidden="true"></span><span>Como jogar</span></a>
+      <a href="/regras/"><span class="icon icon-book" aria-hidden="true"></span><span>Regras</span></a>
+      <a href="/ranking/"><span class="icon icon-trophy" aria-hidden="true"></span><span>Ranking</span></a>
+      <a href="/politica-de-privacidade/"><span class="icon icon-shield" aria-hidden="true"></span><span>Privacidade</span></a>
       <button class="theme-toggle" type="button" id="themeToggle" aria-label="Alternar tema">☼</button>
     </nav>
   </header>
@@ -49,7 +49,7 @@
       <section class="investigator-panel" aria-label="Painel do investigador">
         <div class="investigator-line">
           <div class="investigator-chip">
-            <span>Investigador</span>
+            <span class="investigator-label"><span class="icon icon-fingerprint" aria-hidden="true"></span>Investigador</span>
             <strong id="investigatorInline">Visitante</strong>
           </div>
           <div class="investigator-actions">
@@ -114,16 +114,16 @@
           <label for="answerInput">Resposta</label>
           <div class="answer-row">
             <input id="answerInput" name="answer" type="text" placeholder="Digite sua resposta" autocomplete="off" required />
-            <button type="submit">Investigar</button>
+            <button type="submit" class="answer-submit">Investigar</button>
           </div>
           <p id="answerMessage" class="answer-message" aria-live="polite"></p>
-          <a id="nextCaseLink" class="next-case hidden" href="/riddles/003/">Abrir próximo caso →</a>
+          <a id="nextCaseLink" class="next-case nav-icon nav-icon-folder hidden" href="/riddles/003/">Abrir próximo caso →</a>
         </form>
       </section>
 
       <section class="leaderboard-card leaderboard-riddle-card" aria-label="Top 3 investigadores">
         <div class="ranking-title-wrap">
-          <span class="auth-title-icon">♜</span>
+          <span class="auth-title-icon"><span class="icon icon-trophy" aria-hidden="true"></span></span>
           <p class="auth-card-title">Top 3 investigadores</p>
         </div>
         <p class="auth-card-helper">Só aparecem os 3 primeiros aqui. O ranking completo fica na página de ranking.</p>

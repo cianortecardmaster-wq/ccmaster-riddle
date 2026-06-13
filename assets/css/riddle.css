@@ -409,3 +409,23 @@ body.light .theme-clue {
   color: var(--text);
   font-weight: 700;
 }
+
+
+/* Ajustes de ícones no riddle */
+.riddle-nav a .icon {
+  width: 1.12em;
+  height: 1.12em;
+}
+
+.answer-row button.answer-submit {
+  white-space: nowrap;
+}
+
+@media (max-width: 540px) {
+  .info-button::before,
+  .tool-button::before,
+  .tools-toggle::before,
+  .answer-submit::before {
+    margin-right: 6px;
+  }
+}

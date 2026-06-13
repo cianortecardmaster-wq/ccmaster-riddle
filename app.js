@@ -440,7 +440,8 @@ authForm?.addEventListener('submit', async (event) => {
 showPass?.addEventListener('click', () => {
   const isPassword = passwordInput.type === 'password';
   passwordInput.type = isPassword ? 'text' : 'password';
-  showPass.textContent = isPassword ? '●' : '◌';
+  showPass.classList.toggle('is-visible', isPassword);
+  showPass.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
 });
 
 logoutBtn?.addEventListener('click', endSession);

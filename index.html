@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#050505" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Fugaz+One&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Courier+Prime:wght@400;700&family=Fugaz+One&family=Roboto+Mono:wght@400;500;700&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
@@ -22,12 +22,12 @@
     </div>
 
     <nav class="nav-actions" aria-label="Menu principal">
-      <span class="nav-user" id="navUser" hidden></span>
-      <button class="nav-logout" type="button" id="navLogout" hidden>Sair</button>
-      <a href="/como-jogar/">? <span>Como jogar</span></a>
-      <a href="/regras/">▣ <span>Regras</span></a>
-      <a href="/ranking/">♜ <span>Ranking</span></a>
-      <a href="/politica-de-privacidade/">⚖ <span>Privacidade</span></a>
+      <span class="nav-user nav-icon nav-icon-fingerprint" id="navUser" hidden></span>
+      <button class="nav-logout nav-icon nav-icon-exit" type="button" id="navLogout" hidden>Sair</button>
+      <a href="/como-jogar/"><span class="icon icon-gamepad" aria-hidden="true"></span><span>Como jogar</span></a>
+      <a href="/regras/"><span class="icon icon-book" aria-hidden="true"></span><span>Regras</span></a>
+      <a href="/ranking/"><span class="icon icon-trophy" aria-hidden="true"></span><span>Ranking</span></a>
+      <a href="/politica-de-privacidade/"><span class="icon icon-shield" aria-hidden="true"></span><span>Privacidade</span></a>
       <button class="theme-toggle" type="button" id="themeToggle" aria-label="Alternar tema">☼</button>
     </nav>
   </header>
@@ -54,7 +54,7 @@
 
       <section class="auth-card" aria-label="Cadastro e login">
         <div class="auth-title-wrap" aria-hidden="true">
-          <span class="auth-title-icon">⌕</span>
+          <span class="auth-title-icon"><span class="icon icon-fingerprint" aria-hidden="true"></span></span>
           <p class="auth-card-title">Identificação do Investigador</p>
         </div>
         <p class="auth-card-helper">Entre ou cadastre-se para salvar seu progresso na nuvem.</p>
@@ -71,15 +71,15 @@
         </div>
 
         <div class="auth-tabs" role="tablist" aria-label="Escolha entrar ou cadastrar">
-          <button class="tab active" type="button" id="tabLogin" aria-selected="true">Entrar</button>
-          <button class="tab" type="button" id="tabRegister" aria-selected="false">Cadastrar</button>
+          <button class="tab active" type="button" id="tabLogin" aria-selected="true"><span class="icon icon-lock-open" aria-hidden="true"></span><span>Entrar</span></button>
+          <button class="tab" type="button" id="tabRegister" aria-selected="false"><span class="icon icon-user-plus" aria-hidden="true"></span><span>Cadastrar</span></button>
         </div>
 
         <form id="authForm" autocomplete="on">
           <label class="field" id="nicknameField">
             <span>Apelido</span>
             <div class="input-wrap">
-              <i aria-hidden="true">●</i>
+              <span class="input-icon icon icon-fingerprint" aria-hidden="true"></span>
               <input id="nickname" name="nickname" type="text" placeholder="Digite seu apelido" minlength="2" maxlength="24" />
             </div>
           </label>
@@ -87,7 +87,7 @@
           <label class="field">
             <span>E-mail</span>
             <div class="input-wrap">
-              <i aria-hidden="true">✉</i>
+              <span class="input-icon icon icon-mail" aria-hidden="true"></span>
               <input id="email" name="email" type="email" placeholder="seu@email.com" required />
             </div>
           </label>
@@ -95,13 +95,14 @@
           <label class="field">
             <span>Senha</span>
             <div class="input-wrap">
-              <i aria-hidden="true">▣</i>
+              <span class="input-icon icon icon-key" aria-hidden="true"></span>
               <input id="password" name="password" type="password" placeholder="Digite sua senha" minlength="8" required />
-              <button class="show-pass" type="button" id="showPass" aria-label="Mostrar senha">◌</button>
+              <button class="show-pass" type="button" id="showPass" aria-label="Mostrar senha"><span class="pass-icon icon icon-eye-off" aria-hidden="true"></span></button>
             </div>
           </label>
 
           <label class="remember-field">
+            <span class="remember-icon icon icon-fingerprint" aria-hidden="true"></span>
             <input id="rememberDevice" name="rememberDevice" type="checkbox" checked />
             <span>Lembrar neste navegador</span>
           </label>
@@ -117,11 +118,11 @@
           </p>
 
           <div class="form-actions">
-            <button class="btn btn-ghost" type="submit" id="submitLogin">Entrar</button>
-            <button class="btn btn-light" type="button" id="submitRegister">Cadastrar</button>
+            <button class="btn btn-ghost btn-icon btn-icon-enter" type="submit" id="submitLogin">Entrar</button>
+            <button class="btn btn-light btn-icon btn-icon-register" type="button" id="submitRegister">Cadastrar</button>
           </div>
 
-          <button class="forgot-password" type="button" id="forgotPassword">Esqueci minha senha</button>
+          <button class="forgot-password nav-icon nav-icon-key" type="button" id="forgotPassword">Esqueci minha senha</button>
 
           <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
         </form>
@@ -131,14 +132,14 @@
             <span>Investigador conectado</span>
             <strong id="loggedName">---</strong>
           </div>
-          <a class="btn btn-light" id="continueBtn" href="/riddles/001/">Começar</a>
-          <button class="btn btn-ghost" type="button" id="logoutBtn">Sair</button>
+          <a class="btn btn-light btn-icon btn-icon-folder" id="continueBtn" href="/riddles/001/">Começar</a>
+          <button class="btn btn-ghost btn-icon btn-icon-exit" type="button" id="logoutBtn">Sair</button>
         </div>
       </section>
 
       <section class="ranking-card leaderboard-home-card" id="ranking" aria-label="Top 3 investigadores">
         <div class="ranking-title-wrap">
-          <span class="auth-title-icon">♜</span>
+          <span class="auth-title-icon"><span class="icon icon-trophy" aria-hidden="true"></span></span>
           <p class="auth-card-title">Top 3 investigadores</p>
         </div>
         <p class="auth-card-helper">

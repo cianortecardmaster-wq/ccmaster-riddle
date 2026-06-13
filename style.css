@@ -2329,3 +2329,462 @@ body.light .leaderboard-progress-bar {
     display: none;
   }
 }
+
+
+/* ===== Ícones SVG e fonte de máquina de escrever ===== */
+:root {
+  --font-typewriter: "Special Elite", "Courier Prime", "Roboto Mono", monospace;
+  --font-ui: "Courier Prime", "Roboto Mono", monospace;
+  --font-mono: "Courier Prime", "Roboto Mono", monospace;
+}
+
+.icon,
+.nav-icon::before,
+.btn-icon::before,
+.info-button::before,
+.tool-button::before,
+.tools-toggle::before,
+.answer-submit::before,
+.legal-kicker::before,
+.leaderboard-position::before {
+  content: "";
+  display: inline-block;
+  width: 1.08em;
+  height: 1.08em;
+  flex: 0 0 auto;
+  background: currentColor;
+  opacity: .9;
+  vertical-align: -.16em;
+  -webkit-mask: var(--icon-url) center / contain no-repeat;
+  mask: var(--icon-url) center / contain no-repeat;
+}
+
+.icon-search,
+.nav-icon-search { --icon-url: url('/assets/icones/search.svg'); }
+.icon-gamepad,
+.nav-icon-gamepad { --icon-url: url('/assets/icones/device-gamepad.svg'); }
+.icon-book,
+.nav-icon-book,
+.btn-icon-book { --icon-url: url('/assets/icones/book-2.svg'); }
+.icon-trophy,
+.nav-icon-trophy { --icon-url: url('/assets/icones/trophy.svg'); }
+.icon-shield,
+.nav-icon-shield { --icon-url: url('/assets/icones/shield.svg'); }
+.icon-door-enter,
+.nav-icon-enter,
+.btn-icon-enter { --icon-url: url('/assets/icones/door-enter.svg'); }
+.icon-door-exit,
+.nav-icon-exit,
+.btn-icon-exit { --icon-url: url('/assets/icones/door-exit.svg'); }
+.icon-fingerprint,
+.nav-icon-fingerprint { --icon-url: url('/assets/icones/fingerprint.svg'); }
+.icon-folder,
+.nav-icon-folder,
+.btn-icon-folder { --icon-url: url('/assets/icones/folder-open.svg'); }
+.icon-key,
+.nav-icon-key { --icon-url: url('/assets/icones/key.svg'); }
+.icon-lock,
+.nav-icon-lock { --icon-url: url('/assets/icones/lock.svg'); }
+.icon-lock-open,
+.nav-icon-lock-open { --icon-url: url('/assets/icones/lock-open.svg'); }
+.icon-mail { --icon-url: url('/assets/icones/mail.svg'); }
+.icon-user-plus,
+.nav-icon-user-plus,
+.btn-icon-register { --icon-url: url('/assets/icones/user-plus.svg'); }
+.icon-target { --icon-url: url('/assets/icones/target-arrow.svg'); }
+.icon-eye-off { --icon-url: url('/assets/icones/eye-off.svg'); }
+.icon-eye-check { --icon-url: url('/assets/icones/eye-check.svg'); }
+
+.nav-actions a,
+.nav-logout,
+.nav-user,
+.back-home,
+.google-auth,
+.tab,
+.btn,
+.forgot-password,
+.info-button,
+.tool-button,
+.tools-toggle,
+.answer-row button,
+.next-case,
+.ranking-full-link {
+  gap: 8px;
+}
+
+.nav-actions a,
+.nav-logout,
+.nav-user,
+.back-home,
+.btn-icon,
+.forgot-password,
+.next-case {
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-actions a .icon {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.nav-icon::before,
+.btn-icon::before,
+.info-button::before,
+.tool-button::before,
+.tools-toggle::before,
+.answer-submit::before {
+  margin-right: 8px;
+}
+
+.nav-user::before,
+.nav-logout::before {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+.theme-toggle {
+  font-family: var(--font-mono) !important;
+  font-weight: 700;
+}
+
+.intro-text .lead,
+.intro-text p,
+.intro-text .closing {
+  font-family: var(--font-typewriter) !important;
+  font-weight: 400 !important;
+  letter-spacing: .015em !important;
+}
+
+.auth-card-title,
+.case-label,
+.auth-card-helper,
+.auth-divider,
+.field > span,
+.remember-field,
+.auth-legal,
+.forgot-password,
+.logged-panel span,
+.logged-panel strong,
+.ranking-table,
+.leaderboard-row,
+.legal-card,
+.riddle-phrase,
+.page-clues,
+.answer-message,
+.info-box-content,
+.tools-sheet-header span {
+  font-family: var(--font-mono) !important;
+}
+
+.nav-actions a,
+.nav-logout,
+.nav-user,
+.tab,
+.btn,
+.google-auth,
+.info-button,
+.tool-button,
+.tools-toggle,
+.answer-row button,
+.back-home,
+.ranking-full-link,
+.legal-kicker,
+.legal-card h1,
+.legal-section h2,
+.riddle-card h1,
+.eyebrow,
+.answer-panel label {
+  font-family: var(--font-mono) !important;
+  font-weight: 700;
+}
+
+.auth-title-icon {
+  color: var(--text) !important;
+  background: rgba(255,255,255,.035);
+  box-shadow: 0 0 14px rgba(255,255,255,.06);
+}
+
+.auth-title-icon .icon {
+  width: .92em;
+  height: .92em;
+}
+
+.input-icon {
+  justify-self: center;
+  color: var(--muted);
+  width: 1.22em;
+  height: 1.22em;
+}
+
+.input-wrap:focus-within .input-icon,
+.input-wrap:focus-within .show-pass {
+  color: var(--text);
+}
+
+.show-pass {
+  display: grid;
+  place-items: center;
+}
+
+.show-pass .pass-icon {
+  width: 1.12em;
+  height: 1.12em;
+  color: currentColor;
+}
+
+.show-pass.is-visible .pass-icon {
+  --icon-url: url('/assets/icones/eye-check.svg');
+}
+
+.remember-field {
+  gap: 8px !important;
+}
+
+.remember-icon {
+  width: 1.05em;
+  height: 1.05em;
+  color: var(--muted);
+  opacity: .75;
+}
+
+.google-auth .google-mark {
+  margin-right: 2px;
+}
+
+.auth-card {
+  overflow: hidden;
+}
+
+.auth-card::before,
+.auth-card::after {
+  pointer-events: none;
+}
+
+.auth-card-title::after,
+.ranking-title-wrap .auth-card-title::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 1px;
+  margin: 8px auto 0;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+  opacity: .5;
+}
+
+/* Ícones dos painéis de riddle */
+.investigator-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.investigator-chip .icon {
+  color: var(--text);
+}
+
+.info-button[data-info="metadata"] { --icon-url: url('/assets/icones/book-2.svg'); }
+.info-button[data-info="trail"] { --icon-url: url('/assets/icones/folder-open.svg'); }
+.info-button[data-info="extra"] { --icon-url: url('/assets/icones/key.svg'); }
+
+.tool-button[data-action="reveal"] { --icon-url: url('/assets/icones/eye-check.svg'); }
+.tool-button[data-action="blend"] { --icon-url: url('/assets/icones/target-arrow.svg'); }
+.tool-button[data-action="isolate"] { --icon-url: url('/assets/icones/search.svg'); }
+.tool-button[data-action="invert"] { --icon-url: url('/assets/icones/eye-off.svg'); }
+.tool-button[data-action="mirror"] { --icon-url: url('/assets/icones/fingerprint.svg'); }
+.tool-button[data-action="rotate"] { --icon-url: url('/assets/icones/target-arrow.svg'); }
+.tool-button[data-action="reset"] { --icon-url: url('/assets/icones/lock-open.svg'); }
+.tools-toggle { --icon-url: url('/assets/icones/device-gamepad.svg'); }
+.answer-submit { --icon-url: url('/assets/icones/search.svg'); }
+
+.info-button,
+.tool-button,
+.tools-toggle,
+.answer-row button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-button:hover::before,
+.tool-button:hover::before,
+.tools-toggle:hover::before,
+.answer-row button:hover::before,
+.info-button.is-active::before,
+.tool-button.is-active::before,
+.tools-toggle.is-open::before {
+  opacity: 1;
+}
+
+.next-case {
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.leaderboard-position {
+  position: relative;
+  gap: 4px;
+}
+
+.leaderboard-position::before {
+  --icon-url: url('/assets/icones/trophy.svg');
+  width: .95em;
+  height: .95em;
+  margin-right: 2px;
+}
+
+/* Páginas de texto com acabamento de dossier */
+.legal-shell {
+  width: min(980px, 94vw);
+  margin: 26px auto 70px;
+  position: relative;
+  z-index: 2;
+}
+
+.legal-card {
+  border: 1px solid var(--line-strong);
+  border-radius: 20px;
+  background: var(--panel);
+  box-shadow: 0 26px 70px var(--shadow);
+  padding: clamp(22px, 4vw, 42px);
+  color: var(--text);
+  backdrop-filter: blur(12px);
+}
+
+body.light .legal-card {
+  background: rgba(255,255,255,.82);
+}
+
+.legal-kicker {
+  margin: 0 0 8px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: .8rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.legal-kicker::before {
+  --icon-url: url('/assets/icones/folder-open.svg');
+  margin-right: 8px;
+}
+
+.legal-card h1 {
+  margin: 0 0 8px;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: .95;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.legal-updated {
+  margin: 0 0 22px;
+  color: var(--muted);
+}
+
+.legal-alert,
+.legal-section {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 18px;
+}
+
+.legal-alert {
+  border: 1px solid var(--line);
+  padding: 18px;
+  background: rgba(255,255,255,.045);
+}
+
+body.light .legal-alert {
+  background: rgba(0,0,0,.045);
+}
+
+.legal-section h2 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.legal-section p,
+.legal-section li,
+.legal-alert p {
+  color: color-mix(in srgb, var(--text) 84%, var(--muted));
+  line-height: 1.66;
+}
+
+.legal-section ul {
+  padding-left: 1.25rem;
+}
+
+.legal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.ranking-summary-grid div:nth-child(1) { --icon-url: url('/assets/icones/trophy.svg'); }
+.ranking-summary-grid div:nth-child(2) { --icon-url: url('/assets/icones/key.svg'); }
+.ranking-summary-grid div:nth-child(3) { --icon-url: url('/assets/icones/search.svg'); }
+.ranking-summary-grid strong {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+}
+.ranking-summary-grid strong::before {
+  content: "";
+  width: 1.05em;
+  height: 1.05em;
+  display: inline-block;
+  background: currentColor;
+  -webkit-mask: var(--icon-url) center / contain no-repeat;
+  mask: var(--icon-url) center / contain no-repeat;
+}
+
+@media (max-width: 720px) {
+  .nav-actions a,
+  .nav-logout,
+  .nav-user,
+  .theme-toggle {
+    gap: 6px;
+  }
+
+  .nav-actions a .icon,
+  .nav-icon::before {
+    width: 1.06em;
+    height: 1.06em;
+  }
+
+  .legal-card {
+    padding: 20px 16px;
+  }
+
+  .legal-footer {
+    display: grid;
+  }
+}
+
+/* Correções finas dos ícones inseridos */
+.tab {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaderboard-position {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+[hidden] {
+  display: none !important;
+}
