@@ -11,6 +11,7 @@ const tabRegister = $('#tabRegister');
 const submitLogin = $('#submitLogin');
 const submitRegister = $('#submitRegister');
 const forgotPassword = $('#forgotPassword');
+const googleLogin = $('#googleLogin');
 const nicknameField = $('#nicknameField');
 const nicknameInput = $('#nickname');
 const emailInput = $('#email');
@@ -43,7 +44,7 @@ function setMessage(text, type = 'normal') {
 }
 
 function setBusy(isBusy) {
-  [submitLogin, submitRegister, forgotPassword].forEach((button) => {
+  [submitLogin, submitRegister, forgotPassword, googleLogin].forEach((button) => {
     if (button) button.disabled = isBusy;
   });
 }
@@ -299,6 +300,33 @@ function animateCounters() {
   online.textContent = String(base + variation).padStart(3, '0');
 }
 
+async function loginWithGoogle() {
+  if (!supabaseClient) {
+    setMessage('Supabase não carregou. Recarregue a página.', 'error');
+    return;
+  }
+
+  setBusy(true);
+  setMessage('Redirecionando para o Google...', 'ok');
+
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/`,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'select_account',
+      },
+    },
+  });
+
+  setBusy(false);
+
+  if (error) {
+    setMessage(error.message || 'Não foi possível entrar com Google.', 'error');
+  }
+}
+
 async function registerUser() {
   if (!supabaseClient) {
     setMessage('Supabase não carregou. Recarregue a página.', 'error');
@@ -444,6 +472,7 @@ submitRegister?.addEventListener('click', async () => {
   setMode('register');
   await registerUser();
 });
+googleLogin?.addEventListener('click', loginWithGoogle);
 forgotPassword?.addEventListener('click', requestPasswordReset);
 
 authForm?.addEventListener('submit', async (event) => {
