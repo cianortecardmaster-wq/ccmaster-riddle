@@ -138,11 +138,16 @@
   background: var(--riddle-button-bg);
   color: var(--text);
   border-radius: 12px;
-  padding: 11px 12px;
+  padding: 11px 14px;
   font-family: var(--font-ui);
   text-transform: uppercase;
   font-size: .72rem;
   cursor: pointer;
+}
+
+.info-button,
+.tool-button {
+  white-space: nowrap;
 }
 
 .info-button:hover,
@@ -290,11 +295,6 @@ body.light .theme-clue {
   color: var(--muted);
   font-size: .86rem;
   font-family: var(--font-mono);
-}
-
-.info-button,
-.tool-button {
-  white-space: nowrap;
 }
 
 .tools-grid {
