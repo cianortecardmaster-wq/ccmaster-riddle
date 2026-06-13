@@ -1,0 +1,15 @@
+Arquivos que você pode apagar do GitHub se não vai mais usar Jekyll/Markdown:
+
+riddles/001.md
+riddles/002.md
+
+Opcional, se o site agora for 100% HTML estático e o Cloudflare estiver com Build command vazio e Output directory /:
+
+Gemfile
+_config.yml
+README.md
+_layouts/riddle.html
+
+Observação:
+- Não apague _layouts/riddle.html se ainda quiser manter o modelo Jekyll para criar novos riddles automaticamente.
+- Apagar arquivos pelo ZIP não remove do GitHub. É preciso excluir esses arquivos manualmente no repositório.

@@ -205,6 +205,13 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+function describeSupabaseError(error, fallback) {
+  if (!error) return fallback;
+
+  const message = error.message || error.details || error.hint || '';
+  return message ? `${fallback} Detalhe: ${message}` : fallback;
+}
+
 function setToolsOpen(open) {
   state.toolsOpen = open;
   if (!toolsSheet || !toolsToggle) return;
@@ -243,25 +250,25 @@ function getCurrentHintCount() {
 async function syncCloudHintUsage() {
   if (!supabaseClient || !state.session?.id || !currentRiddleId) return;
 
-  const hintsUsed = getCurrentHintCount();
-  const { data: current } = await supabaseClient
-    .from('progress')
-    .select('id, solved, solved_at, attempts_count, hints_used')
-    .eq('user_id', state.session.id)
-    .eq('riddle_id', currentRiddleId)
-    .maybeSingle();
+  const current = await getCurrentProgressRow(state.session.id);
+  const hintsUsed = Math.max(Number(current?.hints_used || 0), getCurrentHintCount());
+  const now = new Date().toISOString();
 
-  await supabaseClient.from('progress').upsert({
-    user_id: state.session.id,
-    riddle_id: currentRiddleId,
-    solved: Boolean(current?.solved),
-    solved_at: current?.solved_at || null,
-    hints_used: Math.max(Number(current?.hints_used || 0), hintsUsed),
-    attempts_count: Number(current?.attempts_count || 0),
-    updated_at: new Date().toISOString(),
-  }, { onConflict: 'user_id,riddle_id' });
+  try {
+    await saveProgressRow(current, {
+      user_id: state.session.id,
+      riddle_id: currentRiddleId,
+      solved: Boolean(current?.solved),
+      solved_at: current?.solved_at || null,
+      hints_used: hintsUsed,
+      attempts_count: Number(current?.attempts_count || 0),
+      updated_at: now,
+    });
 
-  window.CCMasterLeaderboard?.renderAll?.();
+    window.CCMasterLeaderboard?.renderAll?.();
+  } catch (error) {
+    console.warn('Não foi possível sincronizar a dica extra no Supabase.', error);
+  }
 }
 
 function markExtraHintAsUsed() {
@@ -402,14 +409,50 @@ function toggleLayerMode(mode) {
 async function getCurrentProgressRow(userId) {
   if (!supabaseClient || !userId || !currentRiddleId) return null;
 
-  const { data } = await supabaseClient
+  const { data, error } = await supabaseClient
     .from('progress')
-    .select('id, solved, solved_at, hints_used, attempts_count')
+    .select('solved, solved_at, hints_used, attempts_count, updated_at')
     .eq('user_id', userId)
     .eq('riddle_id', currentRiddleId)
-    .maybeSingle();
+    .order('updated_at', { ascending: false })
+    .limit(1);
 
-  return data || null;
+  if (error) {
+    console.warn('Erro ao consultar progresso no Supabase.', error);
+    return null;
+  }
+
+  return Array.isArray(data) ? (data[0] || null) : null;
+}
+
+async function saveProgressRow(current, payload) {
+  const fields = 'solved, solved_at, hints_used, attempts_count, updated_at';
+
+  if (current) {
+    const { data, error } = await supabaseClient
+      .from('progress')
+      .update(payload)
+      .eq('user_id', payload.user_id)
+      .eq('riddle_id', payload.riddle_id)
+      .select(fields);
+
+    if (error) {
+      throw new Error(describeSupabaseError(error, 'Não consegui atualizar seu progresso na nuvem.'));
+    }
+
+    return Array.isArray(data) ? (data[0] || null) : null;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('progress')
+    .insert(payload)
+    .select(fields);
+
+  if (error) {
+    throw new Error(describeSupabaseError(error, 'Não consegui salvar seu progresso na nuvem.'));
+  }
+
+  return Array.isArray(data) ? (data[0] || null) : null;
 }
 
 async function loadSolvedState() {
@@ -438,22 +481,29 @@ async function registerCloudAttempt({ normalized, rawAnswer, isCorrect }) {
   const hintsUsed = getCurrentHintCount();
   const now = new Date().toISOString();
 
-  await supabaseClient.from('attempts').insert({
+  const { error: attemptError } = await supabaseClient.from('attempts').insert({
     user_id: session.id,
     riddle_id: currentRiddleId,
     answer_submitted: rawAnswer.slice(0, 180),
     correct: isCorrect,
   });
 
-  await supabaseClient.from('progress').upsert({
+  if (attemptError) {
+    console.warn('Tentativa não foi salva no histórico, mas o progresso ainda será registrado.', attemptError);
+  }
+
+  const wasAlreadySolved = Boolean(current?.solved);
+  const payload = {
     user_id: session.id,
     riddle_id: currentRiddleId,
-    solved: Boolean(isCorrect || current?.solved),
+    solved: Boolean(isCorrect || wasAlreadySolved),
     solved_at: isCorrect ? (current?.solved_at || now) : (current?.solved_at || null),
     hints_used: Math.max(Number(current?.hints_used || 0), hintsUsed),
     attempts_count: attemptsCount,
     updated_at: now,
-  }, { onConflict: 'user_id,riddle_id' });
+  };
+
+  const savedProgress = await saveProgressRow(current, payload);
 
   if (isCorrect) {
     saveLocalProgress(document.body.dataset.riddle);
@@ -461,11 +511,11 @@ async function registerCloudAttempt({ normalized, rawAnswer, isCorrect }) {
     saveSessionCache({
       ...session,
       currentRiddle: nextRiddle,
-      solvedCount: Number(session.solvedCount || 0) + (current?.solved ? 0 : 1),
+      solvedCount: Number(session.solvedCount || 0) + (wasAlreadySolved ? 0 : 1),
     });
   }
 
-  return { attemptsCount, normalized };
+  return { attemptsCount, normalized, savedProgress };
 }
 
 navLogout?.addEventListener('click', endRiddleSession);
