@@ -403,3 +403,32 @@ body.light .theme-clue {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* Ajuste visual: o card do riddle deve ficar realmente preto, não cinza/translúcido */
+.riddle-body .riddle-card {
+  background: #000 !important;
+  box-shadow: 0 22px 90px rgba(0, 0, 0, .86);
+  backdrop-filter: none;
+}
+
+.riddle-body .riddle-phrase,
+.riddle-body .investigator-chip,
+.riddle-body .info-box,
+.riddle-body .answer-row input {
+  background: #000 !important;
+}
+
+.riddle-body .info-button,
+.riddle-body .tool-button,
+.riddle-body .tools-toggle,
+.riddle-body .answer-row button {
+  background: #000 !important;
+}
+
+.riddle-body .info-button:hover,
+.riddle-body .tool-button:hover,
+.riddle-body .tools-toggle:hover,
+.riddle-body .answer-row button:hover {
+  background: var(--text) !important;
+  color: var(--bg) !important;
+}
