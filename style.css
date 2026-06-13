@@ -10,11 +10,11 @@
   --white: #ffffff;
   --black: #000000;
   --shadow: rgba(0, 0, 0, .72);
-  --riddle-card-bg: rgba(18, 18, 22, .88);
-  --riddle-section-bg: rgba(26, 26, 32, .82);
-  --riddle-chip-bg: rgba(255, 255, 255, .045);
-  --riddle-button-bg: rgba(255, 255, 255, .055);
-  --riddle-input-bg: rgba(8, 8, 10, .82);
+  --riddle-card-bg: rgba(0, 0, 0, .92);
+  --riddle-section-bg: rgba(0, 0, 0, .78);
+  --riddle-chip-bg: rgba(0, 0, 0, .68);
+  --riddle-button-bg: rgba(0, 0, 0, .76);
+  --riddle-input-bg: rgba(0, 0, 0, .86);
   --font-title: "Bangers", system-ui, sans-serif;
   --font-ui: "Fugaz One", system-ui, sans-serif;
   --font-text: "Barlow", system-ui, sans-serif;
@@ -31,11 +31,11 @@ body.light {
   --line: rgba(0, 0, 0, .24);
   --line-strong: rgba(0, 0, 0, .55);
   --shadow: rgba(0, 0, 0, .18);
-  --riddle-card-bg: rgba(218, 214, 207, .94);
-  --riddle-section-bg: rgba(234, 230, 223, .88);
-  --riddle-chip-bg: rgba(255, 255, 255, .4);
-  --riddle-button-bg: rgba(255, 255, 255, .5);
-  --riddle-input-bg: rgba(255, 255, 255, .78);
+  --riddle-card-bg: rgba(255, 255, 255, .94);
+  --riddle-section-bg: rgba(255, 255, 255, .84);
+  --riddle-chip-bg: rgba(255, 255, 255, .76);
+  --riddle-button-bg: rgba(255, 255, 255, .88);
+  --riddle-input-bg: rgba(255, 255, 255, .96);
 }
 
 * {
