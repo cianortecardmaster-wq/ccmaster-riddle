@@ -291,7 +291,7 @@ function markExtraHintAsUsed() {
 function buildInfoContent(type) {
   if (type === 'metadata') {
     return {
-      title: 'Metadados',
+      title: 'Investigar imagem',
       html: `
         <p><strong>Imagem:</strong> ${escapeHtml(getMetaImageName())}</p>
         <p><strong>Título:</strong> ${escapeHtml(getMetaTitle())}</p>

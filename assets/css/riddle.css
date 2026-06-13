@@ -292,6 +292,11 @@ body.light .theme-clue {
   font-family: var(--font-mono);
 }
 
+.info-button,
+.tool-button {
+  white-space: nowrap;
+}
+
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -393,14 +398,15 @@ body.light .theme-clue {
 @media (max-width: 540px) {
   .investigator-actions {
     width: 100%;
+    gap: 8px;
   }
 
   .investigator-actions .info-button {
-    flex: 1;
+    flex: 0 0 50px;
   }
 
   .tools-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -422,8 +428,6 @@ body.light .theme-clue {
 }
 
 @media (max-width: 540px) {
-  .info-button::before,
-  .tool-button::before,
   .tools-toggle::before,
   .answer-submit::before {
     margin-right: 6px;
