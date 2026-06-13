@@ -454,3 +454,248 @@ body.light .answer-row input {
     padding: 8px 11px;
   }
 }
+
+/* ===== Ferramentas de investigação limpas ===== */
+.investigator-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.riddle-nav .clue-button,
+.dialog-close {
+  min-height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  color: var(--text);
+  padding: 10px 14px;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-size: .72rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+body.light .riddle-nav .clue-button,
+body.light .dialog-close {
+  background: rgba(255,255,255,.28);
+  border-color: rgba(0,0,0,.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.85);
+}
+
+.riddle-nav .clue-button:hover,
+.riddle-nav .clue-button.is-used,
+.riddle-nav .clue-button.is-active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.evidence-frame.mode-reveal .riddle-image-front {
+  opacity: 0;
+}
+
+.evidence-frame.mode-fuse .riddle-image-front {
+  opacity: .68;
+  mix-blend-mode: screen;
+}
+
+.evidence-frame.mode-isolate .riddle-image-front {
+  opacity: 1;
+  mix-blend-mode: difference;
+}
+
+.image-tools {
+  margin-top: 22px;
+}
+
+.tools-toggle {
+  display: none;
+}
+
+.tool-panel-title {
+  margin: 0 0 14px;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .9rem;
+  color: var(--text);
+}
+
+.image-tool-panel {
+  padding: 18px;
+}
+
+.tool-grid button.is-active,
+.tool-grid button[aria-pressed='true'] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.riddle-dialog {
+  width: min(520px, calc(100% - 28px));
+  border: 0;
+  padding: 0;
+  color: var(--text);
+  background: transparent;
+}
+
+.riddle-dialog::backdrop {
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(4px);
+}
+
+.dialog-card {
+  position: relative;
+  border: 1px solid var(--line-strong);
+  border-radius: 22px;
+  background: var(--panel-solid);
+  box-shadow: 0 24px 80px rgba(0,0,0,.55);
+  padding: 24px;
+}
+
+body.light .dialog-card {
+  background: #f7f7f7;
+}
+
+.dialog-card h2 {
+  margin: 0 44px 16px 0;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 1.05rem;
+}
+
+.dialog-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.info-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.info-list div {
+  display: grid;
+  gap: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.info-list div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.info-list dt {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.info-list dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  line-height: 1.45;
+}
+
+.mono-line {
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.045);
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .riddle-body {
+    padding-bottom: 86px;
+  }
+
+  .investigator-actions {
+    order: 4;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .riddle-nav .clue-button {
+    min-height: 38px;
+    font-size: .68rem;
+    padding: 8px 11px;
+  }
+
+  .tools-toggle {
+    position: fixed;
+    right: 14px;
+    bottom: 14px;
+    z-index: 95;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 154px;
+    min-height: 48px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    font-family: var(--font-ui);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    box-shadow: 0 14px 44px rgba(0,0,0,.38);
+    cursor: pointer;
+  }
+
+  .image-tools.open .tools-toggle {
+    bottom: calc(min(56vh, 330px) + 22px);
+  }
+
+  .image-tool-panel {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 90;
+    max-height: min(56vh, 330px);
+    overflow: auto;
+    transform: translateY(calc(100% + 24px));
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .22s ease, opacity .22s ease;
+    padding: 18px;
+    border-radius: 22px;
+    background: var(--panel-solid);
+    box-shadow: 0 18px 70px rgba(0,0,0,.62);
+  }
+
+  body.light .image-tool-panel {
+    background: #f7f7f7;
+  }
+
+  .image-tools.open .image-tool-panel {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .image-tool-panel .tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

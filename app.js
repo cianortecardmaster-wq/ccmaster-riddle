@@ -23,6 +23,8 @@ const logoutBtn = $('#logoutBtn');
 const navUser = $('#navUser');
 const navLogout = $('#navLogout');
 const themeToggle = $('#themeToggle');
+const rankingBody = $('#rankingBody');
+const emptyRanking = $('#emptyRanking');
 
 let currentMode = 'login';
 
@@ -84,6 +86,7 @@ function startSession(user) {
   }
 
   renderSession();
+  renderRanking();
 }
 
 function registerUser() {
@@ -150,6 +153,7 @@ function endSession() {
   localStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem(TEMP_SESSION_KEY);
   renderSession();
+  renderRanking();
   setMessage('Sessão encerrada.');
 }
 
@@ -213,6 +217,65 @@ function toggleTheme() {
   localStorage.setItem('ccmaster_theme', isLight ? 'light' : 'dark');
 }
 
+
+function safeJsonParse(value, fallback) {
+  try {
+    return JSON.parse(value) || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function formatElapsed(seconds) {
+  if (seconds === null || seconds === undefined) return 'tempo não registrado';
+  const total = Number(seconds);
+  const minutes = Math.floor(total / 60);
+  const rest = total % 60;
+  if (minutes <= 0) return `${rest}s`;
+  return `${minutes}min ${String(rest).padStart(2, '0')}s`;
+}
+
+function renderRanking() {
+  if (!rankingBody || !emptyRanking) return;
+
+  const ranking = safeJsonParse(localStorage.getItem('ccmaster_riddle_rankings'), []);
+  rankingBody.innerHTML = '';
+
+  if (!ranking.length) {
+    emptyRanking.hidden = false;
+    return;
+  }
+
+  emptyRanking.hidden = true;
+
+  const sorted = [...ranking].sort((a, b) => {
+    if ((a.riddle || '') !== (b.riddle || '')) return String(a.riddle).localeCompare(String(b.riddle));
+    if ((a.extraCount || 0) !== (b.extraCount || 0)) return (a.extraCount || 0) - (b.extraCount || 0);
+    return (a.elapsedSeconds ?? Number.MAX_SAFE_INTEGER) - (b.elapsedSeconds ?? Number.MAX_SAFE_INTEGER);
+  });
+
+  sorted.slice(0, 20).forEach((entry, index) => {
+    const extras = Array.isArray(entry.extras) && entry.extras.length ? entry.extras.join(', ') : 'nenhuma';
+    const row = document.createElement('tr');
+    const values = [
+      index + 1,
+      entry.nickname || 'Investigador local',
+      String(entry.riddle || '').padStart(3, '0'),
+      entry.extraCount || 0,
+      extras,
+      formatElapsed(entry.elapsedSeconds),
+    ];
+
+    values.forEach((value) => {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+
+    rankingBody.appendChild(row);
+  });
+}
+
 function animateCounters() {
   const online = $('#onlineCount');
   if (!online) return;
@@ -251,6 +314,7 @@ themeToggle?.addEventListener('click', toggleTheme);
 setMode('login');
 initTheme();
 renderSession();
+renderRanking();
 animateCounters();
 setInterval(animateCounters, 8000);
 

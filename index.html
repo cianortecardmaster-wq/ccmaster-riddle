@@ -115,6 +115,30 @@
           <button class="btn btn-ghost" type="button" id="logoutBtn">Sair</button>
         </div>
       </section>
+
+      <section class="ranking-card" id="ranking" aria-label="Ranking dos investigadores">
+        <div class="ranking-title-wrap">
+          <span class="auth-title-icon">♜</span>
+          <p class="auth-card-title">Ranking local</p>
+        </div>
+        <p class="auth-card-helper">O ranking prioriza quem resolve com menos dicas extras. Os dados ficam salvos neste navegador.</p>
+        <div class="ranking-table-wrap">
+          <table class="ranking-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Investigador</th>
+                <th>Riddle</th>
+                <th>Extras</th>
+                <th>Dicas usadas</th>
+                <th>Tempo</th>
+              </tr>
+            </thead>
+            <tbody id="rankingBody"></tbody>
+          </table>
+        </div>
+        <p class="ranking-empty" id="emptyRanking">Nenhum caso resolvido neste navegador ainda.</p>
+      </section>
     </section>
   </main>
 

@@ -1944,3 +1944,64 @@ body {
     padding: 16px 14px !important;
   }
 }
+
+/* ===== Ranking local dos riddles ===== */
+.ranking-card {
+  width: min(860px, 94vw);
+  margin: 26px auto 0;
+  padding: 22px;
+  background: var(--panel);
+  backdrop-filter: blur(13px);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 22px 70px var(--shadow);
+  clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+}
+
+.ranking-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.ranking-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 14px;
+  border: 1px solid var(--line);
+}
+
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: .86rem;
+}
+
+.ranking-table th,
+.ranking-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.ranking-table th {
+  color: var(--muted);
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-size: .7rem;
+}
+
+.ranking-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.ranking-empty {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  text-align: center;
+}

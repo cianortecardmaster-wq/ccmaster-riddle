@@ -1,3 +1,6 @@
+{% assign image_file = page.imagem | split: '/' | last %}
+{% assign image_title = page.titulo_imagem | default: page.nome | default: page.title %}
+{% assign image_description = page.descricao_imagem | default: page.description | default: 'Imagem do caso.' %}
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -12,7 +15,16 @@
   <link rel="stylesheet" href="{{ '/style.css' | relative_url }}" />
   <link rel="stylesheet" href="{{ '/assets/css/riddle.css' | relative_url }}" />
 </head>
-<body class="riddle-body" data-riddle="{{ page.numero }}">
+<body
+  class="riddle-body"
+  data-riddle="{{ page.numero }}"
+  data-image-name="{{ page.imagem_nome | default: image_file | escape }}"
+  data-image-title="{{ image_title | escape }}"
+  data-image-description="{{ image_description | escape }}"
+  data-extra-id="extra-{{ page.numero }}"
+  data-extra-label="Dica extra"
+  data-extra-text="{{ page.dica_extra | default: '' | strip_newlines | escape }}"
+>
   <div class="noise" aria-hidden="true"></div>
   <div class="scanlines" aria-hidden="true"></div>
 
@@ -24,6 +36,11 @@
     </div>
     <nav class="nav-actions riddle-nav" aria-label="Menu do riddle">
       <span class="nav-user" id="navUser" hidden></span>
+      <div class="investigator-actions" aria-label="Ferramentas de investigação">
+        <button class="clue-button" type="button" id="metadataButton">Metadados</button>
+        <button class="clue-button" type="button" id="trailButton">Rastro</button>
+        <button class="clue-button" type="button" id="extraButton">Extra</button>
+      </div>
       <button class="nav-logout" type="button" id="navLogout" hidden>Sair</button>
       <a href="{{ '/#como-jogar' | relative_url }}">? <span>Como jogar</span></a>
       <a href="{{ '/#regras' | relative_url }}">▣ <span>Regras</span></a>
@@ -40,6 +57,10 @@
       {% if page.frase %}
       <blockquote class="riddle-phrase">{{ page.frase }}</blockquote>
       {% endif %}
+
+      <section class="page-clues page-clues-above" aria-label="Pistas da página">
+        {{ content }}
+      </section>
 
       <div class="evidence-area">
         <div class="evidence-frame" id="evidenceFrame">
@@ -59,50 +80,23 @@
             alt="Imagem do riddle {{ page.numero }}"
             draggable="false"
           />
-          <div class="noise-layer" id="noiseLayer" aria-hidden="true"></div>
         </div>
       </div>
 
-      <section class="mobile-panels" aria-label="Painéis de interação">
-        <details class="tool-panel" open>
-          <summary>Ferramentas da imagem</summary>
-          <div class="panel-body">
-            <div class="slider-group">
-              <label for="opacityRange">Transparência da camada frontal</label>
-              <input id="opacityRange" type="range" min="0" max="100" step="5" value="100" />
-              <small>100% = imagem da frente totalmente visível. Reduza para investigar o que está atrás.</small>
-            </div>
-
-            <div class="tool-grid">
-              <button type="button" data-action="zoom-in">Zoom +</button>
-              <button type="button" data-action="zoom-out">Zoom -</button>
-              <button type="button" data-action="brightness-up">Brilho +</button>
-              <button type="button" data-action="brightness-down">Brilho -</button>
-              <button type="button" data-action="contrast-up">Contraste +</button>
-              <button type="button" data-action="contrast-down">Contraste -</button>
-              <button type="button" data-action="invert">Inverter cores</button>
-              <button type="button" data-action="mirror">Espelhar</button>
-              <button type="button" data-action="rotate-left">Girar -90°</button>
-              <button type="button" data-action="rotate-right">Girar +90°</button>
-              <button type="button" data-action="noise">Ruído</button>
-              <button type="button" data-action="reset">Resetar</button>
-            </div>
+      <section class="image-tools" id="imageTools" aria-label="Ferramentas da imagem">
+        <button class="tools-toggle" type="button" id="toolsToggle" aria-expanded="false" aria-controls="toolsPanel">Ferramentas</button>
+        <div class="tool-panel image-tool-panel" id="toolsPanel">
+          <div class="tool-panel-title">Ferramentas</div>
+          <div class="tool-grid">
+            <button type="button" data-action="reveal" aria-pressed="false">Revelar</button>
+            <button type="button" data-action="fuse" aria-pressed="false">Fundir</button>
+            <button type="button" data-action="isolate" aria-pressed="false">Isolar</button>
+            <button type="button" data-action="invert" aria-pressed="false">Negativo</button>
+            <button type="button" data-action="mirror" aria-pressed="false">Espelho</button>
+            <button type="button" data-action="rotate">Girar</button>
+            <button type="button" data-action="reset">Reiniciar</button>
           </div>
-        </details>
-
-        <details class="tool-panel" open>
-          <summary>Ferramentas da página</summary>
-          <div class="panel-body">
-            <div class="page-tool-grid">
-              <button type="button" id="themeTogglePanel">Alternar tema claro/escuro</button>
-            </div>
-            <p class="tool-note">As ferramentas estão disponíveis em todos os casos. Descobrir qual usar faz parte do enigma.</p>
-          </div>
-        </details>
-      </section>
-
-      <section class="page-clues" aria-label="Pistas da página">
-        {{ content }}
+        </div>
       </section>
 
       <section class="answer-panel" aria-label="Enviar resposta">
@@ -118,6 +112,14 @@
       </section>
     </section>
   </main>
+
+  <dialog class="riddle-dialog" id="infoDialog" aria-labelledby="infoDialogTitle">
+    <div class="dialog-card">
+      <button class="dialog-close" type="button" id="infoDialogClose" aria-label="Fechar">×</button>
+      <h2 id="infoDialogTitle">Informação</h2>
+      <div id="infoDialogContent"></div>
+    </div>
+  </dialog>
 
   <script src="{{ '/assets/js/riddle.js' | relative_url }}"></script>
 </body>

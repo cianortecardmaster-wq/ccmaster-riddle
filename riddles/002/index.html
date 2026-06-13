@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>2. — CC MASTER</title>
-  <meta name="description" content="Riddle 001 do jogo CC MASTER." />
+  <title>Riddle 002 — CC MASTER</title>
+  <meta name="description" content="Riddle do jogo CC MASTER." />
   <meta name="theme-color" content="#050505" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,16 @@
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/assets/css/riddle.css" />
 </head>
-<body class="riddle-body" data-riddle="002">
+<body
+  class="riddle-body"
+  data-riddle="002"
+  data-image-name="placeholder.svg"
+  data-image-title="Caso lacrado"
+  data-image-description="Um marcador temporário para um caso que ainda não foi aberto."
+  data-extra-id="extra-002"
+  data-extra-label="Dica extra"
+  data-extra-text="Este caso ainda não tem enigma final configurado."
+>
   <div class="noise" aria-hidden="true"></div>
   <div class="scanlines" aria-hidden="true"></div>
 
@@ -24,6 +33,11 @@
     </div>
     <nav class="nav-actions riddle-nav" aria-label="Menu do riddle">
       <span class="nav-user" id="navUser" hidden></span>
+      <div class="investigator-actions" aria-label="Ferramentas de investigação">
+        <button class="clue-button" type="button" id="metadataButton">Metadados</button>
+        <button class="clue-button" type="button" id="trailButton">Rastro</button>
+        <button class="clue-button" type="button" id="extraButton">Extra</button>
+      </div>
       <button class="nav-logout" type="button" id="navLogout" hidden>Sair</button>
       <a href="/#como-jogar">? <span>Como jogar</span></a>
       <a href="/#regras">▣ <span>Regras</span></a>
@@ -35,73 +49,40 @@
   <main class="riddle-shell">
     <section class="riddle-card" aria-labelledby="riddle-title">
       <p class="eyebrow">Arquivo de investigação</p>
-      <h1 id="riddle-title">2.</h1>
+      <h1 id="riddle-title">Caso 002</h1>
 
-      <blockquote class="riddle-phrase">
-        Este caso ainda está lacrado.
-      </blockquote>
+      <blockquote class="riddle-phrase">Este caso ainda está lacrado.</blockquote>
 
       <section class="page-clues page-clues-above" aria-label="Pistas da página">
-        <p>Algumas pistas se escondem na sombra. Outras só aparecem quando a camada da frente deixa de ser absoluta.</p>
-        <p class="theme-clue">Nem toda transparência é fraqueza. Às vezes, ela é a única forma de revelar quem sobrevive na escuridão.</p>
+        <p>Placeholder para o segundo riddle.</p>
       </section>
 
       <div class="evidence-area">
         <div class="evidence-frame" id="evidenceFrame">
           <img
-            class="riddle-image riddle-image-back"
-            src="/assets/riddles/placeholder.svg"
-            alt="Camada secreta do riddle 001"
-            draggable="false"
-          />
-
-          <img
             id="riddleImage"
             class="riddle-image riddle-image-front"
             src="/assets/riddles/placeholder.svg"
-            alt="Imagem frontal do riddle 001"
+            alt="Imagem do riddle 002"
             draggable="false"
           />
-          <div class="noise-layer" id="noiseLayer" aria-hidden="true"></div>
         </div>
       </div>
 
-      <section class="mobile-panels" aria-label="Painéis de interação">
-        <details class="tool-panel" open>
-          <summary>Ferramentas da imagem</summary>
-          <div class="panel-body">
-            <div class="slider-group">
-              <label for="opacityRange">Transparência da camada frontal</label>
-              <input id="opacityRange" type="range" min="0" max="100" step="5" value="100" />
-              <small>100% = imagem da frente totalmente visível. Reduza para investigar o que está atrás.</small>
-            </div>
-
-            <div class="tool-grid">
-              <button type="button" data-action="zoom-in">Zoom +</button>
-              <button type="button" data-action="zoom-out">Zoom -</button>
-              <button type="button" data-action="brightness-up">Brilho +</button>
-              <button type="button" data-action="brightness-down">Brilho -</button>
-              <button type="button" data-action="contrast-up">Contraste +</button>
-              <button type="button" data-action="contrast-down">Contraste -</button>
-              <button type="button" data-action="invert">Inverter cores</button>
-              <button type="button" data-action="mirror">Espelhar</button>
-              <button type="button" data-action="rotate-left">Girar -90°</button>
-              <button type="button" data-action="rotate-right">Girar +90°</button>
-              <button type="button" data-action="noise">Ruído</button>
-              <button type="button" data-action="reset">Resetar</button>
-            </div>
+      <section class="image-tools" id="imageTools" aria-label="Ferramentas da imagem">
+        <button class="tools-toggle" type="button" id="toolsToggle" aria-expanded="false" aria-controls="toolsPanel">Ferramentas</button>
+        <div class="tool-panel image-tool-panel" id="toolsPanel">
+          <div class="tool-panel-title">Ferramentas</div>
+          <div class="tool-grid">
+            <button type="button" data-action="reveal" aria-pressed="false">Revelar</button>
+            <button type="button" data-action="fuse" aria-pressed="false">Fundir</button>
+            <button type="button" data-action="isolate" aria-pressed="false">Isolar</button>
+            <button type="button" data-action="invert" aria-pressed="false">Negativo</button>
+            <button type="button" data-action="mirror" aria-pressed="false">Espelho</button>
+            <button type="button" data-action="rotate">Girar</button>
+            <button type="button" data-action="reset">Reiniciar</button>
           </div>
-        </details>
-
-        <details class="tool-panel">
-          <summary>Ferramentas da página</summary>
-          <div class="panel-body">
-            <div class="page-tool-grid">
-              <button type="button" id="themeTogglePanel">Alternar tema claro/escuro</button>
-            </div>
-            <p class="tool-note">As ferramentas estão disponíveis em todos os casos. Descobrir qual usar faz parte do enigma.</p>
-          </div>
-        </details>
+        </div>
       </section>
 
       <section class="answer-panel" aria-label="Enviar resposta">
@@ -117,6 +98,14 @@
       </section>
     </section>
   </main>
+
+  <dialog class="riddle-dialog" id="infoDialog" aria-labelledby="infoDialogTitle">
+    <div class="dialog-card">
+      <button class="dialog-close" type="button" id="infoDialogClose" aria-label="Fechar">×</button>
+      <h2 id="infoDialogTitle">Informação</h2>
+      <div id="infoDialogContent"></div>
+    </div>
+  </dialog>
 
   <script src="/assets/js/riddle.js"></script>
 </body>

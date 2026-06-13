@@ -1,15 +1,57 @@
-
 const SESSION_KEY = 'ccmaster_riddle_session';
 const TEMP_SESSION_KEY = 'ccmaster_riddle_session_temp';
+const USERS_KEY = 'ccmaster_riddle_users';
+const HINTS_KEY = 'ccmaster_riddle_hint_usage';
+const RANKING_KEY = 'ccmaster_riddle_rankings';
+
 const navUser = document.querySelector('#navUser');
 const navLogout = document.querySelector('#navLogout');
+const image = document.querySelector('#riddleImage');
+const frame = document.querySelector('#evidenceFrame');
+const themeToggle = document.querySelector('#themeToggle');
+const answerForm = document.querySelector('#answerForm');
+const answerInput = document.querySelector('#answerInput');
+const answerMessage = document.querySelector('#answerMessage');
+const nextCaseLink = document.querySelector('#nextCaseLink');
+const toolsToggle = document.querySelector('#toolsToggle');
+const imageTools = document.querySelector('#imageTools');
+const metadataButton = document.querySelector('#metadataButton');
+const trailButton = document.querySelector('#trailButton');
+const extraButton = document.querySelector('#extraButton');
+const infoDialog = document.querySelector('#infoDialog');
+const infoDialogTitle = document.querySelector('#infoDialogTitle');
+const infoDialogContent = document.querySelector('#infoDialogContent');
+const infoDialogClose = document.querySelector('#infoDialogClose');
+
+const riddleNumber = document.body.dataset.riddle || '000';
+const startedKey = `ccmaster_riddle_started_${riddleNumber}`;
+
+const state = {
+  reveal: false,
+  fuse: false,
+  isolate: false,
+  invert: false,
+  mirror: false,
+  rotate: 0,
+};
+
+function safeJsonParse(value, fallback) {
+  try {
+    return JSON.parse(value) || fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 function getRiddleSession() {
-  try {
-    return JSON.parse(localStorage.getItem(SESSION_KEY)) || JSON.parse(sessionStorage.getItem(TEMP_SESSION_KEY));
-  } catch {
-    return null;
-  }
+  return safeJsonParse(localStorage.getItem(SESSION_KEY), null) || safeJsonParse(sessionStorage.getItem(TEMP_SESSION_KEY), null);
+}
+
+function getInvestigatorKey() {
+  const session = getRiddleSession();
+  if (session?.id) return session.id;
+  if (session?.email) return session.email;
+  return 'visitante-local';
 }
 
 function renderRiddleSession() {
@@ -35,53 +77,37 @@ function endRiddleSession() {
   renderRiddleSession();
 }
 
-navLogout?.addEventListener('click', endRiddleSession);
-
-const image = document.querySelector('#riddleImage');
-const frame = document.querySelector('#evidenceFrame');
-const themeToggle = document.querySelector('#themeToggle');
-const themeTogglePanel = document.querySelector('#themeTogglePanel');
-const answerForm = document.querySelector('#answerForm');
-const answerInput = document.querySelector('#answerInput');
-const answerMessage = document.querySelector('#answerMessage');
-const nextCaseLink = document.querySelector('#nextCaseLink');
-const opacityRange = document.querySelector('#opacityRange');
-
-const state = {
-  zoom: 1,
-  brightness: 1,
-  contrast: 1,
-  invert: 0,
-  mirror: 1,
-  rotate: 0,
-  opacity: 1,
-};
-
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value));
+function setActiveButton(action, active) {
+  document.querySelectorAll(`[data-action="${action}"]`).forEach((button) => {
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
 }
 
 function applyImageState() {
-  if (!image) return;
-  image.style.setProperty('--zoom', state.zoom.toFixed(2));
-  image.style.setProperty('--brightness', state.brightness.toFixed(2));
-  image.style.setProperty('--contrast', state.contrast.toFixed(2));
-  image.style.setProperty('--invert', state.invert);
-  image.style.setProperty('--mirror', state.mirror);
+  if (!image || !frame) return;
+
+  frame.classList.toggle('mode-reveal', state.reveal);
+  frame.classList.toggle('mode-fuse', state.fuse);
+  frame.classList.toggle('mode-isolate', state.isolate);
+  image.style.setProperty('--invert', state.invert ? 1 : 0);
+  image.style.setProperty('--mirror', state.mirror ? -1 : 1);
   image.style.setProperty('--rotate', `${state.rotate}deg`);
-  image.style.setProperty('--opacity', state.opacity.toFixed(2));
-  if (opacityRange) opacityRange.value = String(Math.round(state.opacity * 100));
+
+  setActiveButton('reveal', state.reveal);
+  setActiveButton('fuse', state.fuse);
+  setActiveButton('isolate', state.isolate);
+  setActiveButton('invert', state.invert);
+  setActiveButton('mirror', state.mirror);
 }
 
 function resetImage() {
-  state.zoom = 1;
-  state.brightness = 1;
-  state.contrast = 1;
-  state.invert = 0;
-  state.mirror = 1;
+  state.reveal = false;
+  state.fuse = false;
+  state.isolate = false;
+  state.invert = false;
+  state.mirror = false;
   state.rotate = 0;
-  state.opacity = 1;
-  frame?.classList.remove('noise-on');
   applyImageState();
 }
 
@@ -102,18 +128,124 @@ async function sha256(text) {
     .join('');
 }
 
-function saveProgress(riddleNumber) {
-  const key = 'ccmaster_riddle_progress';
-  let progress = [];
-  try {
-    progress = JSON.parse(localStorage.getItem(key)) || [];
-  } catch {
-    progress = [];
+function getHintUsage() {
+  return safeJsonParse(localStorage.getItem(HINTS_KEY), {});
+}
+
+function saveHintUsage(usage) {
+  localStorage.setItem(HINTS_KEY, JSON.stringify(usage));
+}
+
+function getUsedExtrasForCurrentRiddle() {
+  const usage = getHintUsage();
+  const userKey = getInvestigatorKey();
+  return usage[userKey]?.[riddleNumber] || [];
+}
+
+function markExtraAsUsed() {
+  const extraText = document.body.dataset.extraText || '';
+  if (!extraText.trim()) return [];
+
+  const usage = getHintUsage();
+  const userKey = getInvestigatorKey();
+  const extraId = document.body.dataset.extraId || `extra-${riddleNumber}`;
+  const extraLabel = document.body.dataset.extraLabel || 'Extra';
+
+  usage[userKey] = usage[userKey] || {};
+  usage[userKey][riddleNumber] = usage[userKey][riddleNumber] || [];
+
+  const alreadyUsed = usage[userKey][riddleNumber].some((item) => item.id === extraId);
+  if (!alreadyUsed) {
+    usage[userKey][riddleNumber].push({
+      id: extraId,
+      label: extraLabel,
+      usedAt: new Date().toISOString(),
+    });
+    saveHintUsage(usage);
   }
-  if (!progress.includes(riddleNumber)) {
-    progress.push(riddleNumber);
+
+  renderExtraButtonState();
+  return usage[userKey][riddleNumber];
+}
+
+function renderExtraButtonState() {
+  if (!extraButton) return;
+  const used = getUsedExtrasForCurrentRiddle();
+  extraButton.classList.toggle('is-used', used.length > 0);
+  extraButton.textContent = used.length > 0 ? `Extra ✓` : 'Extra';
+}
+
+function saveProgress(riddleNumberValue) {
+  const key = 'ccmaster_riddle_progress';
+  const progress = safeJsonParse(localStorage.getItem(key), []);
+  if (!progress.includes(riddleNumberValue)) {
+    progress.push(riddleNumberValue);
   }
   localStorage.setItem(key, JSON.stringify(progress));
+}
+
+function updateUserProgress(riddleNumberValue) {
+  const session = getRiddleSession();
+  if (!session?.id) return;
+
+  const users = safeJsonParse(localStorage.getItem(USERS_KEY), []);
+  const user = users.find((candidate) => candidate.id === session.id);
+  if (!user) return;
+
+  user.progress = user.progress || { currentRiddle: 1, solved: [] };
+  user.progress.solved = Array.isArray(user.progress.solved) ? user.progress.solved : [];
+
+  if (!user.progress.solved.includes(riddleNumberValue)) {
+    user.progress.solved.push(riddleNumberValue);
+  }
+
+  const next = Number(riddleNumberValue) + 1;
+  user.progress.currentRiddle = Math.max(Number(user.progress.currentRiddle || 1), next);
+  user.progress.lastAccess = new Date().toISOString();
+
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+  const updatedSession = { ...session, currentRiddle: user.progress.currentRiddle };
+  if (localStorage.getItem(SESSION_KEY)) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(updatedSession));
+  } else if (sessionStorage.getItem(TEMP_SESSION_KEY)) {
+    sessionStorage.setItem(TEMP_SESSION_KEY, JSON.stringify(updatedSession));
+  }
+}
+
+function saveRankingEntry(riddleNumberValue) {
+  const session = getRiddleSession();
+  const userKey = getInvestigatorKey();
+  const nickname = session?.nickname || 'Investigador local';
+  const ranking = safeJsonParse(localStorage.getItem(RANKING_KEY), []);
+  const startedAt = localStorage.getItem(startedKey);
+  const elapsedSeconds = startedAt ? Math.max(0, Math.round((Date.now() - Number(startedAt)) / 1000)) : null;
+  const extras = getUsedExtrasForCurrentRiddle();
+
+  const entryIndex = ranking.findIndex((item) => item.riddle === riddleNumberValue && item.userKey === userKey);
+  const entry = {
+    userKey,
+    nickname,
+    riddle: riddleNumberValue,
+    solvedAt: new Date().toISOString(),
+    elapsedSeconds,
+    extraCount: extras.length,
+    extras: extras.map((item) => item.label || item.id),
+  };
+
+  if (entryIndex >= 0) {
+    const oldEntry = ranking[entryIndex];
+    ranking[entryIndex] = {
+      ...oldEntry,
+      ...entry,
+      elapsedSeconds: oldEntry.elapsedSeconds ?? entry.elapsedSeconds,
+      solvedAt: oldEntry.solvedAt || entry.solvedAt,
+    };
+  } else {
+    ranking.push(entry);
+  }
+
+  localStorage.setItem(RANKING_KEY, JSON.stringify(ranking));
 }
 
 function toggleTheme() {
@@ -121,34 +253,110 @@ function toggleTheme() {
   localStorage.setItem('ccmaster_theme', document.body.classList.contains('light') ? 'light' : 'dark');
 }
 
+function openInfoDialog(title, html) {
+  if (!infoDialog || !infoDialogTitle || !infoDialogContent) return;
+  infoDialogTitle.textContent = title;
+  infoDialogContent.innerHTML = html;
+
+  if (typeof infoDialog.showModal === 'function') {
+    infoDialog.showModal();
+  } else {
+    infoDialog.setAttribute('open', 'open');
+  }
+}
+
+function closeInfoDialog() {
+  if (!infoDialog) return;
+  if (typeof infoDialog.close === 'function') {
+    infoDialog.close();
+  } else {
+    infoDialog.removeAttribute('open');
+  }
+}
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function metadataHtml() {
+  const imageName = document.body.dataset.imageName || 'imagem.png';
+  const imageTitle = document.body.dataset.imageTitle || 'Sem título';
+  const imageDescription = document.body.dataset.imageDescription || 'Sem descrição.';
+
+  return `
+    <dl class="info-list">
+      <div><dt>Imagem</dt><dd>${escapeHtml(imageName)}</dd></div>
+      <div><dt>Título</dt><dd>${escapeHtml(imageTitle)}</dd></div>
+      <div><dt>Descrição</dt><dd>${escapeHtml(imageDescription)}</dd></div>
+    </dl>
+  `;
+}
+
+function trailHtml() {
+  return `<p class="mono-line">${escapeHtml(window.location.pathname || '/')}</p>`;
+}
+
+function extraHtml() {
+  const extraText = document.body.dataset.extraText || '';
+  if (!extraText.trim()) {
+    return '<p>Nenhuma dica extra foi configurada para este caso.</p>';
+  }
+
+  const extras = markExtraAsUsed();
+  const usedLabels = extras.map((item) => item.label || item.id).join(', ');
+
+  return `
+    <p>${escapeHtml(extraText)}</p>
+    <p class="tool-note">Dica registrada para este investigador.</p>
+    <p class="tool-note">Usadas neste caso: ${extras.length}${usedLabels ? ` — ${escapeHtml(usedLabels)}` : ''}</p>
+  `;
+}
+
 document.querySelectorAll('[data-action]').forEach((button) => {
   button.addEventListener('click', () => {
     const action = button.dataset.action;
 
-    if (action === 'zoom-in') state.zoom = clamp(state.zoom + 0.15, 0.5, 3);
-    if (action === 'zoom-out') state.zoom = clamp(state.zoom - 0.15, 0.5, 3);
-    if (action === 'brightness-up') state.brightness = clamp(state.brightness + 0.15, 0.25, 3);
-    if (action === 'brightness-down') state.brightness = clamp(state.brightness - 0.15, 0.25, 3);
-    if (action === 'contrast-up') state.contrast = clamp(state.contrast + 0.2, 0.25, 4);
-    if (action === 'contrast-down') state.contrast = clamp(state.contrast - 0.2, 0.25, 4);
-    if (action === 'invert') state.invert = state.invert ? 0 : 1;
-    if (action === 'mirror') state.mirror = state.mirror === 1 ? -1 : 1;
-    if (action === 'rotate-left') state.rotate -= 90;
-    if (action === 'rotate-right') state.rotate += 90;
-    if (action === 'noise') frame?.classList.toggle('noise-on');
+    if (action === 'reveal') state.reveal = !state.reveal;
+    if (action === 'fuse') {
+      state.fuse = !state.fuse;
+      if (state.fuse) state.isolate = false;
+    }
+    if (action === 'isolate') {
+      state.isolate = !state.isolate;
+      if (state.isolate) state.fuse = false;
+    }
+    if (action === 'invert') state.invert = !state.invert;
+    if (action === 'mirror') state.mirror = !state.mirror;
+    if (action === 'rotate') state.rotate = (state.rotate + 90) % 360;
     if (action === 'reset') resetImage();
 
     applyImageState();
   });
 });
 
-opacityRange?.addEventListener('input', (event) => {
-  state.opacity = clamp(Number(event.target.value) / 100, 0, 1);
-  applyImageState();
+toolsToggle?.addEventListener('click', () => {
+  const isOpen = imageTools?.classList.toggle('open');
+  toolsToggle.setAttribute('aria-expanded', String(Boolean(isOpen)));
 });
 
+metadataButton?.addEventListener('click', () => openInfoDialog('Metadados da imagem', metadataHtml()));
+trailButton?.addEventListener('click', () => openInfoDialog('Rastro', trailHtml()));
+extraButton?.addEventListener('click', () => openInfoDialog('Dica extra', extraHtml()));
+infoDialogClose?.addEventListener('click', closeInfoDialog);
+infoDialog?.addEventListener('click', (event) => {
+  if (event.target === infoDialog) closeInfoDialog();
+});
+navLogout?.addEventListener('click', endRiddleSession);
 themeToggle?.addEventListener('click', toggleTheme);
-themeTogglePanel?.addEventListener('click', toggleTheme);
+
+if (!localStorage.getItem(startedKey)) {
+  localStorage.setItem(startedKey, String(Date.now()));
+}
 
 if (localStorage.getItem('ccmaster_theme') === 'light') {
   document.body.classList.add('light');
@@ -168,15 +376,19 @@ answerForm?.addEventListener('submit', async (event) => {
   }
 
   if (answerHash === expectedHash) {
-    const riddleNumber = document.body.dataset.riddle;
-    saveProgress(riddleNumber);
+    const currentRiddle = document.body.dataset.riddle;
+    saveProgress(currentRiddle);
+    updateUserProgress(currentRiddle);
+    saveRankingEntry(currentRiddle);
     answerMessage.textContent = 'Resposta aceita. Caso registrado no seu progresso.';
     answerMessage.className = 'answer-message ok';
-    nextCaseLink.classList.remove('hidden');
+    nextCaseLink?.classList.remove('hidden');
   } else {
     answerMessage.textContent = 'Resposta recusada. Observe de novo.';
     answerMessage.className = 'answer-message error';
   }
 });
 
+renderRiddleSession();
+renderExtraButtonState();
 applyImageState();
