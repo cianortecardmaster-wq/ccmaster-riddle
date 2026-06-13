@@ -563,7 +563,8 @@
   object-fit: cover;
   user-select: none;
   transition: opacity .18s ease, mix-blend-mode .18s ease;
-  filter: grayscale(1) contrast(1.18) brightness(.78);
+  /* A imagem/evidência precisa manter as cores originais para não atrapalhar o riddle. */
+  filter: none;
 }
 
 .riddle-image-back {
