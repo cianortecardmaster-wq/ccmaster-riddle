@@ -2015,3 +2015,49 @@ body {
   font-family: var(--font-mono);
   text-align: center;
 }
+
+/* ===== Supabase / progresso em nuvem ===== */
+.form-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.forgot-password {
+  display: block;
+  width: fit-content;
+  margin: 12px auto 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: .82rem;
+  cursor: pointer;
+  padding: 4px 2px;
+}
+
+.forgot-password:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+.form-message.ok {
+  color: #a9ffb8;
+}
+
+.form-message.error {
+  color: #ffb1b1;
+}
+
+button:disabled {
+  opacity: .58;
+  cursor: wait;
+}
+
+@media (max-width: 680px) {
+  .form-actions {
+    grid-template-columns: 1fr;
+  }
+}

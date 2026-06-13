@@ -56,7 +56,7 @@
           <span class="auth-title-icon">⌕</span>
           <p class="auth-card-title">Identificação do Investigador</p>
         </div>
-        <p class="auth-card-helper">Para registrar seu progresso, informe suas credenciais.</p>
+        <p class="auth-card-helper">Entre ou cadastre-se para salvar seu progresso na nuvem.</p>
 
         <div class="auth-tabs" role="tablist" aria-label="Escolha entrar ou cadastrar">
           <button class="tab active" type="button" id="tabLogin" aria-selected="true">Entrar</button>
@@ -84,7 +84,7 @@
             <span>Senha</span>
             <div class="input-wrap">
               <i aria-hidden="true">▣</i>
-              <input id="password" name="password" type="password" placeholder="Digite sua senha" minlength="4" required />
+              <input id="password" name="password" type="password" placeholder="Digite sua senha" minlength="8" required />
               <button class="show-pass" type="button" id="showPass" aria-label="Mostrar senha">◌</button>
             </div>
           </label>
@@ -95,13 +95,15 @@
           </label>
 
           <p class="auth-note">
-            Seu apelido será utilizado para mostrar seu progresso na área <strong>Investigadores</strong>.
+            Seu apelido aparece no ranking. Seu e-mail não será exibido.
           </p>
 
           <div class="form-actions">
             <button class="btn btn-ghost" type="submit" id="submitLogin">Entrar</button>
             <button class="btn btn-light" type="button" id="submitRegister">Cadastrar</button>
           </div>
+
+          <button class="forgot-password" type="button" id="forgotPassword">Esqueci minha senha</button>
 
           <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
         </form>
@@ -119,29 +121,29 @@
       <section class="ranking-card" id="ranking" aria-label="Ranking dos investigadores">
         <div class="ranking-title-wrap">
           <span class="auth-title-icon">♜</span>
-          <p class="auth-card-title">Ranking local</p>
+          <p class="auth-card-title">Ranking na nuvem</p>
         </div>
-        <p class="auth-card-helper">O ranking prioriza quem resolve com menos dicas extras. Os dados ficam salvos neste navegador.</p>
+        <p class="auth-card-helper">Ranking dos investigadores salvo na nuvem. Não mostra e-mail nem respostas.</p>
         <div class="ranking-table-wrap">
           <table class="ranking-table">
             <thead>
               <tr>
                 <th>#</th>
                 <th>Investigador</th>
-                <th>Riddle</th>
-                <th>Extras</th>
-                <th>Dicas usadas</th>
-                <th>Tempo</th>
+                <th>Resolvidos</th>
+                <th>Último avanço</th>
               </tr>
             </thead>
             <tbody id="rankingBody"></tbody>
           </table>
         </div>
-        <p class="ranking-empty" id="emptyRanking">Nenhum caso resolvido neste navegador ainda.</p>
+        <p class="ranking-empty" id="emptyRanking">Nenhum investigador com progresso salvo ainda.</p>
       </section>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-client.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

@@ -1,6 +1,9 @@
 const SESSION_KEY = 'ccmaster_riddle_session';
 const TEMP_SESSION_KEY = 'ccmaster_riddle_session_temp';
 const EXTRA_HINTS_KEY = 'ccmaster_riddle_extra_hints';
+const TOTAL_RIDDLES = window.CCMasterSupabase?.totalRiddles || 100;
+const supabaseClient = window.CCMasterSupabase?.client || null;
+
 const navUser = document.querySelector('#navUser');
 const navLogout = document.querySelector('#navLogout');
 const investigatorInline = document.querySelector('#investigatorInline');
@@ -21,6 +24,7 @@ const infoBoxContent = document.querySelector('#infoBoxContent');
 const infoButtons = Array.from(document.querySelectorAll('[data-info]'));
 const actionButtons = Array.from(document.querySelectorAll('[data-action]'));
 const hasBackImage = Boolean(backImage);
+const currentRiddleId = Number.parseInt(document.body.dataset.riddle || '0', 10);
 
 const state = {
   layerMode: 'normal',
@@ -29,9 +33,10 @@ const state = {
   rotate: 0,
   toolsOpen: false,
   activeInfo: null,
+  session: null,
 };
 
-function getRiddleSession() {
+function readCachedSession() {
   try {
     return JSON.parse(localStorage.getItem(SESSION_KEY)) || JSON.parse(sessionStorage.getItem(TEMP_SESSION_KEY));
   } catch {
@@ -39,8 +44,90 @@ function getRiddleSession() {
   }
 }
 
-function renderRiddleSession() {
-  const session = getRiddleSession();
+function saveSessionCache(sessionData) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
+  sessionStorage.removeItem(TEMP_SESSION_KEY);
+}
+
+function clearSessionCache() {
+  localStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(TEMP_SESSION_KEY);
+}
+
+async function getProfile(user) {
+  if (!supabaseClient || !user?.id) return null;
+
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('id, nickname')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (data && !error) return data;
+
+  const fallbackNickname = user.user_metadata?.nickname || String(user.email || '').split('@')[0] || 'Investigador';
+  const { data: created } = await supabaseClient
+    .from('profiles')
+    .upsert({ id: user.id, nickname: fallbackNickname }, { onConflict: 'id' })
+    .select('id, nickname')
+    .maybeSingle();
+
+  return created || { id: user.id, nickname: fallbackNickname };
+}
+
+async function getSolvedStats(userId) {
+  if (!supabaseClient || !userId) return { solvedCount: 0, currentRiddle: 1 };
+
+  const { data } = await supabaseClient
+    .from('progress')
+    .select('riddle_id')
+    .eq('user_id', userId)
+    .eq('solved', true);
+
+  const solvedIds = Array.isArray(data) ? data.map((row) => Number(row.riddle_id)).filter(Boolean) : [];
+  const highestSolved = solvedIds.length ? Math.max(...solvedIds) : 0;
+
+  return {
+    solvedCount: solvedIds.length,
+    currentRiddle: Math.min(highestSolved + 1, TOTAL_RIDDLES) || 1,
+  };
+}
+
+async function syncSessionFromSupabase() {
+  const cached = readCachedSession();
+  if (cached) state.session = cached;
+
+  if (!supabaseClient) {
+    state.session = cached;
+    return cached;
+  }
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user;
+
+  if (!user) {
+    clearSessionCache();
+    state.session = null;
+    return null;
+  }
+
+  const profile = await getProfile(user);
+  const stats = await getSolvedStats(user.id);
+  const sessionData = {
+    id: user.id,
+    nickname: profile?.nickname || user.user_metadata?.nickname || 'Investigador',
+    email: user.email,
+    currentRiddle: stats.currentRiddle,
+    solvedCount: stats.solvedCount,
+  };
+
+  saveSessionCache(sessionData);
+  state.session = sessionData;
+  return sessionData;
+}
+
+async function renderRiddleSession() {
+  const session = await syncSessionFromSupabase();
   const nickname = session?.nickname || 'Visitante';
 
   if (!session) {
@@ -59,10 +146,15 @@ function renderRiddleSession() {
   if (navLogout) navLogout.hidden = false;
 }
 
-function endRiddleSession() {
-  localStorage.removeItem(SESSION_KEY);
-  sessionStorage.removeItem(TEMP_SESSION_KEY);
-  renderRiddleSession();
+async function endRiddleSession() {
+  if (supabaseClient) await supabaseClient.auth.signOut();
+  clearSessionCache();
+  state.session = null;
+  await renderRiddleSession();
+  if (answerMessage) {
+    answerMessage.textContent = 'Sessão encerrada. Entre novamente pela página inicial.';
+    answerMessage.className = 'answer-message';
+  }
 }
 
 function normalizeAnswer(value) {
@@ -82,7 +174,7 @@ async function sha256(text) {
     .join('');
 }
 
-function saveProgress(riddleNumber) {
+function saveLocalProgress(riddleNumber) {
   const key = 'ccmaster_riddle_progress';
   let progress = [];
 
@@ -130,6 +222,61 @@ function getMetaTitle() {
 
 function getMetaImageName() {
   return document.body.dataset.metaImage || frontImage?.getAttribute('src')?.split('/').pop() || 'imagem.png';
+}
+
+function getHintStore() {
+  try {
+    return JSON.parse(localStorage.getItem(EXTRA_HINTS_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function getCurrentHintCount() {
+  const store = getHintStore();
+  const current = Array.isArray(store[document.body.dataset.riddle || '000'])
+    ? store[document.body.dataset.riddle || '000']
+    : [];
+  return current.length;
+}
+
+async function syncCloudHintUsage() {
+  if (!supabaseClient || !state.session?.id || !currentRiddleId) return;
+
+  const hintsUsed = getCurrentHintCount();
+  const { data: current } = await supabaseClient
+    .from('progress')
+    .select('id, solved, solved_at, attempts_count, hints_used')
+    .eq('user_id', state.session.id)
+    .eq('riddle_id', currentRiddleId)
+    .maybeSingle();
+
+  await supabaseClient.from('progress').upsert({
+    user_id: state.session.id,
+    riddle_id: currentRiddleId,
+    solved: Boolean(current?.solved),
+    solved_at: current?.solved_at || null,
+    hints_used: Math.max(Number(current?.hints_used || 0), hintsUsed),
+    attempts_count: Number(current?.attempts_count || 0),
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'user_id,riddle_id' });
+}
+
+function markExtraHintAsUsed() {
+  const riddleNumber = document.body.dataset.riddle || '000';
+  const hint = (document.body.dataset.extraHint || '').trim();
+  if (!hint) return;
+
+  const store = getHintStore();
+  const current = Array.isArray(store[riddleNumber]) ? store[riddleNumber] : [];
+
+  if (!current.includes(hint)) {
+    current.push(hint);
+  }
+
+  store[riddleNumber] = current;
+  localStorage.setItem(EXTRA_HINTS_KEY, JSON.stringify(store));
+  syncCloudHintUsage().catch(() => {});
 }
 
 function buildInfoContent(type) {
@@ -185,30 +332,6 @@ function toggleInfo(type) {
   infoBoxContent.innerHTML = content.html;
   infoBox.hidden = false;
   renderInfoState();
-}
-
-function getHintStore() {
-  try {
-    return JSON.parse(localStorage.getItem(EXTRA_HINTS_KEY)) || {};
-  } catch {
-    return {};
-  }
-}
-
-function markExtraHintAsUsed() {
-  const riddleNumber = document.body.dataset.riddle || '000';
-  const hint = (document.body.dataset.extraHint || '').trim();
-  if (!hint) return;
-
-  const store = getHintStore();
-  const current = Array.isArray(store[riddleNumber]) ? store[riddleNumber] : [];
-
-  if (!current.includes(hint)) {
-    current.push(hint);
-  }
-
-  store[riddleNumber] = current;
-  localStorage.setItem(EXTRA_HINTS_KEY, JSON.stringify(store));
 }
 
 function getRelationButtons() {
@@ -274,6 +397,75 @@ function toggleLayerMode(mode) {
   applyImageState();
 }
 
+async function getCurrentProgressRow(userId) {
+  if (!supabaseClient || !userId || !currentRiddleId) return null;
+
+  const { data } = await supabaseClient
+    .from('progress')
+    .select('id, solved, solved_at, hints_used, attempts_count')
+    .eq('user_id', userId)
+    .eq('riddle_id', currentRiddleId)
+    .maybeSingle();
+
+  return data || null;
+}
+
+async function loadSolvedState() {
+  const session = await syncSessionFromSupabase();
+  if (!session || !supabaseClient || !currentRiddleId) return;
+
+  const current = await getCurrentProgressRow(session.id);
+  if (current?.solved) {
+    if (answerMessage) {
+      answerMessage.textContent = 'Este caso já foi registrado no seu progresso.';
+      answerMessage.className = 'answer-message ok';
+    }
+    nextCaseLink?.classList.remove('hidden');
+  }
+}
+
+async function registerCloudAttempt({ normalized, rawAnswer, isCorrect }) {
+  const session = await syncSessionFromSupabase();
+
+  if (!session || !supabaseClient) {
+    throw new Error('Entre pela página inicial para registrar o progresso na nuvem.');
+  }
+
+  const current = await getCurrentProgressRow(session.id);
+  const attemptsCount = Number(current?.attempts_count || 0) + 1;
+  const hintsUsed = getCurrentHintCount();
+  const now = new Date().toISOString();
+
+  await supabaseClient.from('attempts').insert({
+    user_id: session.id,
+    riddle_id: currentRiddleId,
+    answer_submitted: rawAnswer.slice(0, 180),
+    correct: isCorrect,
+  });
+
+  await supabaseClient.from('progress').upsert({
+    user_id: session.id,
+    riddle_id: currentRiddleId,
+    solved: Boolean(isCorrect || current?.solved),
+    solved_at: isCorrect ? (current?.solved_at || now) : (current?.solved_at || null),
+    hints_used: Math.max(Number(current?.hints_used || 0), hintsUsed),
+    attempts_count: attemptsCount,
+    updated_at: now,
+  }, { onConflict: 'user_id,riddle_id' });
+
+  if (isCorrect) {
+    saveLocalProgress(document.body.dataset.riddle);
+    const nextRiddle = Math.min(currentRiddleId + 1, TOTAL_RIDDLES);
+    saveSessionCache({
+      ...session,
+      currentRiddle: nextRiddle,
+      solvedCount: Number(session.solvedCount || 0) + (current?.solved ? 0 : 1),
+    });
+  }
+
+  return { attemptsCount, normalized };
+}
+
 navLogout?.addEventListener('click', endRiddleSession);
 themeToggle?.addEventListener('click', toggleTheme);
 
@@ -323,8 +515,8 @@ answerForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const expectedHash = answerForm.dataset.answerHash;
-  const normalized = normalizeAnswer(answerInput.value);
-  const answerHash = await sha256(normalized);
+  const rawAnswer = answerInput.value.trim();
+  const normalized = normalizeAnswer(rawAnswer);
 
   if (!expectedHash) {
     answerMessage.textContent = 'Este caso ainda não tem resposta configurada.';
@@ -332,19 +524,47 @@ answerForm?.addEventListener('submit', async (event) => {
     return;
   }
 
-  if (answerHash === expectedHash) {
-    const riddleNumber = document.body.dataset.riddle;
-    saveProgress(riddleNumber);
-    answerMessage.textContent = 'Resposta aceita. Caso registrado no seu progresso.';
+  if (!state.session) {
+    await renderRiddleSession();
+  }
+
+  if (!state.session) {
+    answerMessage.innerHTML = 'Entre pela <a href="/">Entrada</a> para registrar o progresso na nuvem.';
+    answerMessage.className = 'answer-message error';
+    return;
+  }
+
+  const answerHash = await sha256(normalized);
+  const isCorrect = answerHash === expectedHash;
+
+  try {
+    await registerCloudAttempt({ normalized, rawAnswer, isCorrect });
+  } catch (error) {
+    answerMessage.textContent = error.message || 'Não foi possível registrar sua tentativa.';
+    answerMessage.className = 'answer-message error';
+    return;
+  }
+
+  if (isCorrect) {
+    answerMessage.textContent = 'Resposta aceita. Progresso salvo na nuvem.';
     answerMessage.className = 'answer-message ok';
     nextCaseLink.classList.remove('hidden');
+    await renderRiddleSession();
   } else {
-    answerMessage.textContent = 'Resposta recusada. Observe de novo.';
+    answerMessage.textContent = 'Resposta recusada. Tentativa registrada.';
     answerMessage.className = 'answer-message error';
   }
 });
+
+if (supabaseClient) {
+  supabaseClient.auth.onAuthStateChange(async () => {
+    await renderRiddleSession();
+    await loadSolvedState();
+  });
+}
 
 renderRiddleSession();
 renderInfoState();
 applyImageState();
 setToolsOpen(false);
+loadSolvedState();

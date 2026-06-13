@@ -1,6 +1,7 @@
-const STORAGE_KEY = 'ccmaster_riddle_users';
 const SESSION_KEY = 'ccmaster_riddle_session';
 const TEMP_SESSION_KEY = 'ccmaster_riddle_session_temp';
+const TOTAL_RIDDLES = window.CCMasterSupabase?.totalRiddles || 100;
+const supabaseClient = window.CCMasterSupabase?.client || null;
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -9,9 +10,11 @@ const tabLogin = $('#tabLogin');
 const tabRegister = $('#tabRegister');
 const submitLogin = $('#submitLogin');
 const submitRegister = $('#submitRegister');
+const forgotPassword = $('#forgotPassword');
 const nicknameField = $('#nicknameField');
 const nicknameInput = $('#nickname');
 const emailInput = $('#email');
+const emailField = emailInput?.closest('.field');
 const passwordInput = $('#password');
 const rememberDevice = $('#rememberDevice');
 const formMessage = $('#formMessage');
@@ -28,18 +31,6 @@ const emptyRanking = $('#emptyRanking');
 
 let currentMode = 'login';
 
-function getUsers() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-function saveUsers(users) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-}
-
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
 }
@@ -48,113 +39,54 @@ function setMessage(text, type = 'normal') {
   if (!formMessage) return;
   formMessage.textContent = text;
   formMessage.classList.toggle('error', type === 'error');
+  formMessage.classList.toggle('ok', type === 'ok');
+}
+
+function setBusy(isBusy) {
+  [submitLogin, submitRegister, forgotPassword].forEach((button) => {
+    if (button) button.disabled = isBusy;
+  });
 }
 
 function setMode(mode) {
   currentMode = mode;
   const isRegister = mode === 'register';
+  const isReset = mode === 'reset';
 
-  tabLogin?.classList.toggle('active', !isRegister);
-  tabLogin?.setAttribute('aria-selected', String(!isRegister));
+  tabLogin?.classList.toggle('active', mode === 'login' || isReset);
+  tabLogin?.setAttribute('aria-selected', String(mode === 'login' || isReset));
   tabRegister?.classList.toggle('active', isRegister);
   tabRegister?.setAttribute('aria-selected', String(isRegister));
 
   if (nicknameField) nicknameField.style.display = isRegister ? 'block' : 'none';
+  if (emailField) emailField.style.display = isReset ? 'none' : 'block';
   if (nicknameInput) nicknameInput.required = isRegister;
-  setMessage('');
-}
-
-function makeSession(user) {
-  return {
-    id: user.id,
-    nickname: user.nickname,
-    email: user.email,
-    currentRiddle: user.progress?.currentRiddle || 1
-  };
-}
-
-function startSession(user) {
-  const session = makeSession(user);
-  const shouldRemember = Boolean(rememberDevice?.checked);
-
-  if (shouldRemember) {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    sessionStorage.removeItem(TEMP_SESSION_KEY);
-  } else {
-    sessionStorage.setItem(TEMP_SESSION_KEY, JSON.stringify(session));
-    localStorage.removeItem(SESSION_KEY);
+  if (emailInput) emailInput.required = !isReset;
+  if (passwordInput) {
+    passwordInput.required = true;
+    passwordInput.placeholder = isReset ? 'Digite a nova senha' : 'Digite sua senha';
   }
 
-  renderSession();
-  renderRanking();
+  if (submitLogin) submitLogin.textContent = isReset ? 'Salvar nova senha' : 'Entrar';
+  if (submitRegister) submitRegister.hidden = isReset;
+  if (forgotPassword) forgotPassword.hidden = isRegister || isReset;
+
+  if (!isReset) setMessage('');
 }
 
-function registerUser() {
-  const nickname = nicknameInput.value.trim();
-  const email = normalizeEmail(emailInput.value);
-  const password = passwordInput.value;
-
-  if (nickname.length < 2) {
-    setMessage('Escolha um apelido com pelo menos 2 caracteres.', 'error');
-    return;
-  }
-
-  if (!email || !password) {
-    setMessage('Preencha e-mail e senha para cadastrar.', 'error');
-    return;
-  }
-
-  const users = getUsers();
-  const exists = users.some((user) => user.email === email);
-
-  if (exists) {
-    setMessage('Este e-mail já foi cadastrado. Use Entrar.', 'error');
-    return;
-  }
-
-  const user = {
-    id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-    nickname,
-    email,
-    password,
-    progress: {
-      currentRiddle: 1,
-      solved: [],
-      lastAccess: new Date().toISOString()
-    },
-    createdAt: new Date().toISOString()
-  };
-
-  users.push(user);
-  saveUsers(users);
-  startSession(user);
-  setMessage(`Cadastro concluído. Bem-vindo, ${nickname}.`);
+function riddleUrl(number) {
+  return `/riddles/${String(number || 1).padStart(3, '0')}/`;
 }
 
-function loginUser() {
-  const email = normalizeEmail(emailInput.value);
-  const password = passwordInput.value;
-  const users = getUsers();
-  const user = users.find((candidate) => candidate.email === email && candidate.password === password);
-
-  if (!user) {
-    setMessage('E-mail ou senha incorretos.', 'error');
-    return;
-  }
-
-  user.progress = user.progress || { currentRiddle: 1, solved: [] };
-  user.progress.lastAccess = new Date().toISOString();
-  saveUsers(users);
-  startSession(user);
-  setMessage(`Investigador conectado: ${user.nickname}.`);
+function saveSessionCache(sessionData) {
+  const payload = JSON.stringify(sessionData);
+  localStorage.setItem(SESSION_KEY, payload);
+  sessionStorage.removeItem(TEMP_SESSION_KEY);
 }
 
-function endSession() {
+function clearSessionCache() {
   localStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem(TEMP_SESSION_KEY);
-  renderSession();
-  renderRanking();
-  setMessage('Sessão encerrada.');
 }
 
 function getSession() {
@@ -165,12 +97,86 @@ function getSession() {
   }
 }
 
-function riddleUrl(number) {
-  return `/riddles/${String(number || 1).padStart(3, '0')}/`;
+async function getProfile(user) {
+  if (!supabaseClient || !user?.id) return null;
+
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('id, nickname')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (data && !error) return data;
+
+  const fallbackNickname = user.user_metadata?.nickname || normalizeEmail(user.email).split('@')[0] || 'Investigador';
+  const { data: created } = await supabaseClient
+    .from('profiles')
+    .upsert({ id: user.id, nickname: fallbackNickname }, { onConflict: 'id' })
+    .select('id, nickname')
+    .maybeSingle();
+
+  return created || { id: user.id, nickname: fallbackNickname };
 }
 
-function renderSession() {
-  const session = getSession();
+async function getProgressStats(userId) {
+  if (!supabaseClient || !userId) {
+    return { solvedCount: 0, currentRiddle: 1, lastSolvedAt: null };
+  }
+
+  const { data } = await supabaseClient
+    .from('progress')
+    .select('riddle_id, solved_at')
+    .eq('user_id', userId)
+    .eq('solved', true);
+
+  const solved = Array.isArray(data) ? data : [];
+  const solvedIds = solved.map((item) => Number(item.riddle_id)).filter(Boolean);
+  const highestSolved = solvedIds.length ? Math.max(...solvedIds) : 0;
+  const currentRiddle = Math.min(highestSolved + 1, TOTAL_RIDDLES);
+  const lastSolvedAt = solved
+    .map((item) => item.solved_at)
+    .filter(Boolean)
+    .sort()
+    .at(-1) || null;
+
+  return {
+    solvedCount: solvedIds.length,
+    currentRiddle: currentRiddle || 1,
+    lastSolvedAt,
+  };
+}
+
+async function syncSessionFromSupabase() {
+  if (!supabaseClient) {
+    clearSessionCache();
+    return null;
+  }
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const user = session?.user;
+
+  if (!user) {
+    clearSessionCache();
+    return null;
+  }
+
+  const profile = await getProfile(user);
+  const stats = await getProgressStats(user.id);
+  const sessionData = {
+    id: user.id,
+    nickname: profile?.nickname || user.user_metadata?.nickname || 'Investigador',
+    email: user.email,
+    currentRiddle: stats.currentRiddle,
+    solvedCount: stats.solvedCount,
+    lastSolvedAt: stats.lastSolvedAt,
+  };
+
+  saveSessionCache(sessionData);
+  return sessionData;
+}
+
+async function renderSession() {
+  const session = await syncSessionFromSupabase();
 
   if (!session) {
     if (loggedPanel) loggedPanel.hidden = true;
@@ -185,12 +191,12 @@ function renderSession() {
   const current = session.currentRiddle || 1;
 
   if (loggedName) {
-    loggedName.textContent = `${session.nickname} — Riddle ${String(current).padStart(3, '0')}`;
+    loggedName.textContent = `${session.nickname} — ${session.solvedCount || 0}/${TOTAL_RIDDLES} resolvidos`;
   }
 
   if (continueBtn) {
     continueBtn.href = riddleUrl(current);
-    continueBtn.textContent = current > 1 ? 'CONTINUAR O CASO' : 'ENTRAR NO CASO';
+    continueBtn.textContent = current > 1 ? `CONTINUAR NO RIDDLE ${String(current).padStart(3, '0')}` : 'ENTRAR NO CASO';
   }
 
   if (loggedPanel) loggedPanel.hidden = false;
@@ -217,53 +223,61 @@ function toggleTheme() {
   localStorage.setItem('ccmaster_theme', isLight ? 'light' : 'dark');
 }
 
-
-function safeJsonParse(value, fallback) {
-  try {
-    return JSON.parse(value) || fallback;
-  } catch {
-    return fallback;
-  }
+function formatDate(value) {
+  if (!value) return 'sem registro';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'sem registro';
+  return date.toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
-function formatElapsed(seconds) {
-  if (seconds === null || seconds === undefined) return 'tempo não registrado';
-  const total = Number(seconds);
-  const minutes = Math.floor(total / 60);
-  const rest = total % 60;
-  if (minutes <= 0) return `${rest}s`;
-  return `${minutes}min ${String(rest).padStart(2, '0')}s`;
-}
-
-function renderRanking() {
+async function renderRanking() {
   if (!rankingBody || !emptyRanking) return;
 
-  const ranking = safeJsonParse(localStorage.getItem('ccmaster_riddle_rankings'), []);
   rankingBody.innerHTML = '';
+
+  if (!supabaseClient) {
+    emptyRanking.hidden = false;
+    emptyRanking.textContent = 'Supabase não carregou. Recarregue a página.';
+    return;
+  }
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    emptyRanking.hidden = false;
+    emptyRanking.textContent = 'Entre para ver o ranking salvo na nuvem.';
+    return;
+  }
+
+  const { data, error } = await supabaseClient.rpc('get_public_leaderboard');
+
+  if (error) {
+    emptyRanking.hidden = false;
+    emptyRanking.textContent = 'Não foi possível carregar o ranking agora.';
+    return;
+  }
+
+  const ranking = Array.isArray(data) ? data.filter((entry) => Number(entry.solved_count) > 0) : [];
 
   if (!ranking.length) {
     emptyRanking.hidden = false;
+    emptyRanking.textContent = 'Nenhum investigador com progresso salvo ainda.';
     return;
   }
 
   emptyRanking.hidden = true;
 
-  const sorted = [...ranking].sort((a, b) => {
-    if ((a.riddle || '') !== (b.riddle || '')) return String(a.riddle).localeCompare(String(b.riddle));
-    if ((a.extraCount || 0) !== (b.extraCount || 0)) return (a.extraCount || 0) - (b.extraCount || 0);
-    return (a.elapsedSeconds ?? Number.MAX_SAFE_INTEGER) - (b.elapsedSeconds ?? Number.MAX_SAFE_INTEGER);
-  });
-
-  sorted.slice(0, 20).forEach((entry, index) => {
-    const extras = Array.isArray(entry.extras) && entry.extras.length ? entry.extras.join(', ') : 'nenhuma';
+  ranking.slice(0, 30).forEach((entry, index) => {
     const row = document.createElement('tr');
     const values = [
       index + 1,
-      entry.nickname || 'Investigador local',
-      String(entry.riddle || '').padStart(3, '0'),
-      entry.extraCount || 0,
-      extras,
-      formatElapsed(entry.elapsedSeconds),
+      entry.nickname || 'Investigador',
+      `${entry.solved_count || 0}/${TOTAL_RIDDLES}`,
+      formatDate(entry.last_solved_at),
     ];
 
     values.forEach((value) => {
@@ -285,19 +299,161 @@ function animateCounters() {
   online.textContent = String(base + variation).padStart(3, '0');
 }
 
+async function registerUser() {
+  if (!supabaseClient) {
+    setMessage('Supabase não carregou. Recarregue a página.', 'error');
+    return;
+  }
+
+  const nickname = nicknameInput.value.trim();
+  const email = normalizeEmail(emailInput.value);
+  const password = passwordInput.value;
+
+  if (nickname.length < 2) {
+    setMessage('Escolha um apelido com pelo menos 2 caracteres.', 'error');
+    return;
+  }
+
+  if (!email || !password) {
+    setMessage('Preencha e-mail e senha para cadastrar.', 'error');
+    return;
+  }
+
+  if (password.length < 8) {
+    setMessage('Use uma senha com pelo menos 8 caracteres.', 'error');
+    return;
+  }
+
+  setBusy(true);
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { nickname },
+      emailRedirectTo: `${window.location.origin}/`,
+    },
+  });
+  setBusy(false);
+
+  if (error) {
+    setMessage(error.message || 'Não foi possível cadastrar.', 'error');
+    return;
+  }
+
+  if (data?.session) {
+    await renderSession();
+    await renderRanking();
+    setMessage(`Cadastro concluído. Bem-vindo, ${nickname}.`, 'ok');
+    return;
+  }
+
+  setMessage('Cadastro recebido. Confirme seu e-mail para entrar na investigação.', 'ok');
+  setMode('login');
+}
+
+async function loginUser() {
+  if (!supabaseClient) {
+    setMessage('Supabase não carregou. Recarregue a página.', 'error');
+    return;
+  }
+
+  const email = normalizeEmail(emailInput.value);
+  const password = passwordInput.value;
+
+  if (!email || !password) {
+    setMessage('Preencha e-mail e senha para entrar.', 'error');
+    return;
+  }
+
+  setBusy(true);
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  setBusy(false);
+
+  if (error) {
+    setMessage('E-mail ou senha incorretos, ou e-mail ainda não confirmado.', 'error');
+    return;
+  }
+
+  const session = await syncSessionFromSupabase();
+  await renderSession();
+  await renderRanking();
+  setMessage(`Investigador conectado: ${session?.nickname || 'Investigador'}.`, 'ok');
+}
+
+async function requestPasswordReset() {
+  if (!supabaseClient) {
+    setMessage('Supabase não carregou. Recarregue a página.', 'error');
+    return;
+  }
+
+  const email = normalizeEmail(emailInput.value);
+  if (!email) {
+    setMessage('Digite seu e-mail para receber o link de recuperação.', 'error');
+    emailInput?.focus();
+    return;
+  }
+
+  setBusy(true);
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/?reset=1`,
+  });
+  setBusy(false);
+
+  if (error) {
+    setMessage(error.message || 'Não foi possível enviar o e-mail de recuperação.', 'error');
+    return;
+  }
+
+  setMessage('Enviamos um link de recuperação para seu e-mail.', 'ok');
+}
+
+async function updateRecoveredPassword() {
+  if (!supabaseClient) return;
+  const password = passwordInput.value;
+
+  if (password.length < 8) {
+    setMessage('A nova senha precisa ter pelo menos 8 caracteres.', 'error');
+    return;
+  }
+
+  setBusy(true);
+  const { error } = await supabaseClient.auth.updateUser({ password });
+  setBusy(false);
+
+  if (error) {
+    setMessage(error.message || 'Não foi possível alterar a senha.', 'error');
+    return;
+  }
+
+  setMessage('Senha alterada. Você já pode continuar a investigação.', 'ok');
+  setMode('login');
+  await renderSession();
+}
+
+async function endSession() {
+  if (supabaseClient) await supabaseClient.auth.signOut();
+  clearSessionCache();
+  await renderSession();
+  await renderRanking();
+  setMessage('Sessão encerrada.');
+}
+
 tabLogin?.addEventListener('click', () => setMode('login'));
 tabRegister?.addEventListener('click', () => setMode('register'));
-submitRegister?.addEventListener('click', () => {
+submitRegister?.addEventListener('click', async () => {
   setMode('register');
-  registerUser();
+  await registerUser();
 });
+forgotPassword?.addEventListener('click', requestPasswordReset);
 
-authForm?.addEventListener('submit', (event) => {
+authForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (currentMode === 'register') {
-    registerUser();
+    await registerUser();
+  } else if (currentMode === 'reset') {
+    await updateRecoveredPassword();
   } else {
-    loginUser();
+    await loginUser();
   }
 });
 
@@ -311,16 +467,25 @@ logoutBtn?.addEventListener('click', endSession);
 navLogout?.addEventListener('click', endSession);
 themeToggle?.addEventListener('click', toggleTheme);
 
-setMode('login');
+if (supabaseClient) {
+  supabaseClient.auth.onAuthStateChange(async (event) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      setMode('reset');
+      setMessage('Digite sua nova senha para concluir a recuperação.', 'ok');
+      passwordInput?.focus();
+      return;
+    }
+
+    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'SIGNED_OUT') {
+      await renderSession();
+      await renderRanking();
+    }
+  });
+}
+
+setMode(new URLSearchParams(window.location.search).get('reset') === '1' ? 'reset' : 'login');
 initTheme();
 renderSession();
 renderRanking();
 animateCounters();
 setInterval(animateCounters, 8000);
-
-/*
-  IMPORTANTE:
-  Este cadastro usa localStorage/sessionStorage apenas para protótipo estático no GitHub/Cloudflare Pages.
-  Para salvar progresso real entre dispositivos, o ideal é trocar esta camada por Firebase Auth + Firestore
-  ou Supabase Auth + Database.
-*/
