@@ -5,6 +5,10 @@ const supabaseClient = window.CCMasterSupabase?.client || null;
 
 const $ = (selector) => document.querySelector(selector);
 
+const authCard = $('#authCard');
+const authCardTitle = $('#authCardTitle');
+const authCardHelper = $('#authCardHelper');
+const authControls = $('#authControls');
 const authForm = $('#authForm');
 const tabLogin = $('#tabLogin');
 const tabRegister = $('#tabRegister');
@@ -22,6 +26,7 @@ const formMessage = $('#formMessage');
 const showPass = $('#showPass');
 const loggedPanel = $('#loggedPanel');
 const loggedName = $('#loggedName');
+const loggedProgress = $('#loggedProgress');
 const continueBtn = $('#continueBtn');
 const logoutBtn = $('#logoutBtn');
 const navUser = $('#navUser');
@@ -223,7 +228,13 @@ async function renderSession() {
   const session = await syncSessionFromSupabase();
 
   if (!session) {
+    document.body.classList.remove('is-logged-in');
+    if (authControls) authControls.hidden = false;
+    if (authCard) authCard.setAttribute('aria-label', 'Cadastro e login');
+    if (authCardTitle) authCardTitle.textContent = 'Identificação do Investigador';
+    if (authCardHelper) authCardHelper.textContent = 'Entre ou cadastre-se para salvar seu progresso na nuvem.';
     if (loggedPanel) loggedPanel.hidden = true;
+    if (loggedProgress) loggedProgress.textContent = 'Progresso sincronizado na nuvem.';
     if (navUser) {
       navUser.hidden = true;
       navUser.textContent = '';
@@ -232,15 +243,26 @@ async function renderSession() {
     return;
   }
 
+  document.body.classList.add('is-logged-in');
   const current = session.currentRiddle || 1;
+  const solvedCount = session.solvedCount || 0;
+
+  if (authControls) authControls.hidden = true;
+  if (authCard) authCard.setAttribute('aria-label', 'Área do investigador');
+  if (authCardTitle) authCardTitle.textContent = 'Área do Investigador';
+  if (authCardHelper) authCardHelper.textContent = 'Identidade confirmada. Escolha seu próximo passo.';
 
   if (loggedName) {
-    loggedName.textContent = `${session.nickname} — ${session.solvedCount || 0}/${TOTAL_RIDDLES} resolvidos`;
+    loggedName.textContent = session.nickname || 'Investigador';
+  }
+
+  if (loggedProgress) {
+    loggedProgress.textContent = `${solvedCount}/${TOTAL_RIDDLES} riddles resolvidos`;
   }
 
   if (continueBtn) {
     continueBtn.href = riddleUrl(current);
-    continueBtn.textContent = current > 1 ? `CONTINUAR NO RIDDLE ${String(current).padStart(3, '0')}` : 'ENTRAR NO CASO';
+    continueBtn.textContent = current > 1 ? `IR PARA O RIDDLE ${String(current).padStart(3, '0')}` : 'IR PARA O RIDDLE';
   }
 
   if (loggedPanel) loggedPanel.hidden = false;

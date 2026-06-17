@@ -78,30 +78,31 @@
         <p class="closing">Nem tudo será entregue.<br>Quase tudo poderá ser descoberto.</p>
       </section>
 
-      <section class="auth-card" aria-label="Cadastro e login">
+      <section class="auth-card" aria-label="Cadastro e login" id="authCard">
         <div class="auth-title-wrap" aria-hidden="true">
           <span class="auth-title-icon"><span class="icon icon-fingerprint" aria-hidden="true"></span></span>
-          <p class="auth-card-title">Identificação do Investigador</p>
+          <p class="auth-card-title" id="authCardTitle">Identificação do Investigador</p>
         </div>
-        <p class="auth-card-helper">Entre ou cadastre-se para salvar seu progresso na nuvem.</p>
+        <p class="auth-card-helper" id="authCardHelper">Entre ou cadastre-se para salvar seu progresso na nuvem.</p>
 
-        <button class="google-auth" type="button" id="googleLogin" aria-label="Entrar com Google">
-          <span class="google-mark" aria-hidden="true">G</span>
-          <span>Entrar com Google</span>
-        </button>
+        <div class="auth-controls" id="authControls">
+          <button class="google-auth" type="button" id="googleLogin" aria-label="Entrar com Google">
+            <span class="google-mark" aria-hidden="true">G</span>
+            <span>Entrar com Google</span>
+          </button>
 
-        <div class="auth-divider" aria-hidden="true">
-          <span></span>
-          <small>ou use e-mail</small>
-          <span></span>
-        </div>
+          <div class="auth-divider" aria-hidden="true">
+            <span></span>
+            <small>ou use e-mail</small>
+            <span></span>
+          </div>
 
-        <div class="auth-tabs" role="tablist" aria-label="Escolha entrar ou cadastrar">
-          <button class="tab active" type="button" id="tabLogin" aria-selected="true"><span class="icon icon-lock-open" aria-hidden="true"></span><span>Entrar</span></button>
-          <button class="tab" type="button" id="tabRegister" aria-selected="false"><span class="icon icon-user-plus" aria-hidden="true"></span><span>Cadastrar</span></button>
-        </div>
+          <div class="auth-tabs" role="tablist" aria-label="Escolha entrar ou cadastrar">
+            <button class="tab active" type="button" id="tabLogin" aria-selected="true"><span class="icon icon-lock-open" aria-hidden="true"></span><span>Entrar</span></button>
+            <button class="tab" type="button" id="tabRegister" aria-selected="false"><span class="icon icon-user-plus" aria-hidden="true"></span><span>Cadastrar</span></button>
+          </div>
 
-        <form id="authForm" autocomplete="on">
+          <form id="authForm" autocomplete="on">
           <label class="field" id="nicknameField">
             <span>Apelido</span>
             <div class="input-wrap">
@@ -150,16 +151,21 @@
 
           <button class="forgot-password nav-icon nav-icon-key" type="button" id="forgotPassword">Esqueci minha senha</button>
 
-          <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
-        </form>
+            <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+          </form>
+        </div>
 
         <div class="logged-panel" id="loggedPanel" hidden>
-          <div>
-            <span>Investigador conectado</span>
+          <div class="logged-identity">
+            <span>Investigador identificado</span>
             <strong id="loggedName">---</strong>
+            <small id="loggedProgress">Progresso sincronizado na nuvem.</small>
           </div>
-          <a class="btn btn-light btn-icon btn-icon-folder" id="continueBtn" href="/riddles/001/">Começar</a>
-          <button class="btn btn-ghost btn-icon btn-icon-exit" type="button" id="logoutBtn">Sair</button>
+          <div class="logged-actions" aria-label="Ações do investigador">
+            <a class="btn btn-light btn-icon btn-icon-enter" id="continueBtn" href="/riddles/001/">Ir para o riddle</a>
+            <a class="btn btn-ghost btn-icon btn-icon-folder-search" id="dossieBtn" href="/dossie/">Riddles resolvidos</a>
+            <button class="btn btn-ghost btn-icon btn-icon-exit" type="button" id="logoutBtn">Sair</button>
+          </div>
         </div>
       </section>
 
