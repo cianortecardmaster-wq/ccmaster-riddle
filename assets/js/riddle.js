@@ -301,9 +301,10 @@ function buildInfoContent(type) {
   }
 
   if (type === 'trail') {
+    const trailPath = document.body.dataset.trailPath || window.location.pathname || '/';
     return {
       title: 'Rastro',
-      html: `<p>${escapeHtml(window.location.pathname || '/')}</p>`,
+      html: `<p>${escapeHtml(trailPath)}</p>`,
     };
   }
 
