@@ -30,6 +30,49 @@ const themeToggle = $('#themeToggle');
 const rankingBody = $('#rankingBody');
 const emptyRanking = $('#emptyRanking');
 
+
+const INTRO_MODAL_KEY = 'ccmaster_intro_modal_seen_v1';
+const introModal = $('#introModal');
+const introDismissBtn = $('#introDismissBtn');
+const introRulesBtn = $('#introRulesBtn');
+let introLastFocus = null;
+
+function hideIntroModal(saveChoice = true) {
+  if (!introModal) return;
+  if (saveChoice) localStorage.setItem(INTRO_MODAL_KEY, '1');
+  introModal.hidden = true;
+  document.body.classList.remove('intro-modal-open');
+  introLastFocus?.focus?.();
+}
+
+function showIntroModal() {
+  if (!introModal) return;
+  const alreadySeen = localStorage.getItem(INTRO_MODAL_KEY) === '1';
+  const forceIntro = new URLSearchParams(window.location.search).get('intro') === '1';
+
+  if (alreadySeen && !forceIntro) return;
+
+  introLastFocus = document.activeElement;
+  introModal.hidden = false;
+  document.body.classList.add('intro-modal-open');
+  introDismissBtn?.focus();
+}
+
+introDismissBtn?.addEventListener('click', () => hideIntroModal(true));
+introRulesBtn?.addEventListener('click', () => localStorage.setItem(INTRO_MODAL_KEY, '1'));
+
+introModal?.addEventListener('click', (event) => {
+  if (event.target?.matches?.('[data-intro-close]')) {
+    hideIntroModal(true);
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && introModal && !introModal.hidden) {
+    hideIntroModal(true);
+  }
+});
+
 let currentMode = 'login';
 
 function normalizeEmail(email) {
@@ -466,6 +509,7 @@ if (supabaseClient) {
 
 setMode(new URLSearchParams(window.location.search).get('reset') === '1' ? 'reset' : 'login');
 initTheme();
+showIntroModal();
 renderSession();
 renderRanking();
 animateCounters();
