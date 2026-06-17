@@ -387,7 +387,15 @@ function applyImageState() {
   frontImage.style.opacity = String(frontOpacity);
   frontImage.style.mixBlendMode = frontBlendMode;
   evidenceStack.style.transform = `rotate(${state.rotate}deg) scaleX(${state.mirror ? -1 : 1})`;
-  evidenceStack.style.filter = state.invert ? 'invert(1)' : 'none';
+
+  let stackFilter = 'none';
+  if (state.invert) {
+    stackFilter = currentRiddleId === 3
+      ? 'invert(1) contrast(3.1) brightness(0.78)'
+      : 'invert(1)';
+  }
+
+  evidenceStack.style.filter = stackFilter;
   evidenceFrame?.setAttribute('data-layer-mode', state.layerMode);
 
   syncActionButtons();
