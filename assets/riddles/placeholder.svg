@@ -1,10 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
-  <rect width="1600" height="900" fill="#050505"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#050505"/>
   <g fill="none" stroke="#f2f2f2" stroke-width="4" opacity="0.55">
-    <rect x="80" y="80" width="1440" height="740"/>
-    <path d="M160 740 L520 250 L840 590 L1040 390 L1440 740"/>
-    <circle cx="1220" cy="255" r="90"/>
+    <rect x="72" y="72" width="936" height="936"/>
+    <path d="M140 860 L360 470 L550 700 L700 560 L940 860"/>
+    <circle cx="820" cy="275" r="86"/>
   </g>
-  <text x="800" y="440" text-anchor="middle" fill="#f2f2f2" font-family="monospace" font-size="64">IMAGEM DO CASO</text>
-  <text x="800" y="520" text-anchor="middle" fill="#777" font-family="monospace" font-size="30">substitua por /assets/riddles/001.png</text>
+  <text x="540" y="500" text-anchor="middle" fill="#f2f2f2" font-family="monospace" font-size="58">IMAGEM DO CASO</text>
+  <text x="540" y="575" text-anchor="middle" fill="#777" font-family="monospace" font-size="28">padrão recomendado: 1080 x 1080 px</text>
+  <text x="540" y="620" text-anchor="middle" fill="#777" font-family="monospace" font-size="24">substitua por /assets/riddles/001.png</text>
 </svg>

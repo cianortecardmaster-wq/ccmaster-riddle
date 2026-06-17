@@ -219,8 +219,8 @@ body.light .theme-clue {
 }
 
 .evidence-frame {
-  width: min(860px, 100%);
-  aspect-ratio: 16 / 9;
+  width: min(1080px, 100%);
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   position: relative;
   border: 1px solid var(--line-strong);
