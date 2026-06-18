@@ -35,6 +35,22 @@ const themeToggle = $('#themeToggle');
 const rankingBody = $('#rankingBody');
 const emptyRanking = $('#emptyRanking');
 
+function setNavUserLabel(element, nickname) {
+  if (!element) return;
+
+  element.textContent = '';
+
+  const prefix = document.createElement('span');
+  prefix.className = 'nav-user-prefix';
+  prefix.textContent = 'Investigador:';
+
+  const name = document.createElement('span');
+  name.className = 'nav-user-name';
+  name.textContent = nickname || 'Investigador';
+
+  element.append(prefix, name);
+}
+
 
 const INTRO_MODAL_KEY = 'ccmaster_intro_modal_seen_v1';
 const introModal = $('#introModal');
@@ -268,7 +284,7 @@ async function renderSession() {
   if (loggedPanel) loggedPanel.hidden = false;
 
   if (navUser) {
-    navUser.textContent = `Investigador: ${session.nickname}`;
+    setNavUserLabel(navUser, session.nickname);
     navUser.hidden = false;
   }
 

@@ -19,6 +19,7 @@ const evidenceStack = document.querySelector('#evidenceStack');
 const invertClueOverlay = document.querySelector('#invertClueOverlay');
 const toolsToggle = document.querySelector('#toolsToggle');
 const toolsSheet = document.querySelector('#toolsSheet');
+let toolsClose = document.querySelector('#toolsClose');
 const infoBox = document.querySelector('#infoBox');
 const infoBoxTitle = document.querySelector('#infoBoxTitle');
 const infoBoxContent = document.querySelector('#infoBoxContent');
@@ -26,6 +27,44 @@ const infoButtons = Array.from(document.querySelectorAll('[data-info]'));
 const actionButtons = Array.from(document.querySelectorAll('[data-action]'));
 const hasBackImage = Boolean(backImage);
 const currentRiddleId = Number.parseInt(document.body.dataset.riddle || '0', 10);
+
+function setNavUserLabel(element, nickname) {
+  if (!element) return;
+
+  element.textContent = '';
+
+  const prefix = document.createElement('span');
+  prefix.className = 'nav-user-prefix';
+  prefix.textContent = 'Investigador:';
+
+  const name = document.createElement('span');
+  name.className = 'nav-user-name';
+  name.textContent = nickname || 'Investigador';
+
+  element.append(prefix, name);
+}
+
+function ensureToolsCloseButton() {
+  if (!toolsSheet) return null;
+
+  const header = toolsSheet.querySelector('.tools-sheet-header');
+  if (!header) return null;
+
+  const existing = toolsSheet.querySelector('#toolsClose');
+  if (existing) return existing;
+
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.id = 'toolsClose';
+  button.className = 'tools-sheet-close';
+  button.setAttribute('aria-label', 'Fechar ferramentas');
+  button.title = 'Fechar ferramentas';
+  button.textContent = '×';
+  header.appendChild(button);
+  return button;
+}
+
+toolsClose = ensureToolsCloseButton();
 
 const state = {
   layerMode: 'normal',
@@ -139,7 +178,7 @@ async function renderRiddleSession() {
   }
 
   if (navUser) {
-    navUser.textContent = `Investigador: ${nickname}`;
+    setNavUserLabel(navUser, nickname);
     navUser.hidden = false;
   }
 
@@ -216,8 +255,12 @@ function describeSupabaseError(error, fallback) {
 function setToolsOpen(open) {
   state.toolsOpen = open;
   if (!toolsSheet || !toolsToggle) return;
+
   toolsSheet.classList.toggle('is-open', open);
   toolsToggle.classList.toggle('is-open', open);
+  toolsToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  toolsSheet.setAttribute('aria-hidden', open ? 'false' : 'true');
+  document.body.classList.toggle('tools-sheet-open', open);
 }
 
 function getMetaDescription() {
@@ -573,6 +616,18 @@ if (!hasBackImage) {
 toolsToggle?.addEventListener('click', () => {
   setToolsOpen(!state.toolsOpen);
 });
+
+toolsClose?.addEventListener('click', () => {
+  setToolsOpen(false);
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && state.toolsOpen) {
+    setToolsOpen(false);
+  }
+});
+
+setToolsOpen(false);
 
 answerForm?.addEventListener('submit', async (event) => {
   event.preventDefault();

@@ -3416,3 +3416,232 @@ body.is-logged-in .logged-actions .btn {
     min-height: 46px !important;
   }
 }
+
+/* ===== Ajustes: Dossiê em lista, header mobile e tema por ícones ===== */
+.theme-toggle {
+  --theme-icon-url: url('/assets/icones/sun.svg');
+  font-size: 0 !important;
+  line-height: 1 !important;
+}
+
+body.light .theme-toggle {
+  --theme-icon-url: url('/assets/icones/moon.svg');
+}
+
+.theme-toggle::before {
+  content: "";
+  display: block;
+  width: 1.22rem;
+  height: 1.22rem;
+  background: currentColor;
+  -webkit-mask: var(--theme-icon-url) center / contain no-repeat;
+  mask: var(--theme-icon-url) center / contain no-repeat;
+}
+
+.nav-user-prefix,
+.nav-user-name {
+  display: inline-block;
+}
+
+.nav-user-prefix {
+  margin-right: 5px;
+}
+
+.dossie-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  grid-template-columns: none !important;
+  gap: 10px !important;
+  margin-top: 22px !important;
+}
+
+.dossie-case {
+  min-height: 0 !important;
+  padding: 0 !important;
+  border-radius: 14px !important;
+  display: block !important;
+  background: rgba(255,255,255,.035) !important;
+}
+
+body.light .dossie-case {
+  background: rgba(255,255,255,.36) !important;
+}
+
+.dossie-case::before {
+  inset: 50% 14px auto auto !important;
+  width: 22px !important;
+  height: 22px !important;
+  transform: translateY(-50%);
+  opacity: .35 !important;
+}
+
+.dossie-case-link {
+  color: var(--text);
+  text-decoration: none;
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 12px 48px 12px 14px;
+  position: relative;
+}
+
+.dossie-case.is-open .dossie-case-link:hover {
+  background: rgba(255,255,255,.07);
+}
+
+body.light .dossie-case.is-open .dossie-case-link:hover {
+  background: rgba(255,255,255,.46);
+}
+
+.dossie-case-kicker {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  margin: 0 !important;
+  font-size: .73rem !important;
+}
+
+.dossie-case-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .055em;
+  font-size: clamp(.92rem, 2vw, 1.12rem);
+}
+
+.dossie-case-status {
+  margin: 0 !important;
+  white-space: nowrap;
+  font-size: .78rem;
+}
+
+.dossie-case.is-locked .dossie-case-title,
+.dossie-case.is-locked .dossie-case-status {
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    width: calc(100% - 14px) !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 10px 0 0 !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .topbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .case-label {
+    flex: 0 0 auto;
+    min-width: auto !important;
+    padding: 7px 8px !important;
+    font-size: .56rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .case-label strong {
+    font-size: .62rem !important;
+  }
+
+  .case-label::before,
+  .case-label::after {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  .nav-actions {
+    flex: 0 0 auto;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 5px !important;
+  }
+
+  .nav-actions a,
+  .nav-logout,
+  .theme-toggle,
+  .back-home {
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    gap: 0 !important;
+  }
+
+  .nav-actions a span:not(.icon) {
+    display: none !important;
+  }
+
+  .nav-actions a .icon {
+    display: block !important;
+    width: 1.16rem !important;
+    height: 1.16rem !important;
+    margin: 0 !important;
+  }
+
+  .nav-icon::before,
+  .nav-logout::before,
+  .back-home::before {
+    margin: 0 !important;
+    width: 1.16rem !important;
+    height: 1.16rem !important;
+  }
+
+  .nav-user {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 132px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 9px !important;
+    font-size: .68rem !important;
+    line-height: 1 !important;
+    gap: 6px !important;
+    white-space: nowrap;
+  }
+
+  .nav-user-prefix {
+    display: none !important;
+  }
+
+  .nav-user-name {
+    max-width: 86px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dossie-case-link {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 5px;
+    min-height: 0;
+    padding: 12px 42px 12px 12px;
+  }
+
+  .dossie-case-title {
+    white-space: normal;
+  }
+
+  .dossie-case-status {
+    white-space: normal;
+    font-size: .76rem;
+  }
+}

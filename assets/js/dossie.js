@@ -5,6 +5,12 @@
   const TOTAL_RIDDLES = window.CCMasterSupabase?.totalRiddles || 100;
   const supabaseClient = window.CCMasterSupabase?.client || null;
 
+  const CASE_TITLES = {
+    1: 'Corredor do Convés',
+    2: 'Onde o silêncio guarda respostas',
+    3: 'Evolua este pokemon',
+  };
+
   const grid = document.querySelector('#dossieGrid');
   const status = document.querySelector('#dossieStatus');
   const navUser = document.querySelector('#navUser');
@@ -17,6 +23,27 @@
 
   function riddleUrl(id) {
     return `/riddles/${padCase(id)}/`;
+  }
+
+  function caseTitle(id, isSolved) {
+    if (!isSolved) return 'Arquivo lacrado';
+    return CASE_TITLES[id] || `Arquivo ${padCase(id)}`;
+  }
+
+  function setNavUserLabel(element, nickname) {
+    if (!element) return;
+
+    element.textContent = '';
+
+    const prefix = document.createElement('span');
+    prefix.className = 'nav-user-prefix';
+    prefix.textContent = 'Investigador:';
+
+    const name = document.createElement('span');
+    name.className = 'nav-user-name';
+    name.textContent = nickname || 'Investigador';
+
+    element.append(prefix, name);
   }
 
   function readCachedSession() {
@@ -88,7 +115,7 @@
     }
 
     if (navUser) {
-      navUser.textContent = `Investigador: ${session.nickname || 'Investigador'}`;
+      setNavUserLabel(navUser, session.nickname || 'Investigador');
       navUser.hidden = false;
     }
 
@@ -107,22 +134,25 @@
     for (let id = 1; id <= visibleMax; id += 1) {
       const isSolved = solved.has(id);
       const caseNumber = padCase(id);
+      const title = caseTitle(id, isSolved);
       const article = document.createElement('article');
       article.className = `dossie-case ${isSolved ? 'is-open' : 'is-locked'}`;
 
       if (isSolved) {
         article.innerHTML = `
-          <p class="dossie-case-kicker">Caso #${caseNumber}</p>
-          <h2>Arquivo ${caseNumber}</h2>
-          <p class="dossie-case-status">Resolvido. O caso continua disponível para revisão.</p>
-          <a class="dossie-case-action" href="${riddleUrl(id)}">Abrir</a>
+          <a class="dossie-case-link" href="${riddleUrl(id)}" aria-label="Abrir Caso #${caseNumber}: ${title}">
+            <span class="dossie-case-kicker">Caso #${caseNumber}</span>
+            <strong class="dossie-case-title">“${title}”</strong>
+            <span class="dossie-case-status">Resolvido · abrir arquivo</span>
+          </a>
         `;
       } else {
         article.innerHTML = `
-          <p class="dossie-case-kicker">Caso #${caseNumber}</p>
-          <h2>Arquivo ${caseNumber}</h2>
-          <p class="dossie-case-status">Lacrado. Este arquivo só abre depois que o caso for solucionado.</p>
-          <span class="dossie-case-locked">Lacrado</span>
+          <div class="dossie-case-link" aria-label="Caso #${caseNumber} lacrado">
+            <span class="dossie-case-kicker">Caso #${caseNumber}</span>
+            <strong class="dossie-case-title">“${title}”</strong>
+            <span class="dossie-case-status">Lacrado · resolva o caso para revisar</span>
+          </div>
         `;
       }
 
