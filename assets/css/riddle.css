@@ -444,3 +444,39 @@ body.light .theme-clue {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   }
 }
+
+
+.invert-clue-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: start center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .18s ease, transform .18s ease;
+  transform-origin: center center;
+}
+
+.invert-clue-overlay.is-visible {
+  opacity: 1;
+}
+
+.invert-clue-overlay span {
+  margin-top: 18px;
+  display: inline-block;
+  transform: rotate(180deg);
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  line-height: 1;
+  letter-spacing: .01em;
+  color: rgba(38, 38, 38, .92);
+  text-shadow: 0 0 1px rgba(255,255,255,.18);
+}
+
+@media (max-width: 720px) {
+  .invert-clue-overlay span {
+    margin-top: 12px;
+    font-size: clamp(1.5rem, 7vw, 2.5rem);
+  }
+}

@@ -16,6 +16,7 @@ const frontImage = document.querySelector('#riddleImage');
 const backImage = document.querySelector('#riddleImageBack');
 const evidenceFrame = document.querySelector('#evidenceFrame');
 const evidenceStack = document.querySelector('#evidenceStack');
+const invertClueOverlay = document.querySelector('#invertClueOverlay');
 const toolsToggle = document.querySelector('#toolsToggle');
 const toolsSheet = document.querySelector('#toolsSheet');
 const infoBox = document.querySelector('#infoBox');
@@ -386,16 +387,17 @@ function applyImageState() {
 
   frontImage.style.opacity = String(frontOpacity);
   frontImage.style.mixBlendMode = frontBlendMode;
-  evidenceStack.style.transform = `rotate(${state.rotate}deg) scaleX(${state.mirror ? -1 : 1})`;
 
-  let stackFilter = 'none';
-  if (state.invert) {
-    stackFilter = currentRiddleId === 3
-      ? 'invert(1) contrast(3.1) brightness(0.78)'
-      : 'invert(1)';
+  const sharedTransform = `rotate(${state.rotate}deg) scaleX(${state.mirror ? -1 : 1})`;
+  evidenceStack.style.transform = sharedTransform;
+  evidenceStack.style.filter = state.invert ? 'invert(1)' : 'none';
+
+  if (invertClueOverlay) {
+    invertClueOverlay.style.transform = sharedTransform;
+    invertClueOverlay.classList.toggle('is-visible', currentRiddleId === 3 && state.invert);
   }
 
-  evidenceStack.style.filter = stackFilter;
+  evidenceFrame?.classList.toggle('is-inverted', Boolean(state.invert));
   evidenceFrame?.setAttribute('data-layer-mode', state.layerMode);
 
   syncActionButtons();
