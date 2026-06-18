@@ -3645,3 +3645,123 @@ body.light .dossie-case.is-open .dossie-case-link:hover {
     font-size: .76rem;
   }
 }
+
+/* ===== Correção mobile: menu superior sem rolagem lateral, mantendo ícones grandes ===== */
+@media (max-width: 720px) {
+  .topbar {
+    display: grid !important;
+    grid-template-columns: 38px 56px minmax(0, 1fr) !important;
+    width: calc(100% - 12px) !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 10px 0 0 !important;
+    align-items: start !important;
+    justify-content: stretch !important;
+    gap: 6px !important;
+    overflow-x: visible !important;
+  }
+
+  .topbar > .back-home {
+    grid-column: 1;
+  }
+
+  .topbar > .case-label {
+    grid-column: 2;
+    width: 56px !important;
+    max-width: 56px !important;
+    min-width: 0 !important;
+    padding: 6px 5px !important;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .topbar > .case-label span {
+    display: none !important;
+  }
+
+  .topbar > .case-label strong {
+    font-size: .6rem !important;
+    line-height: 1.08 !important;
+    white-space: normal;
+  }
+
+  .topbar > .nav-actions {
+    grid-column: 3;
+    min-width: 0 !important;
+    width: 100% !important;
+    flex: 1 1 auto !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    align-items: flex-start !important;
+    gap: 5px !important;
+    overflow: visible !important;
+  }
+
+  .topbar .nav-actions a,
+  .topbar .nav-logout,
+  .topbar .theme-toggle,
+  .topbar .back-home {
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    gap: 0 !important;
+    border-radius: 12px !important;
+  }
+
+  .topbar .nav-actions a span:not(.icon) {
+    display: none !important;
+  }
+
+  .topbar .nav-actions a .icon,
+  .topbar .nav-icon::before,
+  .topbar .nav-logout::before,
+  .topbar .back-home::before,
+  .topbar .theme-toggle::before {
+    width: 1.16rem !important;
+    height: 1.16rem !important;
+    margin: 0 !important;
+  }
+
+  .topbar .nav-user {
+    order: 99;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 22px !important;
+    padding: 2px 2px 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: .72rem !important;
+    line-height: 1.05 !important;
+    white-space: nowrap;
+  }
+
+  .topbar .nav-user::before {
+    width: 1.16rem !important;
+    height: 1.16rem !important;
+    margin: 0 !important;
+  }
+
+  .topbar .nav-user-prefix {
+    display: none !important;
+  }
+
+  .topbar .nav-user-name {
+    max-width: min(240px, 78vw) !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

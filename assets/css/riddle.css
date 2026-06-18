@@ -644,3 +644,171 @@ body.light .theme-clue {
     margin-bottom: 96px;
   }
 }
+
+/* ===== Correção mobile: header sem arrastar, mantendo ícones grandes ===== */
+@media (max-width: 720px) {
+  .riddle-topbar {
+    display: grid !important;
+    grid-template-columns: 38px 56px minmax(0, 1fr) !important;
+    width: calc(100% - 12px) !important;
+    padding-top: 10px !important;
+    align-items: start !important;
+    justify-content: stretch !important;
+    gap: 6px !important;
+    overflow-x: visible !important;
+  }
+
+  .riddle-topbar .back-home {
+    grid-column: 1;
+  }
+
+  .riddle-topbar .case-label.mini {
+    grid-column: 2;
+    width: 56px !important;
+    max-width: 56px !important;
+    min-width: 0 !important;
+    padding: 6px 5px !important;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .riddle-topbar .case-label.mini span {
+    display: none !important;
+  }
+
+  .riddle-topbar .case-label.mini strong {
+    font-size: .6rem !important;
+    line-height: 1.08 !important;
+    white-space: normal;
+  }
+
+  .riddle-nav {
+    grid-column: 3;
+    min-width: 0 !important;
+    width: 100% !important;
+    flex: 1 1 auto !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    align-items: flex-start !important;
+    gap: 5px !important;
+    overflow: visible !important;
+  }
+
+  .riddle-nav a,
+  .riddle-topbar .back-home,
+  .riddle-nav .nav-logout,
+  .riddle-nav .theme-toggle {
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    gap: 0 !important;
+    border-radius: 12px !important;
+  }
+
+  .riddle-nav a span:not(.icon) {
+    display: none !important;
+  }
+
+  .riddle-nav a .icon,
+  .riddle-nav .nav-icon::before,
+  .riddle-nav .nav-logout::before,
+  .riddle-topbar .back-home::before,
+  .riddle-nav .theme-toggle::before {
+    width: 1.16rem !important;
+    height: 1.16rem !important;
+    margin: 0 !important;
+  }
+
+  .riddle-nav .nav-user {
+    order: 99;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 22px !important;
+    padding: 2px 2px 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: .72rem !important;
+    line-height: 1.05 !important;
+    white-space: nowrap;
+  }
+
+  .riddle-nav .nav-user::before {
+    width: 1.16rem !important;
+    height: 1.16rem !important;
+    margin: 0 !important;
+  }
+
+  .riddle-nav .nav-user-prefix {
+    display: none !important;
+  }
+
+  .riddle-nav .nav-user-name {
+    max-width: min(240px, 78vw) !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .riddle-body {
+    padding-bottom: calc(118px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .tools-toggle {
+    right: 14px !important;
+    left: auto !important;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 82 !important;
+    width: auto !important;
+    min-width: 132px !important;
+    max-width: calc(100vw - 28px) !important;
+    height: 50px !important;
+    min-height: 50px !important;
+    padding: 0 16px !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    box-shadow: 0 12px 34px rgba(0,0,0,.5) !important;
+  }
+
+  .tools-toggle .button-text {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: nowrap !important;
+    font-size: .72rem !important;
+    line-height: 1 !important;
+  }
+
+  .tools-toggle::before {
+    width: 1.16rem !important;
+    height: 1.16rem !important;
+    margin: 0 !important;
+  }
+
+  .tools-sheet {
+    bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important;
+    max-height: min(58vh, 390px) !important;
+  }
+
+  .riddle-shell {
+    margin-bottom: 142px !important;
+    padding-bottom: 18px !important;
+  }
+}
