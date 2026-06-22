@@ -17,6 +17,8 @@ const backImage = document.querySelector('#riddleImageBack');
 const evidenceFrame = document.querySelector('#evidenceFrame');
 const evidenceStack = document.querySelector('#evidenceStack');
 const invertClueOverlay = document.querySelector('#invertClueOverlay');
+const riddleHotspot = document.querySelector('#riddleHotspot');
+const clickClue = document.querySelector('#clickClue');
 const toolsToggle = document.querySelector('#toolsToggle');
 const toolsSheet = document.querySelector('#toolsSheet');
 let toolsClose = document.querySelector('#toolsClose');
@@ -74,6 +76,7 @@ const state = {
   toolsOpen: false,
   activeInfo: null,
   session: null,
+  clickClueVisible: false,
 };
 
 function readCachedSession() {
@@ -442,6 +445,7 @@ function applyImageState() {
 
   evidenceFrame?.classList.toggle('is-inverted', Boolean(state.invert));
   evidenceFrame?.setAttribute('data-layer-mode', state.layerMode);
+  evidenceFrame?.classList.toggle('hotspot-ready', Boolean(riddleHotspot && ['blend', 'isolate'].includes(state.layerMode)));
 
   syncActionButtons();
 }
@@ -571,6 +575,22 @@ async function registerCloudAttempt({ normalized, rawAnswer, isCorrect }) {
 
   return { attemptsCount, normalized, savedProgress };
 }
+
+
+function revealClickClue() {
+  if (!clickClue || !riddleHotspot) return;
+  if (!['blend', 'isolate'].includes(state.layerMode)) return;
+
+  const hint = (document.body.dataset.clickHint || '').trim();
+  if (!hint) return;
+
+  state.clickClueVisible = true;
+  clickClue.textContent = hint;
+  clickClue.hidden = false;
+  clickClue.classList.add('is-visible');
+}
+
+riddleHotspot?.addEventListener('click', revealClickClue);
 
 navLogout?.addEventListener('click', endRiddleSession);
 themeToggle?.addEventListener('click', toggleTheme);

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A maldade tem nome — CC MASTER</title>
+  <meta name="description" content="Riddle 004 do jogo CC MASTER." />
+  <meta name="theme-color" content="#050505" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;800&family=Bangers&family=Courier+Prime:wght@400;700&family=Fugaz+One&family=Roboto+Mono:wght@400;500;700&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/assets/css/riddle.css" />
+</head>
+<body
+  class="riddle-body"
+  data-riddle="004"
+  data-meta-image="adverbio-de-lugar.webp"
+  data-meta-title="toque na tela"
+  data-meta-description="no lugar correto."
+  data-trail-path="/4/click.webp"
+  data-extra-hint="A pose chama atenção demais. Talvez o ponto em comum ajude mais do que o gesto inteiro."
+  data-click-hint="A Dash tem um chará bizarro"
+>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="riddle-topbar">
+    <a class="back-home nav-icon nav-icon-enter" href="/">Entrada</a>
+    <div class="case-label mini">
+      <span>CC MASTER</span>
+      <strong>CASO #004</strong>
+    </div>
+    <nav class="nav-actions riddle-nav" aria-label="Menu do riddle">
+      <span class="nav-user nav-icon nav-icon-fingerprint" id="navUser" hidden></span>
+      <button class="nav-logout nav-icon nav-icon-exit" type="button" id="navLogout" hidden>Sair</button>
+      <a href="/como-jogar/"><span class="icon icon-gamepad" aria-hidden="true"></span><span>Como jogar</span></a>
+      <a href="/regras/"><span class="icon icon-book" aria-hidden="true"></span><span>Regras</span></a>
+      <a href="/ranking/"><span class="icon icon-trophy" aria-hidden="true"></span><span>Ranking</span></a>
+      <a href="/politica-de-privacidade/"><span class="icon icon-shield" aria-hidden="true"></span><span>Privacidade</span></a>
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Alternar tema">☼</button>
+    </nav>
+  </header>
+
+  <main class="riddle-shell">
+    <section class="riddle-card" aria-labelledby="riddle-title">
+      <p class="eyebrow">Arquivo de investigação</p>
+      <h1 id="riddle-title">A maldade tem nome</h1>
+      <blockquote class="riddle-phrase">Onde a pose enquadra o impossível, o mundo parece parar por um instante.</blockquote>
+
+      <section class="investigator-panel" aria-label="Painel do investigador">
+        <div class="investigator-line">
+          <div class="investigator-chip">
+            <span class="investigator-label"><span class="icon icon-fingerprint" aria-hidden="true"></span>Investigador</span>
+            <strong id="investigatorInline">Visitante</strong>
+          </div>
+          <div class="investigator-actions">
+            <button type="button" class="info-button" data-info="metadata" aria-label="Investigar" title="Investigar"><span class="button-text">Investigar</span></button>
+            <button type="button" class="info-button" data-info="trail" aria-label="Rastro" title="Rastro"><span class="button-text">Rastro</span></button>
+            <button type="button" class="info-button" data-info="extra" aria-label="Extra" title="Extra"><span class="button-text">Extra</span></button>
+          </div>
+        </div>
+        <div class="info-box" id="infoBox" hidden>
+          <p class="info-box-title" id="infoBoxTitle"></p>
+          <div class="info-box-content" id="infoBoxContent"></div>
+        </div>
+      </section>
+
+      <div class="click-clue" id="clickClue" hidden aria-live="polite"></div>
+
+      <div class="evidence-area">
+        <div class="evidence-frame evidence-frame-hotspot" id="evidenceFrame">
+          <div class="evidence-stack" id="evidenceStack">
+            <img
+              id="riddleImageBack"
+              class="riddle-image riddle-image-back"
+              src="/assets/img/4/click.webp"
+              alt="Imagem de trás do riddle 004"
+              draggable="false"
+            />
+            <img
+              id="riddleImage"
+              class="riddle-image riddle-image-front"
+              src="/assets/img/4/adverbio-de-lugar.webp"
+              alt="Imagem da frente do riddle 004"
+              draggable="false"
+            />
+          </div>
+          <button type="button" class="riddle-hotspot" id="riddleHotspot" aria-label="Ponto em comum das poses"></button>
+        </div>
+      </div>
+
+      <section class="page-clues" aria-label="Pistas ocultas da página">
+        <p class="theme-clue">O nome ecoa em outro jogo.</p>
+      </section>
+
+      <div class="tools-desktop" aria-label="Ferramentas da imagem">
+        <button type="button" class="tool-button" data-action="reveal" aria-label="Revelar" title="Revelar"><span class="button-text">Revelar</span></button>
+        <button type="button" class="tool-button" data-action="blend" aria-label="Fundir" title="Fundir"><span class="button-text">Fundir</span></button>
+        <button type="button" class="tool-button" data-action="isolate" aria-label="Isolar" title="Isolar"><span class="button-text">Isolar</span></button>
+        <button type="button" class="tool-button" data-action="invert" aria-label="Negativo" title="Negativo"><span class="button-text">Negativo</span></button>
+        <button type="button" class="tool-button" data-action="mirror" aria-label="Espelho" title="Espelho"><span class="button-text">Espelho</span></button>
+        <button type="button" class="tool-button" data-action="rotate" aria-label="Girar" title="Girar"><span class="button-text">Girar</span></button>
+        <button type="button" class="tool-button" data-action="reset" aria-label="Reiniciar" title="Reiniciar"><span class="button-text">Reiniciar</span></button>
+        <a class="tool-button dossie-tool" href="/dossie/" aria-label="Dossiê" title="Dossiê"><span class="button-text">Dossiê</span></a>
+      </div>
+
+      <button type="button" class="tools-toggle" id="toolsToggle" aria-label="Ferramentas" title="Ferramentas"><span class="button-text">Ferramentas</span></button>
+      <section class="tools-sheet" id="toolsSheet" aria-label="Ferramentas da imagem">
+        <div class="tools-sheet-header">
+          <strong>Ferramentas</strong>
+          <span>Toque novamente em Ferramentas para fechar.</span>
+        </div>
+        <div class="tools-grid">
+          <button type="button" class="tool-button" data-action="reveal" aria-label="Revelar" title="Revelar"><span class="button-text">Revelar</span></button>
+          <button type="button" class="tool-button" data-action="blend" aria-label="Fundir" title="Fundir"><span class="button-text">Fundir</span></button>
+          <button type="button" class="tool-button" data-action="isolate" aria-label="Isolar" title="Isolar"><span class="button-text">Isolar</span></button>
+          <button type="button" class="tool-button" data-action="invert" aria-label="Negativo" title="Negativo"><span class="button-text">Negativo</span></button>
+          <button type="button" class="tool-button" data-action="mirror" aria-label="Espelho" title="Espelho"><span class="button-text">Espelho</span></button>
+          <button type="button" class="tool-button" data-action="rotate" aria-label="Girar" title="Girar"><span class="button-text">Girar</span></button>
+          <button type="button" class="tool-button" data-action="reset" aria-label="Reiniciar" title="Reiniciar"><span class="button-text">Reiniciar</span></button>
+          <a class="tool-button dossie-tool" href="/dossie/" aria-label="Dossiê" title="Dossiê"><span class="button-text">Dossiê</span></a>
+        </div>
+      </section>
+
+      <section class="answer-panel" aria-label="Enviar resposta">
+        <form id="answerForm" data-answer-hash="d0c97a588484c47423e5d02db348a5b9cf066825bf44e87a79e0c6aea2cc514e" data-next="/riddles/005/">
+          <label for="answerInput">Resposta</label>
+          <div class="answer-row">
+            <input id="answerInput" name="answer" type="text" placeholder="Digite sua resposta" autocomplete="off" required />
+            <button type="submit" class="answer-submit" aria-label="Investigar resposta" title="Investigar resposta"><span class="button-text">Investigar</span></button>
+          </div>
+          <p id="answerMessage" class="answer-message" aria-live="polite"></p>
+          <a id="nextCaseLink" class="next-case nav-icon nav-icon-folder hidden" href="/riddles/005/">Abrir próximo caso →</a>
+        </form>
+      </section>
+
+      <section class="leaderboard-card leaderboard-riddle-card" aria-label="Top 3 investigadores">
+        <div class="ranking-title-wrap">
+          <span class="auth-title-icon"><span class="icon icon-trophy" aria-hidden="true"></span></span>
+          <p class="auth-card-title">Top 3 investigadores</p>
+        </div>
+        <p class="auth-card-helper">Só aparecem os 3 primeiros aqui. O ranking completo fica na página de ranking.</p>
+        <div data-leaderboard="top" data-limit="3" data-empty="Ainda não há investigadores no ranking."></div>
+        <a class="ranking-full-link" href="/ranking/">Ver ranking completo →</a>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-client.js"></script>
+  <script src="/assets/js/leaderboard.js"></script>
+  <script src="/assets/js/riddle.js"></script>
+</body>
+</html>

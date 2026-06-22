@@ -9,6 +9,7 @@
     1: 'Corredor do Convés',
     2: 'Onde o silêncio guarda respostas',
     3: 'Evolua este pokemon',
+    4: 'A maldade tem nome',
   };
 
   const grid = document.querySelector('#dossieGrid');
