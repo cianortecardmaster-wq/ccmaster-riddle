@@ -67,10 +67,6 @@
         </div>
       </section>
 
-      <section class="page-clues page-clues-above" aria-label="Pistas da página">
-        {{ content }}
-      </section>
-
       <div class="evidence-area">
         <div class="evidence-frame" id="evidenceFrame">
           <div class="evidence-stack" id="evidenceStack">
@@ -106,11 +102,12 @@
         <a class="tool-button dossie-tool" href="{{ '/dossie/' | relative_url }}" aria-label="Dossiê" title="Dossiê"><span class="button-text">Dossiê</span></a>
       </div>
 
+      <div class="mobile-tools-wrap">
       <button type="button" class="tools-toggle" id="toolsToggle" aria-label="Ferramentas" title="Ferramentas"><span class="button-text">Ferramentas</span></button>
       <section class="tools-sheet" id="toolsSheet" aria-label="Ferramentas da imagem">
         <div class="tools-sheet-header">
           <strong>Ferramentas</strong>
-          <span>Toque novamente em Ferramentas para fechar.</span>
+          <span>Use o X para fechar.</span>
           <button type="button" class="tools-sheet-close" id="toolsClose" aria-label="Fechar ferramentas" title="Fechar ferramentas">×</button>
         </div>
         <div class="tools-grid">
@@ -123,6 +120,11 @@
           <button type="button" class="tool-button" data-action="reset" aria-label="Reiniciar" title="Reiniciar"><span class="button-text">Reiniciar</span></button>
           <a class="tool-button dossie-tool" href="{{ '/dossie/' | relative_url }}" aria-label="Dossiê" title="Dossiê"><span class="button-text">Dossiê</span></a>
         </div>
+      </section>
+      </div>
+
+      <section class="page-clues page-clues-above" aria-label="Pistas da página">
+        {{ content }}
       </section>
 
       <section class="answer-panel" aria-label="Enviar resposta">

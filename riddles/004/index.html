@@ -66,8 +66,6 @@
         </div>
       </section>
 
-      <div class="click-clue" id="clickClue" hidden aria-live="polite"></div>
-
       <div class="evidence-area">
         <div class="evidence-frame evidence-frame-hotspot" id="evidenceFrame">
           <div class="evidence-stack" id="evidenceStack">
@@ -90,10 +88,6 @@
         </div>
       </div>
 
-      <section class="page-clues" aria-label="Pistas ocultas da página">
-        <p class="theme-clue">O nome ecoa em outro jogo.</p>
-      </section>
-
       <div class="tools-desktop" aria-label="Ferramentas da imagem">
         <button type="button" class="tool-button" data-action="reveal" aria-label="Revelar" title="Revelar"><span class="button-text">Revelar</span></button>
         <button type="button" class="tool-button" data-action="blend" aria-label="Fundir" title="Fundir"><span class="button-text">Fundir</span></button>
@@ -105,11 +99,12 @@
         <a class="tool-button dossie-tool" href="/dossie/" aria-label="Dossiê" title="Dossiê"><span class="button-text">Dossiê</span></a>
       </div>
 
+      <div class="mobile-tools-wrap">
       <button type="button" class="tools-toggle" id="toolsToggle" aria-label="Ferramentas" title="Ferramentas"><span class="button-text">Ferramentas</span></button>
       <section class="tools-sheet" id="toolsSheet" aria-label="Ferramentas da imagem">
         <div class="tools-sheet-header">
           <strong>Ferramentas</strong>
-          <span>Toque novamente em Ferramentas para fechar.</span>
+          <span>Use o X para fechar.</span>
         </div>
         <div class="tools-grid">
           <button type="button" class="tool-button" data-action="reveal" aria-label="Revelar" title="Revelar"><span class="button-text">Revelar</span></button>
@@ -121,6 +116,13 @@
           <button type="button" class="tool-button" data-action="reset" aria-label="Reiniciar" title="Reiniciar"><span class="button-text">Reiniciar</span></button>
           <a class="tool-button dossie-tool" href="/dossie/" aria-label="Dossiê" title="Dossiê"><span class="button-text">Dossiê</span></a>
         </div>
+      </section>
+      </div>
+
+      <div class="click-clue" id="clickClue" hidden aria-live="polite"></div>
+
+      <section class="page-clues" aria-label="Pistas ocultas da página">
+        <p class="theme-clue">O nome ecoa em outro jogo.</p>
       </section>
 
       <section class="answer-panel" aria-label="Enviar resposta">
