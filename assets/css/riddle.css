@@ -991,3 +991,65 @@ body.light .click-clue {
     margin-top: 18px !important;
   }
 }
+
+/* ===== Correção final mobile: painel abaixo da imagem, sem cobrir a arte ===== */
+@media (max-width: 720px) {
+  .mobile-tools-wrap {
+    display: grid !important;
+    position: relative !important;
+    isolation: isolate !important;
+    width: 100% !important;
+    margin: 14px 0 18px !important;
+    min-height: 50px !important;
+    overflow: visible !important;
+  }
+
+  .mobile-tools-wrap .tools-toggle {
+    grid-area: 1 / 1 !important;
+    position: relative !important;
+    inset: auto !important;
+    z-index: 2 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .mobile-tools-wrap .tools-toggle.is-open {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .mobile-tools-wrap .tools-sheet {
+    grid-area: 1 / 1 !important;
+    display: block !important;
+    position: relative !important;
+    inset: auto !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    z-index: 3 !important;
+    width: 100% !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 14px !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    border-color: transparent !important;
+    transform: translateY(-6px) scale(.98) !important;
+    transform-origin: top center !important;
+    transition: max-height .24s ease, padding .24s ease, opacity .18s ease, transform .22s ease, border-color .18s ease !important;
+  }
+
+  .mobile-tools-wrap .tools-sheet.is-open {
+    max-height: min(64vh, 420px) !important;
+    padding: 14px !important;
+    overflow-y: auto !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    border-color: var(--line-strong) !important;
+    transform: translateY(0) scale(1) !important;
+  }
+}
